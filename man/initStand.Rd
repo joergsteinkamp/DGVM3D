@@ -21,7 +21,7 @@ initStand(area = 1000, npatch = 1, soil = c(0, -0.5, -1.5), z = 0,
 \item{dist}{the fractional distance between the hexagons}
 }
 \value{
-a \code{\link[DGVM3D]{Stand-class}}
+a \code{\link{Stand-class}}
 }
 \description{
 Initialize the model Stand
@@ -31,7 +31,11 @@ If soil is a matrix, the number of columns must be equal to npatch. In that way 
 The patches represented as hexagons can either be arranged in a square or in a line. The later one for example to represent a time series (succession).
 }
 \examples{
-stand <- initStand(npatch=9, z=rnorm(9))
+stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)))
+stand3D(stand)
+
+stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)), arrangement='linear')
+stand3D(stand)
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

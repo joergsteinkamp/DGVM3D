@@ -1,4 +1,4 @@
-#' poplulate a patch with it´s vegetation
+#' poplulate a patch with its vegetation
 #'
 #' @param stand the stand
 #' @param patch.id the patch to polulate
@@ -6,29 +6,30 @@
 #' @param sample number of samples to determine the next trees position
 #' @return the vegetation data.frame with the positions
 #' @include classes.R
-#' @import RColorBrewer
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
-#' stand=initStand(npatch=1)
-#' veg = data.frame(DBH=rep(0.5, 100))  ##rgamma(100, 2.5, 9))
-#' veg$Height = veg$DBH * 35  ## * rbeta(nrow(veg),10,1)
-#' veg$Crownarea = veg$DBH * 5 ## * rnorm(nrow(veg), 1, 0.1)
-#' veg$LeafType = sample(0:1, nrow(veg), replace=TRUE)
+#' stand = initStand(npatch=1)
+#' veg = data.frame(DBH=rep(0.5, 100))
+#' veg$Height    = veg$DBH * 35
+#' veg$Crownarea = veg$DBH * 5
+#' veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
 #' stand@patches[[1]]@vegetation = initPatch(veg, stand@hexagon@supp[['inner.radius']])
 initPatch <- function(vegetation=NULL, radius=1, samples=3) {
+  if (is.null(vegetation))
+    stop("'vegetation' data.frame is missing!")
   vegetation$x = NA
   vegetation$y = NA
   phi <- runif(1) * 2 * pi
-  r   <- runif(1) * stand@hexagon@supp[['inner.radius']]
+  r   <- runif(1) * radius
   vegetation$x[1] = sin(phi) * r
   vegetation$y[1] = cos(phi) * r
   for (i in 2:nrow(vegetation)) {
     phi <- runif(samples) * 2 * pi
     ## slightly biased towards the center, since max distance below tends to place all points along the edge.
     ## Need to find the optimum values (depends also in number of samples)
-    r   <- rbeta(samples, 0.97, 1.4) * stand@hexagon@supp[['inner.radius']]
+    r   <- rbeta(samples, 0.97, 1.4) * radius
     new.x <- sin(phi) * r
     new.y <- cos(phi) * r
 

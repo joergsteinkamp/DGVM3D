@@ -10,9 +10,12 @@ stand3D(stand, patch.id = NULL)
 \item{stand}{the \code{\link[DGVM3D]{Stand-class}} to visualize}
 }
 \description{
-3D view of the stands
+Uses \code{\link{rgl}} to visualize a single, if patch.id is given, or all patch soil hexagons
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
+}
+\seealso{
+\code{\link{initStand}} for examples
 }
 
