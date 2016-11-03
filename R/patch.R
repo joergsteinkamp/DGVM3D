@@ -1,11 +1,13 @@
 #' poplulate a patch with its vegetation
 #'
-#' @param stand the stand
-#' @param patch.id the patch to polulate
+#' Randomly 'plant' the trees in the patch within a given radius.
+#'
 #' @param vegetation the vegetation data.frame
-#' @param sample number of samples to determine the next trees position
+#' @param radius the radius used to distribute the vegetation to
+#' @param samples number of samples to determine the next trees position
 #' @return the vegetation data.frame with the positions
 #' @include classes.R
+#' @importFrom stats runif rbeta
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
@@ -15,8 +17,8 @@
 #' veg$Crownarea = veg$DBH * 5
 #' veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
-#' stand@patches[[1]]@vegetation = initPatch(veg, stand@hexagon@supp[['inner.radius']])
-initPatch <- function(vegetation=NULL, radius=1, samples=3) {
+#' stand@patches[[1]]@vegetation = establishPatch(veg, stand@hexagon@supp[['inner.radius']])
+establishPatch <- function(vegetation=NULL, radius=1, samples=3) {
   if (is.null(vegetation))
     stop("'vegetation' data.frame is missing!")
   vegetation$x = NA

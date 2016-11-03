@@ -6,10 +6,13 @@
 #' @param area patch size area
 #' @param npatch number of patches
 #' @param soil a vector or matrix of soil depths.
+#' @param z the height of each patch.
 #' @param arrangement patch arrangement ('square' or 'linear').
 #' @param composition 'spatial' or 'temporal'
 #' @param dist the fractional distance between the hexagons
 #' @return a \code{\link{Stand-class}}
+#' @importFrom methods new
+#' @importFrom grDevices colorRampPalette
 #' @export
 #' @include classes.R
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
@@ -81,7 +84,8 @@ initStand <- function(area=1000, npatch=1, soil=c(0, -0.5, -1.5), z=0, arrangeme
 #'
 #' Uses \code{\link{rgl}} to visualize a single, if patch.id is given, or all patch soil hexagons
 #'
-#' @param stand the \code{\link[DGVM3D]{Stand-class}} to visualize
+#' @param stand the \code{\link{Stand-class}} to visualize
+#' @param patch.id the patch IDs to create. Default: all.
 #' @export
 #' @import rgl
 #' @include classes.R

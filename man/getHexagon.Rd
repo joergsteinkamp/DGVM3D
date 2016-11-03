@@ -16,7 +16,7 @@ getHexagon(area = NA, outer.radius = NA, inner.radius = NA, z = c(0, 1))
 \item{z}{the height of the hexagon as 2 element vector}
 }
 \value{
-a \code{\link[DGVM3D]{TriangBody-class}}
+a \code{\link{TriangBody-class}}
 }
 \description{
 Calculate a 3D hexagon

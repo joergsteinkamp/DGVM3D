@@ -14,7 +14,13 @@ One model stand consisting of several patches
 
 \item{\code{area}}{the area of each patch}
 
+\item{\code{hexagon}}{a \code{\link{TriangBody-class}} Hexagon definition used for all patches}
+
 \item{\code{arrangement}}{either 'linear' or 'square'}
+
+\item{\code{composition}}{either 'spatial' or 'temporal'. Has no effect yet.}
+
+\item{\code{patch.pos}}{the position of the patche hexagon centers}
 }}
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

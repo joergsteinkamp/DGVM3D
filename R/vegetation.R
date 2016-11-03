@@ -15,7 +15,7 @@
 #' veg$Crownarea = veg$DBH * 5
 #' veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
-#' stand@patches[[1]]@vegetation = initPatch(veg, stand@hexagon@supp[['inner.radius']])
+#' stand@patches[[1]]@vegetation = establishPatch(veg, stand@hexagon@supp[['inner.radius']])
 #' dummy = plant3D(stand, 1)
 #'
 #'#' stand3D(stand, 2)
@@ -24,7 +24,7 @@
 #' veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
 #' veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
-#' stand@patches[[2]]@vegetation = initPatch(veg, stand@hexagon@supp[['inner.radius']])
+#' stand@patches[[2]]@vegetation = establishPatch(veg, stand@hexagon@supp[['inner.radius']])
 #' dummy = plant3D(stand, 2)
 plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
   if (is.null(patch.id))
@@ -53,7 +53,7 @@ plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
 
 #' draw a single tree
 #'
-#' @param tree one column of the \code{\link[DGVM3]{Patch-class}} vegetation data.frame slot
+#' @param tree one column of the \code{\link{Patch-class}} vegetation data.frame slot
 #' @param offset x/y center and surface (z) of the respective patch
 #' @param col crown colors for the shade classes
 #' @param opacity alpha value for the tree crown (heavy impacting performance)

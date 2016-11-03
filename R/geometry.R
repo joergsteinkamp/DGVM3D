@@ -41,13 +41,13 @@ triClose <- function(n, method="circular"){
         warning("More than 3 columns in data.frame, taking the first three as x,y,z coordinates!")
       n <- matrix(c(n[,1], n[,2], n[,3]), nrow=3, byrow=TRUE)
     } else {
-      stop("Don´t know how to handle input 'n'!")
+      stop("Don't know how to handle input 'n'!")
     }
   } else if (is.matrix(n)) {
     if (nrow(n)>3 && (ncol(n)==2 || ncol(n)==3)) {
       n=t(n)
     } else if (nrow(n)>3 && ncol(n)>3) {
-      stop(paste0("Don´t kow how to deal with a ",nrow(n), "x",ncol(n)," matrix!"))
+      stop(paste0("Don't kow how to deal with a ",nrow(n), "x",ncol(n)," matrix!"))
     }
   }
 
@@ -107,7 +107,8 @@ triClose <- function(n, method="circular"){
 #' @param outer.radius the outer radius of the hexagon
 #' @param inner.radius the inner radius of the hexagon
 #' @param z the height of the hexagon as 2 element vector
-#' @return  a \code{\link[DGVM3D]{TriangBody-class}}
+#' @return  a \code{\link{TriangBody-class}}
+#' @importFrom methods new
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 getHexagon <- function(area=NA, outer.radius=NA, inner.radius=NA, z=c(0,1)) {
@@ -141,13 +142,14 @@ getHexagon <- function(area=NA, outer.radius=NA, inner.radius=NA, z=c(0,1)) {
 #' @param height the height of the cone
 #' @param faces number of triangular sides
 #' @param close logical should the bottom side be closed.
-#' @return a \code{\link[DGVM3D]{TriangBody-class}}
+#' @return a \code{\link{TriangBody-class}}
+#' @importFrom methods new
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' if (require(rgl)) {
 #'   cone=getCone(faces=13, close=TRUE)
-#'   triangles3d(cone@vertices[, cone@id], col="green")
+#'   triangles3d(cone@vertices[cone@id, ], col="green")
 #' } else {
 #'   message("the library 'rgl' is required for this example!")
 #' }

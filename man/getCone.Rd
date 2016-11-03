@@ -16,7 +16,7 @@ getCone(radius = 0.5, height = 1, faces = 72, close = FALSE)
 \item{close}{logical should the bottom side be closed.}
 }
 \value{
-a \code{\link[DGVM3D]{TriangBody-class}}
+a \code{\link{TriangBody-class}}
 }
 \description{
 calculate a cone
@@ -24,7 +24,7 @@ calculate a cone
 \examples{
 if (require(rgl)) {
   cone=getCone(faces=13, close=TRUE)
-  triangles3d(cone@vertices[, cone@id], col="green")
+  triangles3d(cone@vertices[cone@id, ], col="green")
 } else {
   message("the library 'rgl' is required for this example!")
 }

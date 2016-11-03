@@ -32,7 +32,10 @@ setClass("Patch",
 #'
 #' @slot patches list of patches in one stand
 #' @slot area the area of each patch
+#' @slot hexagon a \code{\link{TriangBody-class}} Hexagon definition used for all patches
 #' @slot arrangement either 'linear' or 'square'
+#' @slot composition either 'spatial' or 'temporal'. Has no effect yet.
+#' @slot patch.pos the position of the patche hexagon centers
 #' @exportClass Stand
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 setClass("Stand",

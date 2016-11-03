@@ -17,6 +17,9 @@ Collate:
     'stand.R'
     'vegetation.R'
 Depends:
-    rgl
+    rgl,
+    methods,
+    stats,
+    grDevices,
 Suggests:
     RColorBrewer

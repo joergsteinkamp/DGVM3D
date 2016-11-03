@@ -7,7 +7,9 @@
 stand3D(stand, patch.id = NULL)
 }
 \arguments{
-\item{stand}{the \code{\link[DGVM3D]{Stand-class}} to visualize}
+\item{stand}{the \code{\link{Stand-class}} to visualize}
+
+\item{patch.id}{the patch IDs to create. Default: all.}
 }
 \description{
 Uses \code{\link{rgl}} to visualize a single, if patch.id is given, or all patch soil hexagons
