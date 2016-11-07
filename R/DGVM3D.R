@@ -9,8 +9,6 @@
 "_PACKAGE"
 
 
-## to build the vignette I had to change
-## VignetteBuilder: knitr
-## in DESCRIPTION to
-## VignetteBuilder: rmarkdown
-## otherwise building on command line failed
+## to build the vignette I had to run
+## devtools::build_vignettes(pkg = ".")
+## by hand

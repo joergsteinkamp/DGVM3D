@@ -98,3 +98,8 @@ establishPatch <- function(vegetation=NULL, radius=1) {
 
   return(vegetation)
 }
+
+
+updatePatch <- function() {
+
+}

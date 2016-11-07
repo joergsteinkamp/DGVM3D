@@ -58,6 +58,7 @@ read.LPJ <- function(file="vegstruct.out", stand.id=0, patch.id=NULL, year=NULL,
 
   ## from cohort to individual trees
   veg = vegstruct[rep(seq_len(nrow(vegstruct)), times=vegstruct$N), ]
+  veg$N = 1
 
   return(veg)
 }

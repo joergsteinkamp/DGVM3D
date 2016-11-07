@@ -6,7 +6,7 @@
 \alias{DGVM3D-package}
 \title{3D Visualization of simulated vegetation structure}
 \description{
-This is a simple visualization tool for simulated vegetation structure/succession in space and/or time of forest gap models. Those models should contain either individual trees or cohorts (e.g. LPJ-GUESS: Smith et al. (2001, 2014)).
+This is a visualization tool for simulated vegetation structure/succession in space and/or time of forest gap models. Those models should contain either individual trees or cohorts (e.g. LPJ-GUESS: Smith et al. (2001, 2014)).
 }
 \references{
 Smith, B., Prentice, I. C. and Sykes, M. T.: Representation of vegetation dynamics in the modelling of terrestrial ecosystems: comparing two contrasting approaches within European climate space, Global Ecology and Biogeography, 10(6), 621-637, \href{https://dx.doi.org/10.1046/j.1466-822X.2001.t01-1-00256.x}{doi:10.1046/j.1466-822X.2001.t01-1-00256.x}, 2001.

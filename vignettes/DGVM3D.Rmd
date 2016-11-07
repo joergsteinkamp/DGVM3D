@@ -1,0 +1,192 @@
+---
+title: "Introduction to DGVM3D"
+author: "Joerg Steinkamp"
+date: "`r Sys.Date()`"
+bibliography: bibliography.bib
+output: rmarkdown::html_vignette
+keep_md: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to DGVM3D}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This package renders the vegetation structure of individual and cohort based dynamic (global) vegetation models (DGVM) with gap dynamic. Here I present how to derive the required data with the DGVM [LPJ-GUESS](http://iis4.nateko.lu.se/lpj-guess/) [@smith_representation_2001; @smith_implications_2014].
+
+# Code to be part of an external DGVM
+
+So far LPJ-GUESS is the only model included.
+
+## C++ code to include in LPJ-GUESS
+
+LPJ-GUESS is hirachically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per gridpoint. This library needs the output of each patch, therefore an additional output module is needed.
+
+To create the required output table a new output module needs to be registered in LPJ-GUESS. In the source code the following header and code files need to be placed in the modules subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position.
+
+```{r engine='Rcpp', eval=FALSE}
+///////////////////////////////////////////////////////////////////////////////////////
+/// \file vegstructoutput.h
+/// \brief Output module for patch based vegetation structure
+///
+/// \author Joerg Steinkamp
+/// $Date: Thu Nov  3 11:15:37 CET 2016 $
+///
+///////////////////////////////////////////////////////////////////////////////////////
+#ifndef LPJ_GUESS_VEGSTRUCT_OUTPUT_H
+#define LPJ_GUESS_VEGSTRUCT_OUTPUT_H
+#include "outputmodule.h"
+#include "outputchannel.h"
+#include "gutil.h"
+namespace GuessOutput {
+  class VegstructOutput : public OutputModule {
+  public:
+    VegstructOutput();
+    ~VegstructOutput();
+    // implemented functions inherited from OutputModule
+    // (see documentation in OutputModule)
+    void init();
+    void outannual(Gridcell& gridcell);
+    void outdaily(Gridcell& gridcell);
+  private:
+    xtring file_vegstruct;
+    FILE *out_vegstruct;
+  };
+}
+#endif
+```
+
+```{r engine='Rcpp', eval=FALSE}
+///////////////////////////////////////////////////////////////////////////////////////
+/// \file vegstructoutput.cpp
+/// \brief Output module for patch based vegetation structure
+///
+/// \author Joerg Steinkamp
+/// $Date: Thu Nov  3 11:15:37 CET 2016 $
+///
+///////////////////////////////////////////////////////////////////////////////////////
+#include "config.h"
+#include "vegstructoutput.h"
+#include "parameters.h"
+#include "guess.h"
+namespace GuessOutput {
+    REGISTER_OUTPUT_MODULE("vegstruct", VegstructOutput)
+    VegstructOutput::VegstructOutput() {
+    declare_parameter("file_vegstruct", &file_vegstruct, 300, "Detailed vegetation structure");
+  }
+  VegstructOutput::~VegstructOutput() {
+  }
+  void VegstructOutput::init() {
+    if (file_vegstruct != "") {
+      std::string full_path = (char*) file_vegstruct;
+      out_vegstruct = fopen(full_path.c_str(), "w");
+      if (out_vegstruct == NULL) {
+        fail("Could not open %s for output\n"                         \
+             "Close the file if it is open in another application",
+             full_path.c_str());
+      } else {
+        dprintf("dummy\n");
+        fprintf(out_vegstruct, "Lon Lat Year SID PID VID Pft Lifeform LeafType PhenType Pathway Age FPC LAI ShadeType N DBH Height Crownarea\n");
+      }
+    }
+  }
+  void VegstructOutput::outdaily(Gridcell& gridcell) {
+    return;
+  }
+  void VegstructOutput::outannual(Gridcell& gridcell) {
+    if (file_vegstruct == "")
+      return;
+    if (date.year >= nyear_spinup-50) {
+      double lon = gridcell.get_lon();
+      double lat = gridcell.get_lat();
+      Gridcell::iterator gc_itr = gridcell.begin();
+      while (gc_itr != gridcell.end()) {
+        Stand& stand = *gc_itr;
+        stand.firstobj();
+        while (stand.isobj) {
+          Patch& patch = stand.getobj();
+          Vegetation& vegetation = patch.vegetation;
+          vegetation.firstobj();
+          while (vegetation.isobj) {
+            Individual& indiv=vegetation.getobj();
+            // guess2008 - alive check added
+            if (indiv.id != -1 && indiv.alive) {
+              fprintf(out_vegstruct, "%7.2f %6.2f %4i ", lon, lat, date.get_calendar_year() );
+              fprintf(out_vegstruct, " %i ",    stand.id);
+              fprintf(out_vegstruct, " %i ",    patch.id);
+              fprintf(out_vegstruct, " %i ",    indiv.id);
+              fprintf(out_vegstruct, " %10s ",  (char*) indiv.pft.name);
+              fprintf(out_vegstruct, " %i ",    indiv.pft.lifeform);
+              fprintf(out_vegstruct, " %i ",    indiv.pft.leafphysiognomy);
+              fprintf(out_vegstruct, " %i ",    indiv.pft.phenology);
+              fprintf(out_vegstruct, " %i ",    indiv.pft.pathway);
+              fprintf(out_vegstruct, " %4.0f ", indiv.age);
+              fprintf(out_vegstruct, " %6.2f ", indiv.fpc);
+              fprintf(out_vegstruct, " %6.2f ", indiv.lai);
+              if (indiv.pft.lifeform == TREE) {
+                fprintf(out_vegstruct, " %4.1f ", indiv.pft.alphar);
+                fprintf(out_vegstruct, " %4.0f ", indiv.densindiv * patcharea);
+                fprintf(out_vegstruct, " %7.2f ", pow(indiv.height/indiv.pft.k_allom2,1.0/indiv.pft.k_allom3));
+                fprintf(out_vegstruct, " %8.2f ", indiv.height);
+                fprintf(out_vegstruct, " %8.2f ", indiv.crownarea);
+              } else if (indiv.pft.lifeform == GRASS) {
+                fprintf(out_vegstruct, " %4.1f ", -1.0);
+                fprintf(out_vegstruct, " %i ",     1);
+                fprintf(out_vegstruct, " %i ",    -1);
+                fprintf(out_vegstruct, " %i ",    -1);
+                fprintf(out_vegstruct, " %i ",    -1);
+              }
+              fprintf(out_vegstruct, "\n");
+            }
+            vegetation.nextobj();
+          }
+          stand.nextobj();
+        }
+        ++gc_itr;
+      }
+    }
+  } // END of void VegStructOutput::outannual
+} // END of namespace VegStructOutput
+
+```
+
+The code writes the following output columns including a header line, if the parameter `file_vestruct` is defined in the instruction file.
+
+| Column name | Type      | Description |
+|:------------|:---------:|:-------------------------------------------------|
+| Lon         | numeric   | longitude  |
+| Lat         | numeric   | latitude |
+| Year        | integer   | year |
+| SID         | integer   | Stand ID |
+| PID         | integer   | Patch ID |
+| VID         | integer   | Vegetation ID; the ID of a cohort or individuum |
+| Pft         | character | Name of the PFT/Species as defined in the guess instruction file |
+| Lifeform    | integer   | value of Pft lifeform (enum {NOLIFEFORM, TREE, GRASS}) |
+| LeafType    | integer   | value of Pft leafphysiognomy (enum {NOLEAFTYPE, NEEDLELEAF, BROADLEAF}) |
+| PhenType    | integer   | value of Pft phenology (enum {NOPHENOLOGY, EVERGREEN, RAINGREEN, SUMMERGREEN, CROPGREEN, ANY}) |
+| Pathway     | integer   | value of Pft pathway (enum {NOPATHWAY, C3, C4}) |
+| Age         | integer   | value of cohort age |
+| FPC         | numeric   | value of cohort foliar projected cover |
+| LAI         | numeric   | value of cohort leaf area index |
+| ShadeType   | numeric   | value of cohort alphar as a measure for shade tolerance class. Is ranked in the package. |
+| N           | integer   | number of individual per cohort. In individual mode this is 1. |
+| DBH         | numeric   | individual tree diameter (equal for all members of the same cohort) |
+| Height      | numeric   | individual height |
+| Crownarea   | numeric   | individual crown area |
+
+So far not all of those values are used in the code. However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output!
+
+# DGVM3D workflow
+
+For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches. 
+
+## Get the data
+
+The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes.
+
+## Establish the individual trees
+
+The individual trees are by default randomly distributed within the inner radius of each patch hexagon (`establishPatch`). 
+With the function 
+
+
+# References

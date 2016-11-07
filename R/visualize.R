@@ -24,7 +24,21 @@ snapshot <- function(vegetation, stand.id=0, patch.id=NULL, year=2000) {
 
   stand <- initStand(npatch=npatch)
   for (i in 1:npatch) {
-    stand@patches[[i]]@vegetation = establishPatch(subset(vegetation, PID==patch.ids[i]), stand@hexagon@supp[['inner.radius']])
+    if (!all( c("x", "y") %in% colnames(vegetation))) {
+      if (dgvm3d.options("verbose"))
+        message("Randomly distribution trees in patch")
+      stand@patches[[i]]@vegetation = establishPatch(subset(vegetation, PID==patch.ids[i]), stand@hexagon@supp[['inner.radius']])
+    } else {
+      if (any(is.na(vegetation$x)) || any(is.na(vegetation$y))) {
+        warning("NAs in tree position. Randomly redistribution.")
+        message("NAs in tree position. Randomly redistribution.")
+        stand@patches[[i]]@vegetation = establishPatch(subset(vegetation, PID==patch.ids[i]), stand@hexagon@supp[['inner.radius']])
+      } else {
+        if (dgvm3d.options("verbose"))
+          message("Using valid x/y values present in 'vegetation data.frame.")
+        stand@patches[[i]]@vegetation = vegetation
+      }
+    }
     if (dgvm3d.options("verbose")) {
       message(sprintf("Total crownarea (patch %3i): %7.2f (needle: %7.2f; broadleaved: %7.2f)", patch.ids[i],
                       sum(stand@patches[[i]]@vegetation$Crownarea),
