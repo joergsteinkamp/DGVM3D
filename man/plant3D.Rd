@@ -25,17 +25,17 @@ stand3D(stand, 1)
 veg = data.frame(DBH=rep(0.4, 50))
 veg$Height    = veg$DBH * 35
 veg$Crownarea = veg$DBH * 5
-veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
-veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
+veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
+veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 stand@patches[[1]]@vegetation = establishPatch(veg, stand@hexagon@supp[['inner.radius']])
 dummy = plant3D(stand, 1)
 
-#' stand3D(stand, 2)
+stand3D(stand, 2)
 veg = data.frame(DBH=rep(0.5, 100) * rgamma(100, 2.5, 9))
 veg$Height    = veg$DBH * 35  * rbeta(nrow(veg),10,1)
 veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
-veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
-veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
+veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
+veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 stand@patches[[2]]@vegetation = establishPatch(veg, stand@hexagon@supp[['inner.radius']])
 dummy = plant3D(stand, 2)
 }

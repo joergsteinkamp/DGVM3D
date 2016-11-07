@@ -11,6 +11,9 @@ stand3D(stand, patch.id = NULL)
 
 \item{patch.id}{the patch IDs to create. Default: all.}
 }
+\value{
+None
+}
 \description{
 Uses \code{\link{rgl}} to visualize a single, if patch.id is given, or all patch soil hexagons
 }

@@ -7,7 +7,7 @@
 #' @param npatch number of patches
 #' @param soil a vector or matrix of soil depths.
 #' @param z the height of each patch.
-#' @param arrangement patch arrangement ('square' or 'linear').
+#' @param arrangement patch arrangement ('square' or 'linear'), a two element vector with number of rows/colums. A matrix for layout (not yet ready).
 #' @param composition 'spatial' or 'temporal'
 #' @param dist the fractional distance between the hexagons
 #' @return a \code{\link{Stand-class}}
@@ -37,12 +37,21 @@ initStand <- function(area=1000, npatch=1, soil=c(0, -0.5, -1.5), z=0, arrangeme
   }
 
   hexagon <- getHexagon(area=area, z=c(0, -1))
-  if (arrangement=="square") {
-    nxy.max = ceiling(sqrt(npatch))
-    nxy.min = floor(sqrt(npatch))
-  } else {
-    nxy.max = 1
-    nxy.min = npatch
+  if (typeof(arrangement) == "character") {
+    if (arrangement=="square") {
+      nxy.max = ceiling(sqrt(npatch))
+      nxy.min = floor(sqrt(npatch))
+    } else {
+      nxy.min = npatch
+      nxy.max = 1
+    }
+  } else if (typeof(arrangement) == "numeric" && is.vector(arrangement)) {
+    nxy.min = arrangement[2]
+    nxy.max = arrangement[1]
+  } else if (typeof(arrangement) == "numeric" && is.matrix(arrangement)) {
+    nxy.min = nrow(arrangement)
+    nxy.max = ncol(arrangement)
+    stop("Not yet ready!")
   }
 
   ## How I choose the colors:
@@ -86,6 +95,7 @@ initStand <- function(area=1000, npatch=1, soil=c(0, -0.5, -1.5), z=0, arrangeme
 #'
 #' @param stand the \code{\link{Stand-class}} to visualize
 #' @param patch.id the patch IDs to create. Default: all.
+#' @return None
 #' @export
 #' @import rgl
 #' @include classes.R

@@ -166,3 +166,39 @@ getCone <- function(radius=0.5, height=1, faces=72, close=FALSE) {
   }
   return(new("TriangBody", vertices=t(vertices), id=ind, supp=list(radius=radius, height=height)))
 }
+
+
+#' draw a quadrilateral ellipsoid
+#'
+#' I copied and modified it from 'Code demonstations' rgl::shapes3d (search with "??ellipsoid" on commandline)
+#'
+#' @param rx radius in x direction
+#' @param ry radius in y direction
+#' @param rz radius in z direction
+#' @param ctr 3-element vector. center of the ellipsoid
+#' @param col the color to use.
+#' @param n number of vertices along z-axis and around xy rotation
+#' @param opacity the alpha value for the surface
+#' @import rgl
+#' @export
+drawEllipsoid <- function(rx=1, ry=1, rz=1, ctr=c(0, 0, 0), n=72, col="green", opacity=opacity) {
+  degvec <- seq(0, pi, length=n)
+  ecoord2 <- function(p) {
+    c(rx * cos(p[1]) * sin(p[2]),
+      ry * sin(p[1]) * sin(p[2]),
+      rz * cos(p[2])) }
+  v <- apply(expand.grid(2 * degvec, degvec), 1, ecoord2)
+  v[1, ] = v[1, ] + ctr[1]
+  v[2, ] = v[2, ] + ctr[2]
+  v[3, ] = v[3, ] + ctr[3]
+
+  e <- expand.grid(1:(n-1),1:n)
+  i1 <- apply(e,1,function(z)z[1]+n*(z[2]-1))
+  i2 <- i1+1
+  i3 <- (i1+n-1) %% n^2 + 1
+  i4 <- (i2+n-1) %% n^2 + 1
+  i <- rbind(i1,i2,i4,i3)
+  quads3d(v[1,i],v[2,i],v[3,i], col=col, alpha=opacity)
+}
+
+

@@ -16,7 +16,7 @@ initStand(area = 1000, npatch = 1, soil = c(0, -0.5, -1.5), z = 0,
 
 \item{z}{the height of each patch.}
 
-\item{arrangement}{patch arrangement ('square' or 'linear').}
+\item{arrangement}{patch arrangement ('square' or 'linear'), a two element vector with number of rows/colums. A matrix for layout (not yet ready).}
 
 \item{composition}{'spatial' or 'temporal'}
 
