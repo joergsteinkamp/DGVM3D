@@ -100,4 +100,3 @@ dgvm3d.options <- function(x=NULL,
 .onAttach <- function(libname, pkgname) {
   dgvm3d.options("default")
 }
-
