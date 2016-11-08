@@ -85,7 +85,7 @@ namespace GuessOutput {
              full_path.c_str());
       } else {
         dprintf("dummy\n");
-        fprintf(out_vegstruct, "Lon Lat Year SID PID VID Pft Lifeform LeafType PhenType Pathway Age FPC LAI ShadeType N DBH Height Crownarea\n");
+        fprintf(out_vegstruct, "Lon Lat Year SID PID VID Pft Lifeform LeafType PhenType Pathway Age LAI ShadeType N DBH Height Crownarea\n");
       }
     }
   }
@@ -120,7 +120,6 @@ namespace GuessOutput {
               fprintf(out_vegstruct, " %i ",    indiv.pft.phenology);
               fprintf(out_vegstruct, " %i ",    indiv.pft.pathway);
               fprintf(out_vegstruct, " %4.0f ", indiv.age);
-              fprintf(out_vegstruct, " %6.2f ", indiv.fpc);
               fprintf(out_vegstruct, " %6.2f ", indiv.lai);
               if (indiv.pft.lifeform == TREE) {
                 fprintf(out_vegstruct, " %4.1f ", indiv.pft.alphar);
@@ -165,7 +164,6 @@ The code writes the following output columns including a header line, if the par
 | PhenType    | integer   | value of Pft phenology (enum {NOPHENOLOGY, EVERGREEN, RAINGREEN, SUMMERGREEN, CROPGREEN, ANY}) |
 | Pathway     | integer   | value of Pft pathway (enum {NOPATHWAY, C3, C4}) |
 | Age         | integer   | value of cohort age |
-| FPC         | numeric   | value of cohort foliar projected cover |
 | LAI         | numeric   | value of cohort leaf area index |
 | ShadeType   | numeric   | value of cohort alphar as a measure for shade tolerance class. Is ranked in the package. |
 | N           | integer   | number of individual per cohort. In individual mode this is 1. |
@@ -183,10 +181,26 @@ For visualization each patch in a stand is represented by a hexagon with an indi
 
 The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes.
 
+## Global options
+
+When the library is loaded a few global default options are set to reduce the number of function parameters passed through several cascading function calls. These options can be modified by `dgvm3d.options`.
+
+| Name | Value | Function |
+|------|-------|-----------------------------------------------------------|
+| patch.area | 1000 | The area of one patch in m^2 |
+| samples | c(10, 10) | [1] Number of samples to determin next tree position; [2] max. repetition if no suitable position is found |
+| overlap | 0.5 | fraction of crownradii to overlap with nearest neighbour during establishment |
+| sort.column | c("Crownarea", "descending") | Determine the position for the largest trees first, then fill the gaps |
+| establish.method | "random" | How to choose from the above sample for the next tree position |
+| beta.parameters | c(1.1, 0.9) | shape parameters for beta random value to determine the distance from the patch center |
+| color.column | "ShadeType" | which data column to use for the canopy color |
+| verbose | TRUE | print some messages |
+
+
 ## Establish the individual trees
 
 The individual trees are by default randomly distributed within the inner radius of each patch hexagon (`establishPatch`). 
-With the function 
+With the function `snapshot` 
 
 
 # References

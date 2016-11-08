@@ -4,7 +4,7 @@
 \alias{snapshot}
 \title{Visualize a snapshot of patches.}
 \usage{
-snapshot(vegetation, stand.id = 0, patch.id = NULL, year = 2000)
+snapshot(vegetation, stand.id = 1, patch.id = NULL, year = 2000)
 }
 \arguments{
 \item{vegetation}{the data.frame of individual trees}
@@ -20,6 +20,9 @@ a \code{\link{Stand-class}}.
 }
 \description{
 Visualize a snapshot of patches.
+}
+\examples{
+stand=snapshot(dgvm3d.succession)
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

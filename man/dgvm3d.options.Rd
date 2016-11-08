@@ -4,12 +4,14 @@
 \alias{dgvm3d.options}
 \title{set some variables used in cascading functions}
 \usage{
-dgvm3d.options(x = NULL, samples = NULL, overlap = NULL,
-  sort.column = NULL, establish.method = NULL,
-  establish.beta.parameters = NULL, verbose = NULL)
+dgvm3d.options(x = NULL, patch.area = NULL, samples = NULL,
+  overlap = NULL, sort.column = NULL, establish.method = NULL,
+  establish.beta.parameters = NULL, color.column = NULL, verbose = NULL)
 }
 \arguments{
 \item{x}{query character 'x' for its value.}
+
+\item{patch.area}{the patch area in m^2.}
 
 \item{samples}{2 element vector. 1. number of samples to determine the next trees position. 2. max. number to repeat the sampling}
 
@@ -19,7 +21,9 @@ dgvm3d.options(x = NULL, samples = NULL, overlap = NULL,
 
 \item{establish.method}{where to place the next tree: 'random', 'min' or 'max' of valid sampled new positions.}
 
-\item{establish.beta.parameters}{shape parameters for beta random value to get the distance from the patch center. This should be biased away from the center c(0.97, 1.4), otherwise trees tend to accumulate in the center.}
+\item{establish.beta.parameters}{shape parameters for beta random value to get the distance from the patch center. For 'random' it should be biased away from the center c(1.03, 0.9), whereas for 'max' this should be biased towards from the center c(0.97, 1.4), otherwise trees tend to accumulate in the center.}
+
+\item{color.column}{name of the vegetation column to create the canopy colors from.}
 
 \item{verbose}{print some information.}
 }

@@ -12,6 +12,8 @@ This defines the basic class
 \describe{
 \item{\code{id}}{unique ID}
 
+\item{\code{pid}}{the patch id in the vegtation data.frame}
+
 \item{\code{soil}}{vector of soil layer depth}
 
 \item{\code{vegetation}}{the vegetation data.frame}

@@ -14,9 +14,11 @@ One model stand consisting of several patches
 
 \item{\code{area}}{the area of each patch}
 
+\item{\code{year}}{the year of the current patch vegetation}
+
 \item{\code{hexagon}}{a \code{\link{TriangBody-class}} Hexagon definition used for all patches}
 
-\item{\code{arrangement}}{either 'linear' or 'square'}
+\item{\code{layout}}{either 'linear' or 'square'}
 
 \item{\code{composition}}{either 'spatial' or 'temporal'. Has no effect yet.}
 

@@ -3,11 +3,10 @@
 #' @details
 #' If soil is a matrix, the number of columns must be equal to npatch. In that way each patch can have its own soil depth.
 #' The patches represented as hexagons can either be arranged in a square or in a line. The later one for example to represent a time series (succession).
-#' @param area patch size area
 #' @param npatch number of patches
 #' @param soil a vector or matrix of soil depths.
 #' @param z the height of each patch.
-#' @param arrangement patch arrangement ('square' or 'linear'), a two element vector with number of rows/colums. A matrix for layout (not yet ready).
+#' @param layout patch layout ('square' or 'linear'), a two element vector with number of rows/colums. A matrix for layout (not yet ready).
 #' @param composition 'spatial' or 'temporal'
 #' @param dist the fractional distance between the hexagons
 #' @return a \code{\link{Stand-class}}
@@ -20,9 +19,9 @@
 #' stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)))
 #' stand3D(stand)
 #'
-#' stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)), arrangement='linear')
+#' stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)), layout='linear')
 #' stand3D(stand)
-initStand <- function(area=1000, npatch=1, soil=c(0, -0.5, -1.5), z=0, arrangement="square", composition="spatial", dist=0.05) {
+initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="square", composition="spatial", dist=0.05) {
   if (is.matrix(soil)) {
     if (ncol(soil) != npatch)
       stop("'npatch' and 'ncol(soil)' differ!")
@@ -36,21 +35,25 @@ initStand <- function(area=1000, npatch=1, soil=c(0, -0.5, -1.5), z=0, arrangeme
     stop("'z' must be either of length 'npatch' or 1!")
   }
 
-  hexagon <- getHexagon(area=area, z=c(0, -1))
-  if (typeof(arrangement) == "character") {
-    if (arrangement=="square") {
+  hexagon <- getHexagon(area=dgvm3d.options("patch.area"), z=c(0, -1))
+  if (typeof(layout) == "character") {
+    if (layout=="square") {
       nxy.max = ceiling(sqrt(npatch))
       nxy.min = floor(sqrt(npatch))
+      if (npatch==3)
+        nxy.min=2
+      layout = c(nxy.min, nxy.max)
     } else {
       nxy.min = npatch
       nxy.max = 1
+      layout = c(nxy.min, nxy.max)
     }
-  } else if (typeof(arrangement) == "numeric" && is.vector(arrangement)) {
-    nxy.min = arrangement[2]
-    nxy.max = arrangement[1]
-  } else if (typeof(arrangement) == "numeric" && is.matrix(arrangement)) {
-    nxy.min = nrow(arrangement)
-    nxy.max = ncol(arrangement)
+  } else if (typeof(layout) == "integer" && is.vector(layout)) {
+    nxy.min = layout[2]
+    nxy.max = layout[1]
+  } else if (typeof(layout) == "integer" && is.matrix(layout)) {
+    nxy.min = nrow(layout)
+    nxy.max = ncol(layout)
     stop("Not yet ready!")
   }
 
@@ -86,8 +89,60 @@ initStand <- function(area=1000, npatch=1, soil=c(0, -0.5, -1.5), z=0, arrangeme
       }
     }
   }
-  return(new("Stand", area=area, hexagon=hexagon, arrangement=arrangement, composition=composition, patch.pos=t(patch.pos), patches=patches))
+  return(new("Stand", area=dgvm3d.options("patch.area"), year=year, hexagon=hexagon, layout=layout, composition=composition, patch.pos=t(patch.pos), patches=patches))
 }
+
+
+
+#' Remove/add trees with a new vegetation data.frame
+#'
+#' Removes those individuums with the shortest distance to any neighbour and adds new individuums randomly.
+#'
+#' @param stand stand to update
+#' @param vegetation new vegetation data.frame
+#' @param year the next year
+#' @return stand
+#' @export
+updateStand <- function(stand, vegetation, year=NULL) {
+  Year=PID=NULL
+  old.year = stand@year
+  new.years = sort(unique(vegetation$Year))
+  if (all(new.years <= old.year))
+    stop("No larger year in vegetation data.frame!")
+  if (!is.null(year)) {
+    if (all(new.years != year))
+      stop(paste0("Given 'year' (", year, ") not in 'vegetation data.frame!"))
+  } else {
+    year = new.years[which(new.years>old.year)[1]]
+  }
+  vegetation = subset(vegetation, Year==year)
+  stand@year = year
+
+  for ( i in 1:length(stand@patches)) {
+    new.patch.veg = subset(vegetation, PID==stand@patches[[i]]@pid)
+    if (nrow(new.patch.veg)>0) {
+      new.patch.veg$x = NA
+      new.patch.veg$y = NA
+      new.patch.veg$dnn = NA
+      old.vid = unique(stand@patches[[i]]@vegetation$VID)
+      if (length(old.vid) > 0) {
+        for (j in 1:length(old.vid)) {
+          remain = sum(new.patch.veg$VID==old.vid[j])
+          old.trees = stand@patches[[i]]@vegetation[stand@patches[[i]]@vegetation$VID==old.vid[j], ]
+          old.trees = old.trees[with(old.trees, order(-dnn)), ]
+          new.patch.veg[new.patch.veg$VID==old.vid[j], "x"] = old.trees$x[1:remain]
+          new.patch.veg[new.patch.veg$VID==old.vid[j], "y"] = old.trees$y[1:remain]
+        }
+      }
+      stand@patches[[i]]@vegetation = establishPatch(new.patch.veg, stand@hexagon@supp$inner.radius)
+    } else {
+      stand@patches[[i]]@vegetation = data.frame()
+    }
+  }
+  return(stand)
+}
+
+
 
 #' 3D view of the stands
 #'

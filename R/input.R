@@ -1,5 +1,7 @@
 #' Prepare the output table from LPJ-GUESS for visualization
 #'
+#' Stand ID and Patch ID start counting at 0 in the standard output. Here the value of 1 is added, to be consistent with R.
+#'
 #' @param file the filename to be read
 #' @param stand.id the stand ID default to 0.
 #' @param patch.id if a single patch should be used (default all)
@@ -11,11 +13,13 @@
 #' @importFrom utils read.table
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
-read.LPJ <- function(file="vegstruct.out", stand.id=0, patch.id=NULL, year=NULL, lon=NULL, lat=NULL, grass=FALSE) {
+read.LPJ <- function(file="vegstruct.out", stand.id=1, patch.id=NULL, year=NULL, lon=NULL, lat=NULL, grass=FALSE) {
   ## location.names <- read.table("/Users/jsteinkamp/WIP/Establishment/output/gridlist.txt", sep="\t", col.names=c("Lon", "Lat", "Name"))
   ## file = "/Users/jsteinkamp/WIP/Establishment/output/vegstruct.out"
   SID=PID=Year=Lon=Lat=Lifeform=NULL
   vegstruct <- read.table(file, header=TRUE)
+  vegstruct$SID =   vegstruct$SID + 1
+  vegstruct$PID =   vegstruct$PID + 1
   ## apply the filters
   vegstruct <- subset(vegstruct, SID==stand.id)
   if (!is.null(patch.id))

@@ -4,7 +4,7 @@
 \alias{read.LPJ}
 \title{Prepare the output table from LPJ-GUESS for visualization}
 \usage{
-read.LPJ(file = "vegstruct.out", stand.id = 0, patch.id = NULL,
+read.LPJ(file = "vegstruct.out", stand.id = 1, patch.id = NULL,
   year = NULL, lon = NULL, lat = NULL, grass = FALSE)
 }
 \arguments{
@@ -26,7 +26,7 @@ read.LPJ(file = "vegstruct.out", stand.id = 0, patch.id = NULL,
 individual vegetation data.frame with equal indivuduals from each cohort.
 }
 \description{
-Prepare the output table from LPJ-GUESS for visualization
+Stand ID and Patch ID start counting at 0 in the standard output. Here the value of 1 is added, to be consistent with R.
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

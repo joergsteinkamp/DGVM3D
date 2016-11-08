@@ -7,10 +7,10 @@ Authors@R: c(
     )
 URL: https://github.com/joergsteinkamp/DGVM3D
 BugReports: https://github.com/joergsteinkamp/DGVM3D/issues
-Description: This is a visualization tool for simulated vegetation
-    structure/succession in space and/or time of forest gap models. Those models
-    should contain either individual trees or cohorts (e.g. LPJ-GUESS: Smith et al.
-    (2001, 2014)).
+Description: This is a visualization tool for simulated vegetation structure/
+    succession in space and/or time of forest gap models. Those models should
+    contain either individual trees or cohorts (e.g. LPJ-GUESS: Smith et al. (2001,
+    2014)).
 License: GPL | file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -21,11 +21,11 @@ Collate:
     'geometry.R'
     'input.R'
     'misc.R'
-    'patch.R'
     'stand.R'
     'vegetation.R'
     'visualize.R'
 Depends:
+    R (>= 2.10),
     rgl,
     methods,
     stats,
