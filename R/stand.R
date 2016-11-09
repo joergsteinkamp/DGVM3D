@@ -4,6 +4,7 @@
 #' If soil is a matrix, the number of columns must be equal to npatch. In that way each patch can have its own soil depth.
 #' The patches represented as hexagons can either be arranged in a square or in a line. The later one for example to represent a time series (succession).
 #' @param npatch number of patches
+#' @param year the initialization year
 #' @param soil a vector or matrix of soil depths.
 #' @param z the height of each patch.
 #' @param layout patch layout ('square' or 'linear'), a two element vector with number of rows/colums. A matrix for layout (not yet ready).
@@ -36,10 +37,12 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
   }
 
   hexagon <- getHexagon(area=dgvm3d.options("patch.area"), z=c(0, -1))
+
   if (typeof(layout) == "character") {
     if (layout=="square") {
       nxy.max = ceiling(sqrt(npatch))
       nxy.min = floor(sqrt(npatch))
+      ## with 3 patches the above got the values 2 and 1, so 3 was never reached in the loop below
       if (npatch==3)
         nxy.min=2
       layout = c(nxy.min, nxy.max)
@@ -89,6 +92,7 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
       }
     }
   }
+
   return(new("Stand", area=dgvm3d.options("patch.area"), year=year, hexagon=hexagon, layout=layout, composition=composition, patch.pos=t(patch.pos), patches=patches))
 }
 
@@ -126,6 +130,7 @@ updateStand <- function(stand, vegetation, year=NULL) {
       new.patch.veg$dnn = NA
       old.vid = unique(stand@patches[[i]]@vegetation$VID)
       if (length(old.vid) > 0) {
+        ## removal of killed individuals
         for (j in 1:length(old.vid)) {
           remain = sum(new.patch.veg$VID==old.vid[j])
           old.trees = stand@patches[[i]]@vegetation[stand@patches[[i]]@vegetation$VID==old.vid[j], ]
@@ -134,7 +139,7 @@ updateStand <- function(stand, vegetation, year=NULL) {
           new.patch.veg[new.patch.veg$VID==old.vid[j], "y"] = old.trees$y[1:remain]
         }
       }
-      stand@patches[[i]]@vegetation = establishPatch(new.patch.veg, stand@hexagon@supp$inner.radius)
+      stand@patches[[i]]@vegetation = establishVegetation(new.patch.veg, stand@hexagon@supp$inner.radius)
     } else {
       stand@patches[[i]]@vegetation = data.frame()
     }

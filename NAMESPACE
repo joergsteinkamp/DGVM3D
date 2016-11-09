@@ -2,7 +2,7 @@
 
 export(dgvm3d.options)
 export(drawEllipsoid)
-export(establishPatch)
+export(establishVegetation)
 export(gapless.rank)
 export(getCone)
 export(getHexagon)

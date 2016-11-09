@@ -12,7 +12,7 @@
 
 <meta name="author" content="Joerg Steinkamp" />
 
-<meta name="date" content="2016-11-08" />
+<meta name="date" content="2016-11-09" />
 
 <title>Introduction to DGVM3D</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to DGVM3D</h1>
 <h4 class="author"><em>Joerg Steinkamp</em></h4>
-<h4 class="date"><em>2016-11-08</em></h4>
+<h4 class="date"><em>2016-11-09</em></h4>
 
 
 
@@ -90,11 +90,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">///</span> <span class="er">$</span>Date: Thu Nov  <span class="dv">3</span> <span class="dv">11</span>:<span class="dv">15</span>:<span class="dv">37</span> CET <span class="dv">2016</span> <span class="er">$</span>
 <span class="co">///</span>
 <span class="co">///////////////////////////////////////////////////////////////////////////////////////</span>
-<span class="ot">#ifndef LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
-<span class="ot">#define LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
-<span class="ot">#include &quot;outputmodule.h&quot;</span>
-<span class="ot">#include &quot;outputchannel.h&quot;</span>
-<span class="ot">#include &quot;gutil.h&quot;</span>
+<span class="pp">#ifndef LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
+<span class="pp">#define LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
+<span class="pp">#include </span><span class="im">&quot;outputmodule.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;outputchannel.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;gutil.h&quot;</span>
 <span class="kw">namespace</span> GuessOutput {
   <span class="kw">class</span> VegstructOutput : <span class="kw">public</span> OutputModule {
   <span class="kw">public</span>:
@@ -110,7 +110,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
     FILE *out_vegstruct;
   };
 }
-<span class="ot">#endif</span></code></pre></div>
+<span class="pp">#endif</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">///////////////////////////////////////////////////////////////////////////////////////</span>
 <span class="er">/// \file vegstructoutput.cpp</span>
 <span class="er">/// \brief Output module for patch based vegetation structure</span>
@@ -119,10 +119,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">///</span> <span class="er">$</span>Date: Thu Nov  <span class="dv">3</span> <span class="dv">11</span>:<span class="dv">15</span>:<span class="dv">37</span> CET <span class="dv">2016</span> <span class="er">$</span>
 <span class="co">///</span>
 <span class="co">///////////////////////////////////////////////////////////////////////////////////////</span>
-<span class="ot">#include &quot;config.h&quot;</span>
-<span class="ot">#include &quot;vegstructoutput.h&quot;</span>
-<span class="ot">#include &quot;parameters.h&quot;</span>
-<span class="ot">#include &quot;guess.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;config.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;vegstructoutput.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;parameters.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;guess.h&quot;</span>
 <span class="kw">namespace</span> GuessOutput {
     REGISTER_OUTPUT_MODULE(<span class="st">&quot;vegstruct&quot;</span>, VegstructOutput)
     VegstructOutput::VegstructOutput() {
@@ -131,65 +131,65 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   VegstructOutput::~VegstructOutput() {
   }
   <span class="dt">void</span> VegstructOutput::init() {
-    <span class="kw">if</span> (file_vegstruct != <span class="st">&quot;&quot;</span>) {
-      std::string full_path = (<span class="dt">char</span>*) file_vegstruct;
+    <span class="cf">if</span> (file_vegstruct != <span class="st">&quot;&quot;</span>) {
+      <span class="bu">std::</span>string full_path = (<span class="dt">char</span>*) file_vegstruct;
       out_vegstruct = fopen(full_path.c_str(), <span class="st">&quot;w&quot;</span>);
-      <span class="kw">if</span> (out_vegstruct == NULL) {
-        fail(<span class="st">&quot;Could not open </span><span class="ch">%s</span><span class="st"> for output</span><span class="ch">\n</span><span class="st">&quot;</span>                         \
+      <span class="cf">if</span> (out_vegstruct == NULL) {
+        fail(<span class="st">&quot;Could not open </span><span class="sc">%s</span><span class="st"> for output</span><span class="sc">\n</span><span class="st">&quot;</span>                         \
              <span class="st">&quot;Close the file if it is open in another application&quot;</span>,
              full_path.c_str());
-      } <span class="kw">else</span> {
-        dprintf(<span class="st">&quot;dummy</span><span class="ch">\n</span><span class="st">&quot;</span>);
-        fprintf(out_vegstruct, <span class="st">&quot;Lon Lat Year SID PID VID Pft Lifeform LeafType PhenType Pathway Age LAI ShadeType N DBH Height Crownarea</span><span class="ch">\n</span><span class="st">&quot;</span>);
+      } <span class="cf">else</span> {
+        dprintf(<span class="st">&quot;dummy</span><span class="sc">\n</span><span class="st">&quot;</span>);
+        fprintf(out_vegstruct, <span class="st">&quot;Lon Lat Year SID PID VID Pft Lifeform LeafType PhenType Pathway Age LAI ShadeType N DBH Height Crownarea</span><span class="sc">\n</span><span class="st">&quot;</span>);
       }
     }
   }
   <span class="dt">void</span> VegstructOutput::outdaily(Gridcell&amp; gridcell) {
-    <span class="kw">return</span>;
+    <span class="cf">return</span>;
   }
   <span class="dt">void</span> VegstructOutput::outannual(Gridcell&amp; gridcell) {
-    <span class="kw">if</span> (file_vegstruct == <span class="st">&quot;&quot;</span>)
-      <span class="kw">return</span>;
-    <span class="kw">if</span> (date.year &gt;= nyear_spinup<span class="dv">-50</span>) {
+    <span class="cf">if</span> (file_vegstruct == <span class="st">&quot;&quot;</span>)
+      <span class="cf">return</span>;
+    <span class="cf">if</span> (date.year &gt;= nyear_spinup<span class="dv">-50</span>) {
       <span class="dt">double</span> lon = gridcell.get_lon();
       <span class="dt">double</span> lat = gridcell.get_lat();
       Gridcell::iterator gc_itr = gridcell.begin();
-      <span class="kw">while</span> (gc_itr != gridcell.end()) {
+      <span class="cf">while</span> (gc_itr != gridcell.end()) {
         Stand&amp; stand = *gc_itr;
         stand.firstobj();
-        <span class="kw">while</span> (stand.isobj) {
+        <span class="cf">while</span> (stand.isobj) {
           Patch&amp; patch = stand.getobj();
           Vegetation&amp; vegetation = patch.vegetation;
           vegetation.firstobj();
-          <span class="kw">while</span> (vegetation.isobj) {
+          <span class="cf">while</span> (vegetation.isobj) {
             Individual&amp; indiv=vegetation.getobj();
             <span class="co">// guess2008 - alive check added</span>
-            <span class="kw">if</span> (indiv.id != <span class="dv">-1</span> &amp;&amp; indiv.alive) {
-              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="ch">%7.2f</span><span class="st"> </span><span class="ch">%6.2f</span><span class="st"> </span><span class="ch">%4i</span><span class="st"> &quot;</span>, lon, lat, date.get_calendar_year() );
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    stand.id);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    patch.id);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.id);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%10s</span><span class="st"> &quot;</span>,  (<span class="dt">char</span>*) indiv.pft.name);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.lifeform);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.leafphysiognomy);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.phenology);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.pathway);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.0f</span><span class="st"> &quot;</span>, indiv.age);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%6.2f</span><span class="st"> &quot;</span>, indiv.lai);
-              <span class="kw">if</span> (indiv.pft.lifeform == TREE) {
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.1f</span><span class="st"> &quot;</span>, indiv.pft.alphar);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.0f</span><span class="st"> &quot;</span>, indiv.densindiv * patcharea);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%7.2f</span><span class="st"> &quot;</span>, pow(indiv.height/indiv.pft.k_allom2,<span class="fl">1.0</span>/indiv.pft.k_allom3));
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%8.2f</span><span class="st"> &quot;</span>, indiv.height);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%8.2f</span><span class="st"> &quot;</span>, indiv.crownarea);
-              } <span class="kw">else</span> <span class="kw">if</span> (indiv.pft.lifeform == GRASS) {
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.1f</span><span class="st"> &quot;</span>, <span class="fl">-1.0</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,     <span class="dv">1</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
+            <span class="cf">if</span> (indiv.id != <span class="dv">-1</span> &amp;&amp; indiv.alive) {
+              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="sc">%7.2f</span><span class="st"> </span><span class="sc">%6.2f</span><span class="st"> </span><span class="sc">%4i</span><span class="st"> &quot;</span>, lon, lat, date.get_calendar_year() );
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    stand.id);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    patch.id);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.id);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%10s</span><span class="st"> &quot;</span>,  (<span class="dt">char</span>*) indiv.pft.name);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.lifeform);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.leafphysiognomy);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.phenology);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.pathway);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.0f</span><span class="st"> &quot;</span>, indiv.age);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%6.2f</span><span class="st"> &quot;</span>, indiv.lai);
+              <span class="cf">if</span> (indiv.pft.lifeform == TREE) {
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.1f</span><span class="st"> &quot;</span>, indiv.pft.alphar);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.0f</span><span class="st"> &quot;</span>, indiv.densindiv * patcharea);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%7.2f</span><span class="st"> &quot;</span>, pow(indiv.height/indiv.pft.k_allom2,<span class="fl">1.0</span>/indiv.pft.k_allom3));
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%8.2f</span><span class="st"> &quot;</span>, indiv.height);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%8.2f</span><span class="st"> &quot;</span>, indiv.crownarea);
+              } <span class="cf">else</span> <span class="cf">if</span> (indiv.pft.lifeform == GRASS) {
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.1f</span><span class="st"> &quot;</span>, <span class="dv">-1</span><span class="fl">.0</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,     <span class="dv">1</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
               }
-              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>);
             }
             vegetation.nextobj();
           }
@@ -313,10 +313,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="dgvm3d-workflow" class="section level1">
 <h1>DGVM3D workflow</h1>
 <p>For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches.</p>
-<div id="get-the-data" class="section level2">
-<h2>Get the data</h2>
-<p>The function <code>read.LPJ</code> reads the above output if the output and extend cohorts to <code>N</code> average individuals, which will be rendered in varying shapes and colors based on the other attributes.</p>
-</div>
 <div id="global-options" class="section level2">
 <h2>Global options</h2>
 <p>When the library is loaded a few global default options are set to reduce the number of function parameters passed through several cascading function calls. These options can be modified by <code>dgvm3d.options</code>.</p>
@@ -377,9 +373,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tbody>
 </table>
 </div>
+<div id="get-the-data" class="section level2">
+<h2>Get the data</h2>
+<p>The function <code>read.LPJ</code> reads the above output if the output and extend cohorts to <code>N</code> average individuals, which will be rendered in varying shapes and colors based on the other attributes.</p>
+</div>
 <div id="establish-the-individual-trees" class="section level2">
 <h2>Establish the individual trees</h2>
-<p>The individual trees are by default randomly distributed within the inner radius of each patch hexagon (<code>establishPatch</code>). With the function <code>snapshot</code></p>
+<p>The individual trees are by default randomly distributed within the inner radius of each patch hexagon with <code>establishVegetation</code>.</p>
+</div>
+<div id="visualisation" class="section level2">
+<h2>Visualisation</h2>
+<p><code>stand3D</code> renders the soil hexagons in a rgl window and <code>plant3D</code> renders the trees planted with <code>establishVegetation</code>.</p>
+</div>
+<div id="overview-applications" class="section level2">
+<h2>Overview Applications</h2>
+<p>With the function <code>snapshot</code> the trees present at the given year and for the given patches will be rendered. The function <code>succession</code> keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function <code>updateStand</code>, which calls <code>establishVegetation</code> with the next years vegetation data.frame to distribute new trees.</p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

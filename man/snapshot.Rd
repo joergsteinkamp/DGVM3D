@@ -22,7 +22,7 @@ a \code{\link{Stand-class}}.
 Visualize a snapshot of patches.
 }
 \examples{
-stand=snapshot(dgvm3d.succession)
+stand=snapshot(dgvm3d.succession[[1]])
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

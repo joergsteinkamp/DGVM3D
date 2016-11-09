@@ -10,6 +10,8 @@ initStand(npatch = 1, year = 2000, soil = c(0, -0.5, -1.5), z = 0,
 \arguments{
 \item{npatch}{number of patches}
 
+\item{year}{the initialization year}
+
 \item{soil}{a vector or matrix of soil depths.}
 
 \item{z}{the height of each patch.}

@@ -177,10 +177,6 @@ So far not all of those values are used in the code. However, they seemed to be 
 
 For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches. 
 
-## Get the data
-
-The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes.
-
 ## Global options
 
 When the library is loaded a few global default options are set to reduce the number of function parameters passed through several cascading function calls. These options can be modified by `dgvm3d.options`.
@@ -196,11 +192,22 @@ When the library is loaded a few global default options are set to reduce the nu
 | color.column | "ShadeType" | which data column to use for the canopy color |
 | verbose | TRUE | print some messages |
 
+## Get the data
+
+The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes.
 
 ## Establish the individual trees
 
-The individual trees are by default randomly distributed within the inner radius of each patch hexagon (`establishPatch`). 
-With the function `snapshot` 
+The individual trees are by default randomly distributed within the inner radius of each patch hexagon with `establishVegetation`.
+
+## Visualisation
+
+`stand3D` renders the soil hexagons in a rgl window and `plant3D` renders the trees planted with `establishVegetation`.
+
+## Overview Applications
+
+With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishVegetation` with the next years vegetation data.frame to distribute new trees. 
+
 
 
 # References

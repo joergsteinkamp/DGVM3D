@@ -9,6 +9,9 @@
 dgvm3d.locations
 }
 \description{
+This is the default test gridlist shipped with the LPJ-GUESS source code.
+}
+\details{
 @name dgvm3d.locations
  @docType data
  @author Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

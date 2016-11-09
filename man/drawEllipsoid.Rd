@@ -23,6 +23,6 @@ drawEllipsoid(rx = 1, ry = 1, rz = 1, ctr = c(0, 0, 0), n = 72,
 \item{opacity}{the alpha value for the surface}
 }
 \description{
-I copied and modified it from 'Code demonstations' rgl::shapes3d (search with "??ellipsoid" on commandline)
+I copied and modified it from 'Code demonstations' rgl::shapes3d (searched with "??ellipsoid" on commandline)
 }
 

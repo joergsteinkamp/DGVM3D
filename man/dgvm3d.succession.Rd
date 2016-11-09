@@ -3,12 +3,15 @@
 \docType{data}
 \name{dgvm3d.succession}
 \alias{dgvm3d.succession}
-\title{timeseries data from 1865-2005 is 5 year steps}
-\format{An object of class \code{data.frame} with 42619 rows and 19 columns.}
+\title{timeseries data from 1865-2005 in 5 year steps}
+\format{An object of class \code{list} of length 13.}
 \usage{
 dgvm3d.succession
 }
 \description{
+A list of 13 data.frames with simulation results of a model run without random patch disturbance at the 13 locations defined in \code{\link{dgvm3d.locations}}.
+}
+\details{
 @name dgvm3d.succession
  @docType data
  @author Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

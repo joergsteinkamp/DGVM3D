@@ -170,7 +170,7 @@ getCone <- function(radius=0.5, height=1, faces=72, close=FALSE) {
 
 #' draw a quadrilateral ellipsoid
 #'
-#' I copied and modified it from 'Code demonstations' rgl::shapes3d (search with "??ellipsoid" on commandline)
+#' I copied and modified it from 'Code demonstations' rgl::shapes3d (searched with "??ellipsoid" on commandline)
 #'
 #' @param rx radius in x direction
 #' @param ry radius in y direction
