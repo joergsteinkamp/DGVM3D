@@ -1,7 +1,7 @@
 Package: DGVM3D
 Type: Package
 Title: 3D forest simulation visualization tool
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Steinkamp", "Joerg", , "steinkamp.joerg@gmail.com", c("aut", "cre"))
     )

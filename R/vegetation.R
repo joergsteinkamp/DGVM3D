@@ -183,18 +183,18 @@ plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
   return(stand)
 }
 
-#' draw a single tree
-#'
-#' @param tree one column of the \code{\link{Patch-class}} vegetation data.frame slot
-#' @param offset x/y center and surface (z) of the respective patch
-#' @param col crown colors for the shade classes
-#' @param opacity alpha value for the tree crown (heavy impacting performance)
-#' @param faces number of faces/triangles used per stem and tree cone
-#' @return None
-#' @import rgl
-#' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
-tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opacity=1, faces=29) {
+## draw a single tree
+##
+## @param tree one column of the \code{\link{Patch-class}} vegetation data.frame slot
+## @param offset x/y center and surface (z) of the respective patch
+## @param col crown colors for the shade classes
+## @param opacity alpha value for the tree crown (heavy impacting performance)
+## @param faces number of faces/triangles used per stem and tree cone 3-times for ellipsoid.
+## @return None
+## @import rgl
+## @export
+## @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opacity=1, faces=19) {
   color.column = dgvm3d.options("color.column")
   crownRadius = sqrt(tree$Crownarea/pi)
   if (tree$LeafType==1) {
@@ -212,10 +212,10 @@ tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opa
                                 tree$x + offset[1], tree$y + offset[2], 0.34 * tree$Height + offset[3]),
                               nrow=2, byrow=TRUE),
                        rep(tree$DBH/2, 2), sides=faces), col="#8B4513")
-    drawEllipsoid(rx=crownRadius, ry=crownRadius, rz=0.33*tree$Height,
-                 ctr=c(tree$x + offset[1],
-                       tree$y + offset[2],
-                       tree$Height * 0.67 + offset[3]),
-                 n=faces, col=col[eval(parse(text=paste0("tree$", color.column)))], opacity=opacity)
+    ellipsoid = getEllipsoid(radius=crownRadius, height=0.66*tree$Height, faces=3*faces)
+    ellipsoid@vertices[,1] = ellipsoid@vertices[,1] + tree$x + offset[1]
+    ellipsoid@vertices[,2] = ellipsoid@vertices[,2] + tree$y + offset[2]
+    ellipsoid@vertices[,3] = ellipsoid@vertices[,3] + 0.25 * tree$Height + offset[3]
+    triangles3d(ellipsoid@vertices[ellipsoid@id, ], col=col[eval(parse(text=paste0("tree$",color.column)))], alpha=opacity)
   }
 }
