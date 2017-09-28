@@ -41,4 +41,3 @@ for (i in 1:nrow(dgvm3d.locations)) {
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }
-

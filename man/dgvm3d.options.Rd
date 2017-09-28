@@ -33,4 +33,3 @@ set some variables used in cascading functions
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }
-

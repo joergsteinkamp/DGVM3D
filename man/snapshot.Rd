@@ -27,4 +27,3 @@ stand=snapshot(dgvm3d.succession[[1]])
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }
-

@@ -42,4 +42,3 @@ stand3D(stand)
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }
-

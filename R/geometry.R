@@ -1,38 +1,38 @@
-## fill a polygon (number of vertices) with triangles
-##
-## Method 'circular' (default) used the most triangles so far by going round in the circle and connecting the next three vertices. 'fix' uses vertex id 1 and creates triangles to all other points round. 'planar' always flips the triangles.
-##
-## @param n number of vertices.
-## @param method Method how to organize the triangles 'circular', 'planar', 'fix' and 'center'.
-## @param center The center vertex ID for the central point (method 'center' only; default NA).
-## @return A vector of indices for the polygon vertices.
-## @export
-## @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
-## @examples
-## par(mfrow=c(2,2))
-## for (m in c("plan", "fix", "center", "")) {
-##   faces <- sample(12:20, 1)
-##   vertices <- sapply(seq(0, 2*pi*(faces-1)/faces, length.out=faces), function(x){c(sin(x), cos(x))})
-##   tri = triClose(faces, method=m)
-##   if (m == "center") {
-##     tri[is.na(tri)] = faces + 1
-##     vertices = cbind(vertices, c(mean(vertices[1,]), mean(vertices[2, ])))
-##   }
-##   plot(vertices[1,1:faces], vertices[2,1:faces], type="b")
-##   text(x=1.05*vertices[1,], y=1.05*vertices[2,], labels=1:faces, adj=0.5)
-##   for (i in seq(1, length(tri), 3))
-##     polygon(vertices[1,tri[i:(i+2)]], vertices[2,tri[i:(i+2)]], col=rgb(runif(1), runif(1), runif(1)))
-## }
-##
-## par(mfrow=c(2,2))
-## for (faces in c(6, 12, 13, 25)) {
-##   vertices <- sapply(seq(0, 2*pi*(faces-1)/faces, length.out=faces), function(x){c(sin(x), cos(x))})
-##   tri = triClose(faces, method=m)
-##   plot(vertices[1,], vertices[2,], type="b")
-##   text(x=1.05*vertices[1,], y=1.05*vertices[2,], labels=1:faces, adj=0.5)
-##   for (i in seq(1, length(tri), 3))
-##     polygon(vertices[1,tri[i:(i+2)]], vertices[2,tri[i:(i+2)]], col=rgb(runif(1), runif(1), runif(1)))
-## }
+#' fill a polygon (number of vertices) with triangles
+#'
+#' Method 'circular' (default) used the most triangles so far by going round in the circle and connecting the next three vertices. 'fix' uses vertex id 1 and creates triangles to all other points round. 'planar' always flips the triangles.
+#'
+#' @param n number of vertices.
+#' @param method Method how to organize the triangles 'circular', 'planar', 'fix' and 'center'.
+#' @param center The center vertex ID for the central point (method 'center' only; default NA).
+#' @return A vector of indices for the polygon vertices.
+#' @export
+#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#' @examples
+#' par(mfrow=c(2,2))
+#' for (m in c("plan", "fix", "center", "")) {
+#'   faces <- sample(12:20, 1)
+#'   vertices <- sapply(seq(0, 2*pi*(faces-1)/faces, length.out=faces), function(x){c(sin(x), cos(x))})
+#'   tri = triClose(faces, method=m)
+#'   if (m == "center") {
+#'     tri[is.na(tri)] = faces + 1
+#'     vertices = cbind(vertices, c(mean(vertices[1,]), mean(vertices[2, ])))
+#'   }
+#'   plot(vertices[1,1:faces], vertices[2,1:faces], type="b")
+#'   text(x=1.05*vertices[1,], y=1.05*vertices[2,], labels=1:faces, adj=0.5)
+#'   for (i in seq(1, length(tri), 3))
+#'     polygon(vertices[1,tri[i:(i+2)]], vertices[2,tri[i:(i+2)]], col=rgb(runif(1), runif(1), runif(1)))
+#' }
+#'
+#' par(mfrow=c(2,2))
+#' for (faces in c(6, 12, 13, 25)) {
+#'   vertices <- sapply(seq(0, 2*pi*(faces-1)/faces, length.out=faces), function(x){c(sin(x), cos(x))})
+#'   tri = triClose(faces, method=m)
+#'   plot(vertices[1,], vertices[2,], type="b")
+#'   text(x=1.05*vertices[1,], y=1.05*vertices[2,], labels=1:faces, adj=0.5)
+#'   for (i in seq(1, length(tri), 3))
+#'     polygon(vertices[1,tri[i:(i+2)]], vertices[2,tri[i:(i+2)]], col=rgb(runif(1), runif(1), runif(1)))
+#' }
 triClose <- function(n, method="circular", center=NA){
   if (is.vector(n) && length(n) > 1) {
     ids <- n
@@ -92,16 +92,16 @@ triClose <- function(n, method="circular", center=NA){
 }
 
 ### calculate the vertices (x/y) and edges (from one index of vertices to the next)
-## Calculate a 3D hexagon
-##
-## @param area the area of the hexagon
-## @param outer.radius the outer radius of the hexagon
-## @param inner.radius the inner radius of the hexagon
-## @param z the height of the hexagon as 2 element vector
-## @return  a \code{\link{TriangBody-class}}
-## @importFrom methods new
-## @export
-## @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#' Calculate a 3D hexagon
+#'
+#' @param area the area of the hexagon
+#' @param outer.radius the outer radius of the hexagon
+#' @param inner.radius the inner radius of the hexagon
+#' @param z the height of the hexagon as 2 element vector
+#' @return  a \code{\link{TriangBody-class}}
+#' @importFrom methods new
+#' @export
+#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 getHexagon <- function(area=NA, outer.radius=NA, inner.radius=NA, z=c(0,1)) {
   if (!is.na(area)) {
     orad = sqrt(2.0 / 3.0 / sqrt(3.0) * area)
@@ -126,24 +126,23 @@ getHexagon <- function(area=NA, outer.radius=NA, inner.radius=NA, z=c(0,1)) {
   return(new("TriangBody", vertices=t(vertices), id=ind, supp=list(inner.radius=irad, outer.radius=orad, area=area)))
 }
 
-
-## calculate a cone
-##
-## @param radius the outer radius of the cone
-## @param height the height of the cone
-## @param faces number of triangular sides
-## @param close logical should the bottom side be closed.
-## @return a \code{\link{TriangBody-class}}
-## @importFrom methods new
-## @export
-## @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
-## @examples
-## if (require(rgl)) {
-##   cone=getCone(faces=13, close=TRUE)
-##   triangles3d(cone@vertices[cone@id, ], col="green")
-## } else {
-##   message("the library 'rgl' is required for this example!")
-## }
+#' calculate a cone
+#'
+#' @param radius the outer radius of the cone
+#' @param height the height of the cone
+#' @param faces number of triangular sides
+#' @param close logical should the bottom side be closed.
+#' @return a \code{\link{TriangBody-class}}
+#' @importFrom methods new
+#' @export
+#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#' @examples
+#' if (require(rgl)) {
+#'   cone=getCone(faces=13, close=TRUE)
+#'   triangles3d(cone@vertices[cone@id, ], col="green")
+#' } else {
+#'   message("the library 'rgl' is required for this example!")
+#' }
 getCone <- function(radius=0.5, height=1, faces=72, close=FALSE) {
   vertices <- sapply(seq(0, 2*pi*(faces-1)/faces, length.out=faces), function(x){c(sin(x)*radius, cos(x)*radius)})
   vertices = rbind(vertices, 0)
@@ -158,15 +157,15 @@ getCone <- function(radius=0.5, height=1, faces=72, close=FALSE) {
   return(new("TriangBody", vertices=t(vertices), id=ind, supp=list(radius=radius, height=height)))
 }
 
-## Calculate an ellipsoid
-##
-## @param radius x/y radius
-## @param height z height
-## @param faces approx. number of faces. If two values given: 1.) around z-axis; 2.) along z-axis.
-## @return a \code{\link{TriangBody-class}}
-## @importFrom methods new
-## @export
-## @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#' Calculate an ellipsoid
+#'
+#' @param radius x/y radius
+#' @param height z height
+#' @param faces approx. number of faces. If two values given: 1.) around z-axis; 2.) along z-axis.
+#' @return a \code{\link{TriangBody-class}}
+#' @importFrom methods new
+#' @export
+#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 getEllipsoid <- function(radius=0.5, height=1, faces=c(6, 3)) {
   ## faces: 2 * faces[1] * faces[2]
   if (length(faces)==1) {

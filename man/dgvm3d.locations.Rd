@@ -18,4 +18,3 @@ This is the default test gridlist shipped with the LPJ-GUESS source code.
  @keywords data
 }
 \keyword{datasets}
-

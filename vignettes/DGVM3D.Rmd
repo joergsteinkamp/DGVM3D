@@ -208,6 +208,4 @@ The individual trees are by default randomly distributed within the inner radius
 
 With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishVegetation` with the next years vegetation data.frame to distribute new trees. 
 
-
-
 # References

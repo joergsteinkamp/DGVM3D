@@ -20,7 +20,7 @@ This defines the basic class
 
 \item{\code{color.table}}{lookup table for coloring}
 }}
+
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }
-

@@ -30,4 +30,3 @@ stand@patches[[1]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['in
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }
-

@@ -42,4 +42,3 @@ dummy = plant3D(stand, 2)
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }
-
