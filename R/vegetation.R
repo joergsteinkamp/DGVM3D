@@ -10,6 +10,7 @@
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
+#' \dontrun{
 #' dgvm3d.options("default")
 #' stand = initStand(npatch=1)
 #' veg = data.frame(DBH=rep(0.5, 100))
@@ -18,6 +19,7 @@
 #' veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
 #' stand@patches[[1]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
+#' }
 establishVegetation <- function(vegetation=NULL, radius=1) {
   if (is.null(vegetation))
     stop("'vegetation' data.frame is missing!")
@@ -130,6 +132,7 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
 #' @export
 #' @import rgl
 #' @examples
+#' \dontrun{
 #' stand = initStand(npatch=2)
 #' stand3D(stand, 1)
 #' veg = data.frame(DBH=rep(0.4, 50))
@@ -148,6 +151,7 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
 #' veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 #' stand@patches[[2]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
 #' dummy = plant3D(stand, 2)
+#' }
 plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
   if (is.null(patch.id))
     patch.id <- 1:length(stand@patches)

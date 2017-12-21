@@ -18,6 +18,7 @@ the vegetation data.frame with the positions
 Randomly 'plant' the trees in the patch within a given radius.
 }
 \examples{
+\dontrun{
 dgvm3d.options("default")
 stand = initStand(npatch=1)
 veg = data.frame(DBH=rep(0.5, 100))
@@ -26,6 +27,7 @@ veg$Crownarea = veg$DBH * 10
 veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
 stand@patches[[1]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
+}
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

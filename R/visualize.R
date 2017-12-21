@@ -8,9 +8,11 @@
 #' @return a stand object
 #' @export
 #' @examples
+#' \dontrun{
 #' stand=succession(dgvm3d.succession[[3]], init.year=1865, years=c(1865, seq(1875, 2000, 25)), patch.id=sample(1:12, 3))
 #' stand3D(stand)
 #' stand=plant3D(stand)
+#' }
 succession <- function(vegetation, stand.id=1, patch.id=NULL, init.year=1901, years=seq(1950, 2000, 10)) {
   SID=PID=Year=NULL
   if (is.null(patch.id))
@@ -60,7 +62,9 @@ succession <- function(vegetation, stand.id=1, patch.id=NULL, init.year=1901, ye
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
+#' \dontrun{
 #' stand=snapshot(dgvm3d.succession[[1]])
+#' }
 snapshot <- function(vegetation, stand.id=1, patch.id=NULL, year=2000) {
   SID=PID=Year=NULL
   patch.ids = unique(vegetation$PID)

@@ -17,11 +17,13 @@
 #' @include classes.R
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
+#' \dontrun{
 #' stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)))
 #' stand3D(stand)
 #'
 #' stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)), layout='linear')
 #' stand3D(stand)
+#' }
 initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="square", composition="spatial", dist=0.05) {
   if (is.matrix(soil)) {
     if (ncol(soil) != npatch)

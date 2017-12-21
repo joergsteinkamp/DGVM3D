@@ -20,6 +20,7 @@ the updated stand
 Plant the trees of an already created patch/stand
 }
 \examples{
+\dontrun{
 stand = initStand(npatch=2)
 stand3D(stand, 1)
 veg = data.frame(DBH=rep(0.4, 50))
@@ -38,6 +39,7 @@ veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 stand@patches[[2]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
 dummy = plant3D(stand, 2)
+}
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}

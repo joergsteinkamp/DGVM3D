@@ -33,11 +33,13 @@ If soil is a matrix, the number of columns must be equal to npatch. In that way 
 The patches represented as hexagons can either be arranged in a square or in a line. The later one for example to represent a time series (succession).
 }
 \examples{
+\dontrun{
 stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)))
 stand3D(stand)
 
 stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)), layout='linear')
 stand3D(stand)
+}
 }
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
