@@ -81,10 +81,10 @@ i=6
 
 dgvm3d.succession[[i]][dgvm3d.succession[[i]]$Pft == "C3G" & dgvm3d.succession[[i]]$LAI > 1, c("Year", "PID", "LAI","Fireprob")]
 
-
-
-
-
+stand=succession(dgvm3d.succession[[6]], patch.id=c(2,12), init.year = 1860)
+stand=plant3D(stand)
+stand3D(stand)
+fire3D(stand)
 
 
 
