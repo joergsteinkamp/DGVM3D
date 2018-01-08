@@ -8,7 +8,7 @@
 #' @param turn twist the flame a bit
 #'
 #' @return list of vertices and ids to be used with rgl::triangles3d
-#' @export
+### @export
 #'
 #' @examples
 #' \dontrun{
@@ -29,8 +29,8 @@
 #'   turn   <- rnorm(1, sd=2)
 #'   ## radius/height reduction depending on distance from center
 #'   XXX=append(XXX, sqrt(sum(offset^2)) / inner.radius)
-#'   radius <- rlnorm(1, mean=-0.2 * (2 + sqrt(sum(offset^2))), sd=0.1)
-#'   dz     <- 0.5 + rlnorm(1, mean=-0.4 * sqrt(sum(offset^2)), sd=0.3)
+#'   radius <- rlnorm(1, meanlog=-0.2 * (2 + sqrt(sum(offset^2))), sdlog=0.1)
+#'   dz     <- 0.5 + rlnorm(1, meanlog=-0.4 * sqrt(sum(offset^2)), sdlog=0.3)
 #'   ## center (whitish)
 #'   x = getFlame(radius=radius, dz=dz*0.8, turn=turn,expand=0.5)
 #'   x$vertices$x = x$vertices$x + offset[1]
@@ -97,4 +97,71 @@ getFlame <- function(faces=10, radius=0.3, dz=1, z.exp=1.1, expand=1, turn=0) {
   }
 
   return(list(vertices=vertices, id=id))
+}
+
+
+#' add Fire to the stand or succession
+#'
+#' @param stand the stand object
+#' @param patch.id the ID of a patch if NULL all are used
+#' @param limit define a lower bound below which no fire should be plotted
+#'
+#' @return NULL
+#' @export
+#' @importFrom stats rlnorm rnorm
+#'
+#' @examples
+#' \dontrun{
+#' stand=snapshot(dgvm3d.succession[[8]], patch.id=4, year=1905)
+#' rgl.clear("lights")
+#' rgl.light( theta = -25, phi = 30, specular = "#AAAAAA")
+#' fire3D(stand)
+#' }
+fire3D <- function(stand=NULL, patch.id=NULL, limit=0.5) {
+  if (is.null(patch.id))
+    patch.id <- 1:length(stand@patches)
+
+  for (i in patch.id) {
+    if (nrow(stand@patches[[i]]@vegetation) == 0)
+      next
+    if (stand@patches[[i]]@vegetation$Fireprob[1] < limit)
+      next
+    fire.prob = stand@patches[[i]]@vegetation$Fireprob[1]
+    inner.radius = stand@hexagon@supp$inner.radius
+    ##    Fire = NULL
+    for (j in 1:round(200*fire.prob^2)) {
+      ## angle of each flame
+      phi    <- runif(1) * 2 * pi
+      ## fractional distance from center of each flame
+      dist   <- rbeta(1, 1.5, 1)
+      ## absolute distance from center in x/y direction
+      offset <- c(sin(phi) * dist * inner.radius,
+                  cos(phi) * dist * inner.radius) * fire.prob
+      ## random twist of flame top
+      turn   <- rnorm(1, sd=2)
+      ## radius/height reduction depending on distance from center
+      ##      Fire = append(Fire, sqrt(sum(offset^2)) / inner.radius)
+      radius <- rlnorm(1, meanlog=-0.2 * (2 + sqrt(sum(offset^2))), sdlog=0.1)
+      dz     <- 0.5 + rlnorm(1, meanlog=-0.4 * sqrt(sum(offset^2)), sdlog=0.3)
+      ## center (whitish)
+      x = getFlame(radius=radius, dz=dz*0.8, turn=turn)
+      x$vertices$x = x$vertices$x + offset[1] + stand@patch.pos[i, 'x']
+      x$vertices$y = x$vertices$y + offset[2] + stand@patch.pos[i, 'y']
+      x$vertices$z = x$vertices$z + stand@patch.pos[i, 'z']
+      triangles3d(x$vertices[x$id[, (2 * 20 + 1):150], ], col="#e6ffcc", alpha=1, shininess=1,lit=F)
+      ## inner ( yellow)
+      x = getFlame(radius=radius, dz=dz*0.97, turn=turn, expand=2)
+      x$vertices$x = x$vertices$x + offset[1] + stand@patch.pos[i, 'x']
+      x$vertices$y = x$vertices$y + offset[2] + stand@patch.pos[i, 'y']
+      x$vertices$z = x$vertices$z + stand@patch.pos[i, 'z']
+      triangles3d(x$vertices[x$id[, (2 * 20 + 1):175], ], col="#f0ff00", alpha=0.6, shininess=1,lit=F)
+      ## outer ( red)
+      x = getFlame(radius=radius, dz=dz, expand=3, turn=turn)
+      x$vertices$x = x$vertices$x + offset[1] + stand@patch.pos[i, 'x']
+      x$vertices$y = x$vertices$y + offset[2] + stand@patch.pos[i, 'y']
+      x$vertices$z = x$vertices$z + stand@patch.pos[i, 'z']
+      triangles3d(x$vertices[x$id[, (2*20+1):200], ], col="#ce1301", alpha=0.3,shininess=10,lit=F)
+    }
+  }
+  return(invisible(NULL))
 }

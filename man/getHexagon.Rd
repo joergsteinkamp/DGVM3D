@@ -21,6 +21,14 @@ a \code{\link{TriangBody-class}}
 \description{
 Calculate a 3D hexagon
 }
+\examples{
+if (require(rgl)) {
+  hexagon <- getHexagon(area=dgvm3d.options("patch.area"), z=c(0, -2))
+  triangles3d(hexagon@vertices[hexagon@id, ], col="brown")
+} else {
+  message("the library 'rgl' is required for this example!")
+}
+}
 \author{
 Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
 }

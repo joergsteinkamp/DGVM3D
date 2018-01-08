@@ -45,8 +45,8 @@ for (i in 1:round(200*fire.prob^2)) {
   turn   <- rnorm(1, sd=2)
   ## radius/height reduction depending on distance from center
   XXX=append(XXX, sqrt(sum(offset^2)) / inner.radius)
-  radius <- rlnorm(1, mean=-0.2 * (2 + sqrt(sum(offset^2))), sd=0.1)
-  dz     <- 0.5 + rlnorm(1, mean=-0.4 * sqrt(sum(offset^2)), sd=0.3)
+  radius <- rlnorm(1, meanlog=-0.2 * (2 + sqrt(sum(offset^2))), sdlog=0.1)
+  dz     <- 0.5 + rlnorm(1, meanlog=-0.4 * sqrt(sum(offset^2)), sdlog=0.3)
   ## center (whitish)
   x = getFlame(radius=radius, dz=dz*0.8, turn=turn,expand=0.5)
   x$vertices$x = x$vertices$x + offset[1]

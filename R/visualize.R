@@ -23,7 +23,7 @@ succession <- function(vegetation, stand.id=1, patch.id=NULL, init.year=1901, ye
   stand <- initStand(npatch=npatch, year=init.year)
 
   for ( i in 1:npatch) {
-    stand@patches[[i]]@vegetation = establishVegetation(subset(init.vegetation, PID==patch.id[i]), stand@hexagon@supp[['inner.radius']])
+    stand@patches[[i]]@vegetation = establishTrees(subset(init.vegetation, PID==patch.id[i]), stand@hexagon@supp[['inner.radius']])
     stand@patches[[i]]@pid = patch.id[i]
   }
 
@@ -82,13 +82,13 @@ snapshot <- function(vegetation, stand.id=1, patch.id=NULL, year=2000) {
     if (!all( c("x", "y") %in% colnames(vegetation))) {
       if (dgvm3d.options("verbose"))
         message("Randomly distributing trees in patch")
-      stand@patches[[i]]@vegetation = establishVegetation(subset(vegetation, PID==patch.ids[i]), stand@hexagon@supp[['inner.radius']])
+      stand@patches[[i]]@vegetation = establishTrees(subset(vegetation, PID==patch.ids[i]), stand@hexagon@supp[['inner.radius']])
       stand@patches[[i]]@pid = patch.ids[i]
     } else {
       if (any(is.na(vegetation$x)) || any(is.na(vegetation$y))) {
         warning("NAs in tree position. Random redistribution of missing positions.")
         message("NAs in tree position. Random redistribution of missing positions.")
-        stand@patches[[i]]@vegetation = establishVegetation(subset(vegetation, PID==patch.ids[i]), stand@hexagon@supp[['inner.radius']])
+        stand@patches[[i]]@vegetation = establishTrees(subset(vegetation, PID==patch.ids[i]), stand@hexagon@supp[['inner.radius']])
       } else {
         if (dgvm3d.options("verbose"))
           message("Using valid x/y values present in 'vegetation data.frame.")

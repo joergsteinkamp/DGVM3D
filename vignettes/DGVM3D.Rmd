@@ -19,9 +19,9 @@ So far LPJ-GUESS is the only model included.
 
 ## C++ code to include in LPJ-GUESS
 
-LPJ-GUESS is hirachically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per gridpoint. This library needs the output of each patch, therefore an additional output module is needed.
+LPJ-GUESS is hirarchically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per coarse gridpoint. This library here needs the output of each patch, therefore an additional output module is needed.
 
-To create the required output table a new output module needs to be registered in LPJ-GUESS. In the source code the following header and code files need to be placed in the modules subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position.
+To create the required output table in LPJ-GUESS, which is written in C++ a new output module needs to be registered. In the source code the following header and code files need to be placed in the 'modules' subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position.
 
 ```{r engine='Rcpp', eval=FALSE}
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -171,11 +171,19 @@ The code writes the following output columns including a header line, if the par
 | Height      | numeric   | individual height |
 | Crownarea   | numeric   | individual crown area |
 
-So far not all of those values are used in the code. However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output!
+So far not all of those values are used in the code. However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output! An example dataset ('dgvm3d.succession') is included in this package. However, to save disk space it includes data for every fifth year only.
 
 # DGVM3D workflow
 
-For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches. 
+For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches.
+
+```{r, message=FALSE}
+library(DGVM3D)
+stand = initStand()
+stand3D(stand)
+snapshot3d("stand_1x1.png")
+```
+![One single hexagonal default stand](stand_1x1.png)
 
 ## Global options
 
@@ -196,16 +204,54 @@ When the library is loaded a few global default options are set to reduce the nu
 
 The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes.
 
+```{r, eval=FALSE}
+dgvm3d.locations = read.table("gridlist.txt",
+                              col.names=c("Lon", "Lat", "Name"), sep="\t",
+                              stringsAsFactors=FALSE)
+dgvm3d.succession=list()
+for (i in 1:nrow(dgvm3d.locations)) {
+  dgvm3d.succession[[dgvm3d.locations$Name[i]]] =
+  read.LPJ("vegstruct.out",
+           lon=dgvm3d.locations$Lon[i],
+           lat=dgvm3d.locations$Lat[i])
+  dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year %% 5) &
+                                                  dgvm3d.succession[[i]]$Year > 1859, ]
+}
+```
+
 ## Establish the individual trees
 
-The individual trees are by default randomly distributed within the inner radius of each patch hexagon with `establishVegetation`.
+The individual trees are by default randomly distributed within the inner radius of each patch hexagon with `establishTrees`. The returned data.frame should is the put into the respective vegetation slot of a patch of a stand.
 
 ## Visualisation
 
-`stand3D` renders the soil hexagons in a rgl window and `plant3D` renders the trees planted with `establishVegetation`.
+`stand3D` renders the soil hexagons in a rgl window and `plant3D` renders the trees planted with `establishTrees`.
+
+```{r}
+stand = initStand(npatch=2)
+stand3D(stand, 1)
+veg = data.frame(DBH=rep(0.4, 50))
+veg$Height    = veg$DBH * 35
+veg$Crownarea = veg$DBH * 5
+veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
+veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
+stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+dummy = plant3D(stand, 1)
+
+stand3D(stand, 2)
+veg = data.frame(DBH=rep(0.5, 100) * rgamma(100, 2.5, 9))
+veg$Height    = veg$DBH * 35  * rbeta(nrow(veg),10,1)
+veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
+veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
+veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
+stand@patches[[2]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+dummy = plant3D(stand, 2)
+snapshot3d("stand_1x2.png")
+```
+![One stand with two patches](stand_1x2.png)
 
 ## Overview Applications
 
-With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishVegetation` with the next years vegetation data.frame to distribute new trees. 
+With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishTrees` with the next years vegetation data.frame to distribute new trees. 
 
 # References

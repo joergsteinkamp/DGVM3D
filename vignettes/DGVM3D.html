@@ -12,7 +12,7 @@
 
 <meta name="author" content="Joerg Steinkamp" />
 
-<meta name="date" content="2017-08-08" />
+<meta name="date" content="2018-01-08" />
 
 <title>Introduction to DGVM3D</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to DGVM3D</h1>
 <h4 class="author"><em>Joerg Steinkamp</em></h4>
-<h4 class="date"><em>2017-08-08</em></h4>
+<h4 class="date"><em>2018-01-08</em></h4>
 
 
 
@@ -80,21 +80,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>So far LPJ-GUESS is the only model included.</p>
 <div id="c-code-to-include-in-lpj-guess" class="section level2">
 <h2>C++ code to include in LPJ-GUESS</h2>
-<p>LPJ-GUESS is hirachically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per gridpoint. This library needs the output of each patch, therefore an additional output module is needed.</p>
-<p>To create the required output table a new output module needs to be registered in LPJ-GUESS. In the source code the following header and code files need to be placed in the modules subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position.</p>
+<p>LPJ-GUESS is hirarchically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per coarse gridpoint. This library here needs the output of each patch, therefore an additional output module is needed.</p>
+<p>To create the required output table in LPJ-GUESS, which is written in C++ a new output module needs to be registered. In the source code the following header and code files need to be placed in the ‘modules’ subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position.</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">///////////////////////////////////////////////////////////////////////////////////////</span>
-<span class="er">/// \file vegstructoutput.h</span>
-<span class="er">/// \brief Output module for patch based vegetation structure</span>
+<span class="co">/// </span><span class="an">\file</span><span class="co"> </span><span class="cv">vegstructoutput.h</span>
+<span class="co">/// </span><span class="an">\brief</span><span class="co"> Output module for patch based vegetation structure</span>
 <span class="co">///</span>
-<span class="er">/// \author Joerg Steinkamp</span>
-<span class="co">///</span> <span class="er">$</span>Date: Thu Nov  <span class="dv">3</span> <span class="dv">11</span>:<span class="dv">15</span>:<span class="dv">37</span> CET <span class="dv">2016</span> <span class="er">$</span>
+<span class="co">/// </span><span class="an">\author</span><span class="co"> Joerg Steinkamp</span>
+<span class="co">/// $Date: Thu Nov  3 11:15:37 CET 2016 $</span>
 <span class="co">///</span>
 <span class="co">///////////////////////////////////////////////////////////////////////////////////////</span>
-<span class="ot">#ifndef LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
-<span class="ot">#define LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
-<span class="ot">#include &quot;outputmodule.h&quot;</span>
-<span class="ot">#include &quot;outputchannel.h&quot;</span>
-<span class="ot">#include &quot;gutil.h&quot;</span>
+<span class="pp">#ifndef LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
+<span class="pp">#define LPJ_GUESS_VEGSTRUCT_OUTPUT_H</span>
+<span class="pp">#include </span><span class="im">&quot;outputmodule.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;outputchannel.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;gutil.h&quot;</span>
 <span class="kw">namespace</span> GuessOutput {
   <span class="kw">class</span> VegstructOutput : <span class="kw">public</span> OutputModule {
   <span class="kw">public</span>:
@@ -110,19 +110,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
     FILE *out_vegstruct;
   };
 }
-<span class="ot">#endif</span></code></pre></div>
+<span class="pp">#endif</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">///////////////////////////////////////////////////////////////////////////////////////</span>
-<span class="er">/// \file vegstructoutput.cpp</span>
-<span class="er">/// \brief Output module for patch based vegetation structure</span>
+<span class="co">/// </span><span class="an">\file</span><span class="co"> </span><span class="cv">vegstructoutput.cpp</span>
+<span class="co">/// </span><span class="an">\brief</span><span class="co"> Output module for patch based vegetation structure</span>
 <span class="co">///</span>
-<span class="er">/// \author Joerg Steinkamp</span>
-<span class="co">///</span> <span class="er">$</span>Date: Thu Nov  <span class="dv">3</span> <span class="dv">11</span>:<span class="dv">15</span>:<span class="dv">37</span> CET <span class="dv">2016</span> <span class="er">$</span>
+<span class="co">/// </span><span class="an">\author</span><span class="co"> Joerg Steinkamp</span>
+<span class="co">/// $Date: Thu Nov  3 11:15:37 CET 2016 $</span>
 <span class="co">///</span>
 <span class="co">///////////////////////////////////////////////////////////////////////////////////////</span>
-<span class="ot">#include &quot;config.h&quot;</span>
-<span class="ot">#include &quot;vegstructoutput.h&quot;</span>
-<span class="ot">#include &quot;parameters.h&quot;</span>
-<span class="ot">#include &quot;guess.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;config.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;vegstructoutput.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;parameters.h&quot;</span>
+<span class="pp">#include </span><span class="im">&quot;guess.h&quot;</span>
 <span class="kw">namespace</span> GuessOutput {
     REGISTER_OUTPUT_MODULE(<span class="st">&quot;vegstruct&quot;</span>, VegstructOutput)
     VegstructOutput::VegstructOutput() {
@@ -131,65 +131,65 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   VegstructOutput::~VegstructOutput() {
   }
   <span class="dt">void</span> VegstructOutput::init() {
-    <span class="kw">if</span> (file_vegstruct != <span class="st">&quot;&quot;</span>) {
-      std::string full_path = (<span class="dt">char</span>*) file_vegstruct;
+    <span class="cf">if</span> (file_vegstruct != <span class="st">&quot;&quot;</span>) {
+      <span class="bu">std::</span>string full_path = (<span class="dt">char</span>*) file_vegstruct;
       out_vegstruct = fopen(full_path.c_str(), <span class="st">&quot;w&quot;</span>);
-      <span class="kw">if</span> (out_vegstruct == NULL) {
-        fail(<span class="st">&quot;Could not open </span><span class="ch">%s</span><span class="st"> for output</span><span class="ch">\n</span><span class="st">&quot;</span>                         \
+      <span class="cf">if</span> (out_vegstruct == NULL) {
+        fail(<span class="st">&quot;Could not open </span><span class="sc">%s</span><span class="st"> for output</span><span class="sc">\n</span><span class="st">&quot;</span>                         \
              <span class="st">&quot;Close the file if it is open in another application&quot;</span>,
              full_path.c_str());
-      } <span class="kw">else</span> {
-        dprintf(<span class="st">&quot;dummy</span><span class="ch">\n</span><span class="st">&quot;</span>);
-        fprintf(out_vegstruct, <span class="st">&quot;Lon Lat Year SID PID VID Pft Lifeform LeafType PhenType Pathway Age LAI ShadeType N DBH Height Crownarea</span><span class="ch">\n</span><span class="st">&quot;</span>);
+      } <span class="cf">else</span> {
+        dprintf(<span class="st">&quot;dummy</span><span class="sc">\n</span><span class="st">&quot;</span>);
+        fprintf(out_vegstruct, <span class="st">&quot;Lon Lat Year SID PID VID Pft Lifeform LeafType PhenType Pathway Age LAI ShadeType N DBH Height Crownarea</span><span class="sc">\n</span><span class="st">&quot;</span>);
       }
     }
   }
   <span class="dt">void</span> VegstructOutput::outdaily(Gridcell&amp; gridcell) {
-    <span class="kw">return</span>;
+    <span class="cf">return</span>;
   }
   <span class="dt">void</span> VegstructOutput::outannual(Gridcell&amp; gridcell) {
-    <span class="kw">if</span> (file_vegstruct == <span class="st">&quot;&quot;</span>)
-      <span class="kw">return</span>;
-    <span class="kw">if</span> (date.year &gt;= nyear_spinup<span class="dv">-50</span>) {
+    <span class="cf">if</span> (file_vegstruct == <span class="st">&quot;&quot;</span>)
+      <span class="cf">return</span>;
+    <span class="cf">if</span> (date.year &gt;= nyear_spinup<span class="dv">-50</span>) {
       <span class="dt">double</span> lon = gridcell.get_lon();
       <span class="dt">double</span> lat = gridcell.get_lat();
       Gridcell::iterator gc_itr = gridcell.begin();
-      <span class="kw">while</span> (gc_itr != gridcell.end()) {
+      <span class="cf">while</span> (gc_itr != gridcell.end()) {
         Stand&amp; stand = *gc_itr;
         stand.firstobj();
-        <span class="kw">while</span> (stand.isobj) {
+        <span class="cf">while</span> (stand.isobj) {
           Patch&amp; patch = stand.getobj();
           Vegetation&amp; vegetation = patch.vegetation;
           vegetation.firstobj();
-          <span class="kw">while</span> (vegetation.isobj) {
+          <span class="cf">while</span> (vegetation.isobj) {
             Individual&amp; indiv=vegetation.getobj();
             <span class="co">// guess2008 - alive check added</span>
-            <span class="kw">if</span> (indiv.id != <span class="dv">-1</span> &amp;&amp; indiv.alive) {
-              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="ch">%7.2f</span><span class="st"> </span><span class="ch">%6.2f</span><span class="st"> </span><span class="ch">%4i</span><span class="st"> &quot;</span>, lon, lat, date.get_calendar_year() );
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    stand.id);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    patch.id);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.id);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%10s</span><span class="st"> &quot;</span>,  (<span class="dt">char</span>*) indiv.pft.name);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.lifeform);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.leafphysiognomy);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.phenology);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    indiv.pft.pathway);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.0f</span><span class="st"> &quot;</span>, indiv.age);
-              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%6.2f</span><span class="st"> &quot;</span>, indiv.lai);
-              <span class="kw">if</span> (indiv.pft.lifeform == TREE) {
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.1f</span><span class="st"> &quot;</span>, indiv.pft.alphar);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.0f</span><span class="st"> &quot;</span>, indiv.densindiv * patcharea);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%7.2f</span><span class="st"> &quot;</span>, pow(indiv.height/indiv.pft.k_allom2,<span class="fl">1.0</span>/indiv.pft.k_allom3));
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%8.2f</span><span class="st"> &quot;</span>, indiv.height);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%8.2f</span><span class="st"> &quot;</span>, indiv.crownarea);
-              } <span class="kw">else</span> <span class="kw">if</span> (indiv.pft.lifeform == GRASS) {
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%4.1f</span><span class="st"> &quot;</span>, <span class="fl">-1.0</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,     <span class="dv">1</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
-                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="ch">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
+            <span class="cf">if</span> (indiv.id != <span class="dv">-1</span> &amp;&amp; indiv.alive) {
+              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="sc">%7.2f</span><span class="st"> </span><span class="sc">%6.2f</span><span class="st"> </span><span class="sc">%4i</span><span class="st"> &quot;</span>, lon, lat, date.get_calendar_year() );
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    stand.id);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    patch.id);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.id);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%10s</span><span class="st"> &quot;</span>,  (<span class="dt">char</span>*) indiv.pft.name);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.lifeform);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.leafphysiognomy);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.phenology);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    indiv.pft.pathway);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.0f</span><span class="st"> &quot;</span>, indiv.age);
+              fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%6.2f</span><span class="st"> &quot;</span>, indiv.lai);
+              <span class="cf">if</span> (indiv.pft.lifeform == TREE) {
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.1f</span><span class="st"> &quot;</span>, indiv.pft.alphar);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.0f</span><span class="st"> &quot;</span>, indiv.densindiv * patcharea);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%7.2f</span><span class="st"> &quot;</span>, pow(indiv.height/indiv.pft.k_allom2,<span class="fl">1.0</span>/indiv.pft.k_allom3));
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%8.2f</span><span class="st"> &quot;</span>, indiv.height);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%8.2f</span><span class="st"> &quot;</span>, indiv.crownarea);
+              } <span class="cf">else</span> <span class="cf">if</span> (indiv.pft.lifeform == GRASS) {
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%4.1f</span><span class="st"> &quot;</span>, <span class="fl">-1.0</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,     <span class="dv">1</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
+                fprintf(out_vegstruct, <span class="st">&quot; </span><span class="sc">%i</span><span class="st"> &quot;</span>,    <span class="dv">-1</span>);
               }
-              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+              fprintf(out_vegstruct, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>);
             }
             vegetation.nextobj();
           }
@@ -198,8 +198,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
         ++gc_itr;
       }
     }
-  } <span class="co">// END of void VegStructOutput::outannual</span>
-} <span class="co">// END of namespace VegStructOutput</span></code></pre></div>
+  } <span class="co">// </span><span class="re">END</span><span class="co"> of void VegStructOutput::outannual</span>
+} <span class="co">// </span><span class="re">END</span><span class="co"> of namespace VegStructOutput</span></code></pre></div>
 <p>The code writes the following output columns including a header line, if the parameter <code>file_vestruct</code> is defined in the instruction file.</p>
 <table>
 <colgroup>
@@ -307,12 +307,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tr>
 </tbody>
 </table>
-<p>So far not all of those values are used in the code. However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output!</p>
+<p>So far not all of those values are used in the code. However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output! An example dataset (‘dgvm3d.succession’) is included in this package. However, to save disk space it includes data for every fifth year only.</p>
 </div>
 </div>
 <div id="dgvm3d-workflow" class="section level1">
 <h1>DGVM3D workflow</h1>
 <p>For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DGVM3D)
+stand =<span class="st"> </span><span class="kw">initStand</span>()
+<span class="kw">stand3D</span>(stand)
+<span class="kw">snapshot3d</span>(<span class="st">&quot;stand_1x1.png&quot;</span>)</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAAHXRFWHRTb2Z0d2FyZQBSL1JHTCBwYWNrYWdlL2xpYnBuZ7GveO8AAAOVSURBVHic7dg9alRhGIbhjBsQDP602YGCWFiIjWBjZWcVa0FwB1OKgr1dQNTKSlILYpk9iI3bUEH4MigRxZAz59zXxbOAKd4b5js73yBsZ+ofAFMSAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmAkK9fPo+9fLr+MQEQIgAS3r85GLt3dW/s+oXVLxMACyQAFuv3vzE/9+dDP2kCYGYEQMJJh/73xy0AZkwAJGwe+vrR/tjpHroA2FICIOH/H6wCYMYEwGKdzYNVAGwpAZAw30MXAKdAACRM+2lSAExMACRs56dJAXBGBCCAxVreg1UA/AMBCCDBoQsgTQACSDj69GGs+WAVQJoABJBw+PZgzKELIEcAAkh79vjh2K2Lq7HJb2WRE8DWEYAA0l49X4/dvXJuTAwCSBCAANIOX78Ye3Dt/NhmDLcvHW/yG5r1BLB1BCCAtKOP78ae3N8b27+5O7YZw53Lx7uxuxqb/LZmse9hs2rXMFVSIAAAAABJRU5ErkJggg==" alt="One single hexagonal default stand" />
+<p class="caption">One single hexagonal default stand</p>
+</div>
 <div id="global-options" class="section level2">
 <h2>Global options</h2>
 <p>When the library is loaded a few global default options are set to reduce the number of function parameters passed through several cascading function calls. These options can be modified by <code>dgvm3d.options</code>.</p>
@@ -376,14 +384,57 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="get-the-data" class="section level2">
 <h2>Get the data</h2>
 <p>The function <code>read.LPJ</code> reads the above output if the output and extend cohorts to <code>N</code> average individuals, which will be rendered in varying shapes and colors based on the other attributes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dgvm3d.locations =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;gridlist.txt&quot;</span>,
+                              <span class="dt">col.names=</span><span class="kw">c</span>(<span class="st">&quot;Lon&quot;</span>, <span class="st">&quot;Lat&quot;</span>, <span class="st">&quot;Name&quot;</span>), <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>,
+                              <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)
+dgvm3d.succession=<span class="kw">list</span>()
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(dgvm3d.locations)) {
+  dgvm3d.succession[[dgvm3d.locations<span class="op">$</span>Name[i]]] =
+<span class="st">  </span><span class="kw">read.LPJ</span>(<span class="st">&quot;vegstruct.out&quot;</span>,
+           <span class="dt">lon=</span>dgvm3d.locations<span class="op">$</span>Lon[i],
+           <span class="dt">lat=</span>dgvm3d.locations<span class="op">$</span>Lat[i])
+  dgvm3d.succession[[i]] =<span class="st"> </span>dgvm3d.succession[[i]][<span class="op">!</span>(dgvm3d.succession[[i]]<span class="op">$</span>Year <span class="op">%%</span><span class="st"> </span><span class="dv">5</span>) <span class="op">&amp;</span>
+<span class="st">                                                  </span>dgvm3d.succession[[i]]<span class="op">$</span>Year <span class="op">&gt;</span><span class="st"> </span><span class="dv">1859</span>, ]
+}</code></pre></div>
 </div>
 <div id="establish-the-individual-trees" class="section level2">
 <h2>Establish the individual trees</h2>
-<p>The individual trees are by default randomly distributed within the inner radius of each patch hexagon with <code>establishVegetation</code>.</p>
+<p>The individual trees are by default randomly distributed within the inner radius of each patch hexagon with <code>establishVegetation</code>. The returned data.frame should is the put into the respective vegetation slot of a patch of a stand.</p>
 </div>
 <div id="visualisation" class="section level2">
 <h2>Visualisation</h2>
 <p><code>stand3D</code> renders the soil hexagons in a rgl window and <code>plant3D</code> renders the trees planted with <code>establishVegetation</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">stand =<span class="st"> </span><span class="kw">initStand</span>(<span class="dt">npatch=</span><span class="dv">2</span>)
+<span class="kw">stand3D</span>(stand, <span class="dv">1</span>)
+veg =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">DBH=</span><span class="kw">rep</span>(<span class="fl">0.4</span>, <span class="dv">50</span>))
+veg<span class="op">$</span>Height    =<span class="st"> </span>veg<span class="op">$</span>DBH <span class="op">*</span><span class="st"> </span><span class="dv">35</span>
+veg<span class="op">$</span>Crownarea =<span class="st"> </span>veg<span class="op">$</span>DBH <span class="op">*</span><span class="st"> </span><span class="dv">5</span>
+veg<span class="op">$</span>LeafType  =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">nrow</span>(veg), <span class="dt">replace=</span><span class="ot">TRUE</span>)
+veg<span class="op">$</span>ShadeType =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">nrow</span>(veg), <span class="dt">replace=</span><span class="ot">TRUE</span>)
+stand<span class="op">@</span>patches[[<span class="dv">1</span>]]<span class="op">@</span>vegetation =<span class="st"> </span><span class="kw">establishVegetation</span>(veg, stand<span class="op">@</span>hexagon<span class="op">@</span>supp[[<span class="st">'inner.radius'</span>]])</code></pre></div>
+<pre><code>## ### establishVegetation ###</code></pre>
+<pre><code>## Using 10 samples in max. 10 repetitions (max. crown radius overlap: 0.500).</code></pre>
+<pre><code>## Sorting by 'Crownarea' in 'descending' order.</code></pre>
+<pre><code>## New establishment.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dummy =<span class="st"> </span><span class="kw">plant3D</span>(stand, <span class="dv">1</span>)
+
+<span class="kw">stand3D</span>(stand, <span class="dv">2</span>)
+veg =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">DBH=</span><span class="kw">rep</span>(<span class="fl">0.5</span>, <span class="dv">100</span>) <span class="op">*</span><span class="st"> </span><span class="kw">rgamma</span>(<span class="dv">100</span>, <span class="fl">2.5</span>, <span class="dv">9</span>))
+veg<span class="op">$</span>Height    =<span class="st"> </span>veg<span class="op">$</span>DBH <span class="op">*</span><span class="st"> </span><span class="dv">35</span>  <span class="op">*</span><span class="st"> </span><span class="kw">rbeta</span>(<span class="kw">nrow</span>(veg),<span class="dv">10</span>,<span class="dv">1</span>)
+veg<span class="op">$</span>Crownarea =<span class="st"> </span>veg<span class="op">$</span>DBH <span class="op">*</span><span class="st"> </span><span class="dv">5</span> <span class="op">*</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">nrow</span>(veg), <span class="dv">1</span>, <span class="fl">0.1</span>)
+veg<span class="op">$</span>LeafType  =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">nrow</span>(veg), <span class="dt">replace=</span><span class="ot">TRUE</span>)
+veg<span class="op">$</span>ShadeType =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">nrow</span>(veg), <span class="dt">replace=</span><span class="ot">TRUE</span>)
+stand<span class="op">@</span>patches[[<span class="dv">2</span>]]<span class="op">@</span>vegetation =<span class="st"> </span><span class="kw">establishVegetation</span>(veg, stand<span class="op">@</span>hexagon<span class="op">@</span>supp[[<span class="st">'inner.radius'</span>]])</code></pre></div>
+<pre><code>## ### establishVegetation ###</code></pre>
+<pre><code>## Using 10 samples in max. 10 repetitions (max. crown radius overlap: 0.500).</code></pre>
+<pre><code>## Sorting by 'Crownarea' in 'descending' order.</code></pre>
+<pre><code>## New establishment.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dummy =<span class="st"> </span><span class="kw">plant3D</span>(stand, <span class="dv">2</span>)
+<span class="kw">snapshot3d</span>(<span class="st">&quot;stand_1x2.png&quot;</span>)</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="One stand with two patches" />
+<p class="caption">One stand with two patches</p>
+</div>
 </div>
 <div id="overview-applications" class="section level2">
 <h2>Overview Applications</h2>

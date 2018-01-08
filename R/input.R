@@ -15,37 +15,38 @@
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' \dontrun{
-#' data(dgvm3d.locations)
-#' dgvm3d.succession = list()
+#' dgvm3d.locations = read.table("gridlist.txt",
+#'                               col.names=c("Lon", "Lat", "Name"), sep="\t",
+#'                               stringsAsFactors=FALSE)
+#' dgvm3d.succession=list()
 #' for (i in 1:nrow(dgvm3d.locations)) {
-#'   dgvm3d.succession[[i]] = read.LPJ("~/WIP/Establishment/output/disturb/vegstruct.out",
-#'                                     lon=dgvm3d.locations$Lon[i], lat=dgvm3d.locations$Lat[i])
-#'   dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year %% 5) &
-#'                                                   dgvm3d.succession[[i]]$Year > 1859, ]
+#'   dgvm3d.succession[[dgvm3d.locations$Name[i]]] =
+#'    read.LPJ("vegstruct.out",
+#'             lon=dgvm3d.locations$Lon[i],
+#'             lat=dgvm3d.locations$Lat[i])
+#'    dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year %% 5) &
+#'                                                    dgvm3d.succession[[i]]$Year > 1859, ]
 #' }
 #' }
-read.LPJ <- function(file="vegstruct.out", stand.id=1, patch.id=NULL, year=NULL, lon=NULL, lat=NULL, grass=FALSE) {
-  ## location.names <- read.table("/Users/jsteinkamp/WIP/Establishment/output/gridlist.txt",
-  ##                              sep="\t", col.names=c("Lon", "Lat", "Name"))
-  ## file = "/Users/jsteinkamp/WIP/Establishment/output/vegstruct.out"
+read.LPJ <- function(file="vegstruct.out", stand.id=1, patch.id=NULL, year=NULL, lon=NULL, lat=NULL, grass=TRUE) {
   SID=PID=Year=Lon=Lat=Lifeform=NULL
-  vegstruct <- read.table(file, header=TRUE)
+  vegstruct <- read.table(file, header=TRUE, stringsAsFactors = FALSE)
   vegstruct$SID =   vegstruct$SID + 1
   vegstruct$PID =   vegstruct$PID + 1
   ## apply the filters
-  vegstruct <- subset(vegstruct, SID==stand.id)
+  vegstruct <- subset(vegstruct, SID == stand.id)
   if (!is.null(patch.id))
-    vegstruct <- subset(vegstruct, PID==patch.id)
+    vegstruct <- subset(vegstruct, PID == patch.id)
   if (!is.null(year))
-    vegstruct <- subset(vegstruct, Year==year)
+    vegstruct <- subset(vegstruct, Year == year)
   if (!is.null(lon))
-    vegstruct <- subset(vegstruct, Lon==lon)
+    vegstruct <- subset(vegstruct, Lon == lon)
   if (!is.null(lat))
-    vegstruct <- subset(vegstruct, Lat==lat)
+    vegstruct <- subset(vegstruct, Lat == lat)
   if (!grass)
     vegstruct <- subset(vegstruct, Lifeform != 2)
 
-  if (length(unique(vegstruct$Lon))>1 || length(unique(vegstruct$Lat))>1)
+  if (length(unique(vegstruct$Lon)) > 1 || length(unique(vegstruct$Lat)) > 1)
     warning("Several locations are defined. Sure that's what you want?")
 
   ## vegstruct$Lifeform[vegstruct$Lifeform==1] = "tree"

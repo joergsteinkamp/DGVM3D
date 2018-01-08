@@ -1,17 +1,8 @@
 if("package:DGVM3D" %in% search()) detach(name = "package:DGVM3D", unload = TRUE)
 library(DGVM3D)
 
-data("dgvm3d.locations")
-succ=list()
-for (i in 1:nrow(dgvm3d.locations)) {
-  succ[[i]] = read.LPJ("~/WIP/Establishment/output/disturb2/vegstruct.out",
-                       lon=dgvm3d.locations$Lon[i],
-                       lat=dgvm3d.locations$Lat[i])
-}
-
-
 open3d(windowRect=c(10, 10, 1280, 1024), scale=c(1, 1, 1), FOV=0)
-stand = snapshot(succ[[i]])
+stand = snapshot(dgvm3d.succession[[1]])
 rgl.clear("lights")
 rgl.light( theta = -25, phi = 30, specular = "#AAAAAA")
 #axis3d("z", pos=c(stand@hexagon@supp$outer.radius*0.525, -0.25, NA))
@@ -21,7 +12,82 @@ axis3d("z", pos=c(-stand@hexagon@supp$outer.radius, 5*stand@hexagon@supp$inner.r
 rot.z = rotationMatrix(pi/6, 0, 0, 1)
 rot.y = rotationMatrix(-pi/3, 1, 0, 0)
 rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
-rgl.snapshot("patch_y2000_loc13.png")
+## rgl.snapshot("patch_y2000_loc01.png")
+
+
+#for (i in 1:nrow(dgvm3d.locations)) {
+#  print(i)
+#  print(nrow(dgvm3d.succession[[i]][dgvm3d.succession[[i]]$Fireprob > 0.7, c("Year", "PID", "Fireprob")]))
+#}
+### 6/7/11
+#dgvm3d.succession[[10]][dgvm3d.succession[[10]]$Fireprob > 0.8, c("Year", "PID", "Fireprob")]
+
+open3d(windowRect=c(100, 100, 1280, 1024), scale=c(1, 1, 1), FOV=1)
+stand=initStand()
+stand3D(stand)
+stand@patches[[1]]@vegetation = data.frame(Fireprob=1)
+fire3D(stand)
+rgl.clear("lights")
+rgl.light( theta = -25, phi = 30, specular = "#AAAAAA")
+
+open3d(windowRect=c(100, 100, 1280, 1024), scale=c(1, 1, 1), FOV=1)
+stand=snapshot(dgvm3d.succession[[8]], patch.id = 4, year = 1905)
+fire3D(stand)
+
+rgl.clear("lights")
+rgl.light( theta = -25, phi = 30, specular = "#AAAAAA")
+
+rot.z = rotationMatrix(-pi/2, 0, 0, 1)
+rot.y = rotationMatrix(-pi/4, 0, 1, 0)
+rgl.viewpoint(userMatrix = rot.z %*% rot.y, fov=1)
+#  title3d(main =paste0(dgvm3d.locations$Name[i], " (", dgvm3d.locations$Lon[i], "/", dgvm3d.locations$Lat[i],")"))
+axis3d("z", pos=c(stand@hexagon@supp$outer.radius*0.525, -0.25, NA))
+## snapshot3d("succ_loc11.png")
+
+
+
+
+
+open3d(windowRect=c(100, 100, 1280, 1024), scale=c(1, 1, 1), FOV=1)
+succession(dgvm3d.succession[[7]], patch.id = c(2, 6, 10), init.year = 1860, years = seq(1905, 2005, 10))
+stand3D(stand)
+stand=plant3D(stand)
+fire3D(stand)
+
+rgl.clear("lights")
+rgl.light( theta = -25, phi = 30, specular = "#AAAAAA")
+
+rot.z = rotationMatrix(-pi/2, 0, 0, 1)
+rot.y = rotationMatrix(-pi/4, 0, 1, 0)
+rgl.viewpoint(userMatrix = rot.z %*% rot.y, fov=1)
+#  title3d(main =paste0(dgvm3d.locations$Name[i], " (", dgvm3d.locations$Lon[i], "/", dgvm3d.locations$Lat[i],")"))
+axis3d("z", pos=c(stand@hexagon@supp$outer.radius*0.525, -0.25, NA))
+## snapshot3d("succ_loc11.png")
+
+
+
+
+
+
+
+for (i in 1:nrow(dgvm3d.locations)) {
+  print(i)
+  print(nrow(dgvm3d.succession[[i]][dgvm3d.succession[[i]]$Pft == "C3G" & dgvm3d.succession[[i]]$LAI > 2, c("Year", "PID", "Fireprob")]))
+}
+# 6/7/11
+#dgvm3d.succession[[10]][dgvm3d.succession[[10]]$Fireprob > 0.8, c("Year", "PID", "Fireprob")]
+i=6
+
+
+dgvm3d.succession[[i]][dgvm3d.succession[[i]]$Pft == "C3G" & dgvm3d.succession[[i]]$LAI > 1, c("Year", "PID", "LAI","Fireprob")]
+
+
+
+
+
+
+
+
 
 
 for (i in c(11,13)) {

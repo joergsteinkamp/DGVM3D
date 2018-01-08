@@ -106,6 +106,13 @@ triClose <- function(n, method="circular", center=NA){
 #' @importFrom methods new
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#' @examples
+#' if (require(rgl)) {
+#'   hexagon <- getHexagon(area=dgvm3d.options("patch.area"), z=c(0, -2))
+#'   triangles3d(hexagon@vertices[hexagon@id, ], col="brown")
+#' } else {
+#'   message("the library 'rgl' is required for this example!")
+#' }
 getHexagon <- function(area=NA, outer.radius=NA, inner.radius=NA, z=c(0,1)) {
   if (!is.na(area)) {
     orad = sqrt(2.0 / 3.0 / sqrt(3.0) * area)
@@ -170,6 +177,13 @@ getCone <- function(radius=0.5, height=1, faces=72, close=FALSE) {
 #' @importFrom methods new
 #' @export
 #' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#' @examples
+#' if (require(rgl)) {
+#'   ellipsoid=getEllipsoid(height=2)
+#'   triangles3d(ellipsoid@vertices[ellipsoid@id, ], col="green")
+#' } else {
+#'   message("the library 'rgl' is required for this example!")
+#' }
 getEllipsoid <- function(radius=0.5, height=1, faces=c(6, 3)) {
   ## faces: 2 * faces[1] * faces[2]
   if (length(faces)==1) {

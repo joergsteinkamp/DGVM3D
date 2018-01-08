@@ -4,7 +4,7 @@
 \name{dgvm3d.succession}
 \alias{dgvm3d.succession}
 \title{timeseries data from 1865-2005 in 5 year steps}
-\format{An object of class \code{list} of length 13.}
+\format{An object of class \code{list} of length 19.}
 \usage{
 dgvm3d.succession
 }

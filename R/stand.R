@@ -98,8 +98,6 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
   return(new("Stand", area=dgvm3d.options("patch.area"), year=year, hexagon=hexagon, layout=layout, composition=composition, patch.pos=t(patch.pos), patches=patches))
 }
 
-
-
 #' Remove/add trees with a new vegetation data.frame
 #'
 #' Removes those individuums with the shortest distance to any neighbour and adds new individuums randomly.
@@ -141,15 +139,13 @@ updateStand <- function(stand, vegetation, year=NULL) {
           new.patch.veg[new.patch.veg$VID==old.vid[j], "y"] = old.trees$y[1:remain]
         }
       }
-      stand@patches[[i]]@vegetation = establishVegetation(new.patch.veg, stand@hexagon@supp$inner.radius)
+      stand@patches[[i]]@vegetation = establishTrees(new.patch.veg, stand@hexagon@supp$inner.radius)
     } else {
       stand@patches[[i]]@vegetation = data.frame()
     }
   }
   return(stand)
 }
-
-
 
 #' 3D view of the stands
 #'
@@ -171,9 +167,9 @@ stand3D <- function(stand, patch.id=NULL) {
     patch.hex = stand@hexagon@vertices
     offset = matrix(stand@patch.pos[i, ], nrow(patch.hex), 3, byrow=TRUE)
     patch.hex[,1:2] = patch.hex[,1:2] + offset[,1:2]
-    for (j in 1:(length(stand@patches[[i]]@soil)-1)) {
+    for (j in 1:(length(stand@patches[[i]]@soil) - 1)) {
       patch.hex[1:6,  3] = stand@patches[[i]]@soil[j]
-      patch.hex[7:12, 3] = stand@patches[[i]]@soil[j+1]
+      patch.hex[7:12, 3] = stand@patches[[i]]@soil[j + 1]
       patch.hex[,3] = patch.hex[,3] + offset[,3]
       triangles3d(patch.hex[stand@hexagon@id, ], col=stand@patches[[i]]@color.table[['soil']][j])
     }

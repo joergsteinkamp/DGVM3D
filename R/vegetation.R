@@ -18,9 +18,9 @@
 #' veg$Crownarea = veg$DBH * 10
 #' veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
-#' stand@patches[[1]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
+#' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 #' }
-establishVegetation <- function(vegetation=NULL, radius=1) {
+establishTrees <- function(vegetation=NULL, radius=1) {
   if (is.null(vegetation))
     stop("'vegetation' data.frame is missing!")
 
@@ -31,7 +31,7 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
   est.beta.param   <- dgvm3d.options("establish.beta.parameters")
 
   if (dgvm3d.options("verbose")) {
-    message("### establishVegetation ###")
+    message("### establishTrees ###")
     message(sprintf("Using %i samples in max. %i repetitions (max. crown radius overlap: %0.3f).", samples[1], samples[2], overlap))
     message(paste0("Sorting by '", sort.column[1], "' in '", sort.column[2], "' order."))
   }
@@ -48,7 +48,7 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
   }
 
   ## if vegetation table is empty, e.g. after disturbance
-  if (nrow(vegetation)==0)
+  if (nrow(vegetation) == 0)
     return(vegetation)
 
   ## check for present position columns
@@ -61,7 +61,7 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
     message("Establishing new trees.")
   }
 
-  ## first tree
+  ## first tree (excluding grasses)
   if (all(is.na(vegetation$x)) || all(is.na(vegetation$x))) {
     phi <- runif(1) * 2 * pi
     r   <- runif(1) * radius
@@ -70,7 +70,8 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
   }
 
   ## any other tree
-  for (i in which(is.na(vegetation$x) | is.na(vegetation$y))) {
+  ## Filter grasses by negative Crownarea, should bettter be done by lifeform
+  for (i in which((is.na(vegetation$x) | is.na(vegetation$y)) & (vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)))) {
     trees.with.xy = which(!is.na(vegetation$x) & !is.na(vegetation$y))
     nwhile = 0
     dist <- matrix(NA, i-1, samples[1])
@@ -89,8 +90,9 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
       for (j in 1:samples[1])
         dist[,j] <- sqrt((new.x[j] - vegetation$x[trees.with.xy])^2 + (new.y[j] -vegetation$y[trees.with.xy])^2)
 
-      crown.radius <- sqrt(vegetation$Crownarea[trees.with.xy]/pi)
-      min.dist <- (crown.radius + sqrt(vegetation$Crownarea[i]/pi)) * (1 - overlap)
+      ## TODO: NaNs are produced for grasses, since Crownarea = -1
+      crown.radius <- sqrt(vegetation$Crownarea[trees.with.xy] / pi)
+      min.dist <- (crown.radius + sqrt(vegetation$Crownarea[i] / pi)) * (1 - overlap)
       min.dist = matrix(rep(min.dist, samples[1]), length(min.dist), samples[1])
 
       dist[dist < min.dist] = NA
@@ -99,11 +101,11 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
       ## on those
       dist = apply(dist, 2, min)
       if (!all(is.na(dist))) {
-        if (establish.method=="max") {
+        if (establish.method == "max") {
           k = which.max(dist)
-        } else if (establish.method=="min") {
+        } else if (establish.method == "min") {
           k = which.min(dist)
-        } else if (establish.method=="random") {
+        } else if (establish.method == "random") {
           k = sample(which(is.finite(dist)), 1)
         } else {
           stop(paste0("'establish.method' '", establish.method, "' not known!"))
@@ -140,7 +142,7 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
 #' veg$Crownarea = veg$DBH * 5
 #' veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
-#' stand@patches[[1]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
+#' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 #' dummy = plant3D(stand, 1)
 #'
 #' stand3D(stand, 2)
@@ -149,7 +151,7 @@ establishVegetation <- function(vegetation=NULL, radius=1) {
 #' veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
 #' veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 #' veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
-#' stand@patches[[2]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
+#' stand@patches[[2]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 #' dummy = plant3D(stand, 2)
 #' }
 plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
@@ -182,6 +184,17 @@ plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
       for (j in 1:nrow(stand@patches[[i]]@vegetation)) {
         tree3D(stand@patches[[i]]@vegetation[j, ], offset, col, opacity=crown.opacity)
       }
+      grass = stand@patches[[i]]@vegetation[stand@patches[[i]]@vegetation$Crownarea <= 0 | !is.finite(stand@patches[[i]]@vegetation$Crownarea), ]
+      if (nrow(grass > 0)) {
+        if (sum(grass$LAI > 0.2)) {
+          patch.hex = stand@hexagon@vertices
+          offset = matrix(stand@patch.pos[i, ], nrow(patch.hex), 3, byrow=TRUE)
+          patch.hex[,1:2] = patch.hex[,1:2] + offset[,1:2]
+          patch.hex[7:12, 3] = -patch.hex[7:12, 3] * sum(grass$LAI*0.1)
+          patch.hex[,3] = patch.hex[,3] + offset[,3]
+          triangles3d(patch.hex[stand@hexagon@id, ], col="green", opacity=min(1, sum(grass$LAI)))
+        }
+      }
     }
   }
   return(stand)
@@ -194,14 +207,16 @@ plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
 ## @param col crown colors for the shade classes
 ## @param opacity alpha value for the tree crown (heavy impacting performance)
 ## @param faces number of faces/triangles used per stem and tree cone 3-times for ellipsoid.
-## @return None
+## @return NULL
 ## @import rgl
 ## @export
 ## @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opacity=1, faces=19) {
+  if (tree$Crownarea <= 0 || !is.finite(tree$Crownarea))
+    return(NULL)
   color.column = dgvm3d.options("color.column")
-  crownRadius = sqrt(tree$Crownarea/pi)
-  if (tree$LeafType==1) {
+  crownRadius = sqrt(tree$Crownarea / pi)
+  if (tree$LeafType == 1) {
     shade3d(cylinder3d(matrix(c(tree$x + offset[1], tree$y + offset[2], offset[3],
                                 tree$x + offset[1], tree$y + offset[2], 0.25 * tree$Height + offset[3]),
                               nrow=2, byrow=TRUE),
@@ -211,7 +226,7 @@ tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opa
     cone@vertices[,2] = cone@vertices[,2] + tree$y + offset[2]
     cone@vertices[,3] = cone@vertices[,3] + 0.25 * tree$Height + offset[3]
     triangles3d(cone@vertices[cone@id, ], col=col[eval(parse(text=paste0("tree$",color.column)))], alpha=opacity)
-  } else if (tree$LeafType==2) {
+  } else if (tree$LeafType == 2) {
     shade3d(cylinder3d(matrix(c(tree$x + offset[1], tree$y + offset[2], offset[3],
                                 tree$x + offset[1], tree$y + offset[2], 0.34 * tree$Height + offset[3]),
                               nrow=2, byrow=TRUE),
@@ -222,4 +237,5 @@ tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opa
     ellipsoid@vertices[,3] = ellipsoid@vertices[,3] + 0.25 * tree$Height + offset[3]
     triangles3d(ellipsoid@vertices[ellipsoid@id, ], col=col[eval(parse(text=paste0("tree$",color.column)))], alpha=opacity)
   }
+  return(invisible(NULL))
 }

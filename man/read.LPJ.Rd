@@ -5,7 +5,7 @@
 \title{Prepare the output table from LPJ-GUESS for visualization}
 \usage{
 read.LPJ(file = "vegstruct.out", stand.id = 1, patch.id = NULL,
-  year = NULL, lon = NULL, lat = NULL, grass = FALSE)
+  year = NULL, lon = NULL, lat = NULL, grass = TRUE)
 }
 \arguments{
 \item{file}{the filename to be read}
@@ -30,13 +30,17 @@ Stand ID and Patch ID start counting at 0 in the standard output. Here the value
 }
 \examples{
 \dontrun{
-data(dgvm3d.locations)
-dgvm3d.succession = list()
+dgvm3d.locations = read.table("gridlist.txt",
+                              col.names=c("Lon", "Lat", "Name"), sep="\\t",
+                              stringsAsFactors=FALSE)
+dgvm3d.succession=list()
 for (i in 1:nrow(dgvm3d.locations)) {
-  dgvm3d.succession[[i]] = read.LPJ("~/WIP/Establishment/output/disturb/vegstruct.out",
-                                    lon=dgvm3d.locations$Lon[i], lat=dgvm3d.locations$Lat[i])
-  dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year \%\% 5) &
-                                                  dgvm3d.succession[[i]]$Year > 1859, ]
+  dgvm3d.succession[[dgvm3d.locations$Name[i]]] =
+   read.LPJ("vegstruct.out",
+            lon=dgvm3d.locations$Lon[i],
+            lat=dgvm3d.locations$Lat[i])
+   dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year \%\% 5) &
+                                                   dgvm3d.succession[[i]]$Year > 1859, ]
 }
 }
 }
