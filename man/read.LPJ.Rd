@@ -33,8 +33,10 @@ Stand ID and Patch ID start counting at 0 in the standard output. Here the value
 data(dgvm3d.locations)
 dgvm3d.succession = list()
 for (i in 1:nrow(dgvm3d.locations)) {
-  dgvm3d.succession[[i]] = read.LPJ("~/WIP/Establishment/output/disturb/vegstruct.out", lon=dgvm3d.locations$Lon[i], lat=dgvm3d.locations$Lat[i])
-  dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year \%\% 5) & dgvm3d.succession[[i]]$Year > 1859, ]
+  dgvm3d.succession[[i]] = read.LPJ("~/WIP/Establishment/output/disturb/vegstruct.out",
+                                    lon=dgvm3d.locations$Lon[i], lat=dgvm3d.locations$Lat[i])
+  dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year \%\% 5) &
+                                                  dgvm3d.succession[[i]]$Year > 1859, ]
 }
 }
 }

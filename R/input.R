@@ -18,12 +18,15 @@
 #' data(dgvm3d.locations)
 #' dgvm3d.succession = list()
 #' for (i in 1:nrow(dgvm3d.locations)) {
-#'   dgvm3d.succession[[i]] = read.LPJ("~/WIP/Establishment/output/disturb/vegstruct.out", lon=dgvm3d.locations$Lon[i], lat=dgvm3d.locations$Lat[i])
-#'   dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year %% 5) & dgvm3d.succession[[i]]$Year > 1859, ]
+#'   dgvm3d.succession[[i]] = read.LPJ("~/WIP/Establishment/output/disturb/vegstruct.out",
+#'                                     lon=dgvm3d.locations$Lon[i], lat=dgvm3d.locations$Lat[i])
+#'   dgvm3d.succession[[i]] = dgvm3d.succession[[i]][!(dgvm3d.succession[[i]]$Year %% 5) &
+#'                                                   dgvm3d.succession[[i]]$Year > 1859, ]
 #' }
 #' }
 read.LPJ <- function(file="vegstruct.out", stand.id=1, patch.id=NULL, year=NULL, lon=NULL, lat=NULL, grass=FALSE) {
-  ## location.names <- read.table("/Users/jsteinkamp/WIP/Establishment/output/gridlist.txt", sep="\t", col.names=c("Lon", "Lat", "Name"))
+  ## location.names <- read.table("/Users/jsteinkamp/WIP/Establishment/output/gridlist.txt",
+  ##                              sep="\t", col.names=c("Lon", "Lat", "Name"))
   ## file = "/Users/jsteinkamp/WIP/Establishment/output/vegstruct.out"
   SID=PID=Year=Lon=Lat=Lifeform=NULL
   vegstruct <- read.table(file, header=TRUE)

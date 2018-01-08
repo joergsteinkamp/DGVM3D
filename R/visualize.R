@@ -9,7 +9,8 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' stand=succession(dgvm3d.succession[[3]], init.year=1865, years=c(1865, seq(1875, 2000, 25)), patch.id=sample(1:12, 3))
+#' stand=succession(dgvm3d.succession[[3]], init.year=1865, years=c(1865, seq(1875, 2000, 25)),
+#'                  patch.id=sample(1:12, 3))
 #' stand3D(stand)
 #' stand=plant3D(stand)
 #' }
