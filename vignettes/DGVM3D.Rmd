@@ -175,16 +175,6 @@ So far not all of those values are used in the code. However, they seemed to be 
 
 # DGVM3D workflow
 
-For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches.
-
-```{r, message=FALSE}
-library(DGVM3D)
-stand = initStand()
-stand3D(stand)
-snapshot3d("stand_1x1.png")
-```
-![One single hexagonal default stand](stand_1x1.png)
-
 ## Global options
 
 When the library is loaded a few global default options are set to reduce the number of function parameters passed through several cascading function calls. These options can be modified by `dgvm3d.options`.
@@ -195,14 +185,18 @@ When the library is loaded a few global default options are set to reduce the nu
 | samples | c(10, 10) | [1] Number of samples to determin next tree position; [2] max. repetition if no suitable position is found |
 | overlap | 0.5 | fraction of crownradii to overlap with nearest neighbour during establishment |
 | sort.column | c("Crownarea", "descending") | Determine the position for the largest trees first, then fill the gaps |
-| establish.method | "random" | How to choose from the above sample for the next tree position |
+| establish.method | "random" | How to choose from the above sample for the next tree position ('random', 'min' or 'max' distance) |
 | beta.parameters | c(1.1, 0.9) | shape parameters for beta random value to determine the distance from the patch center |
 | color.column | "ShadeType" | which data column to use for the canopy color |
 | verbose | TRUE | print some messages |
 
-## Get the data
+## Importing the data
 
-The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes.
+For very large output files I recommend writing an extra input function using data.table, which is way faster than the default data.frames.
+
+### From LPJ-GUESS
+
+The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes. If LPJ-GUESS was run at several locations, it is recommended to read the gridlist first, and create a list of data.frames.
 
 ```{r, eval=FALSE}
 dgvm3d.locations = read.table("gridlist.txt",
@@ -218,6 +212,22 @@ for (i in 1:nrow(dgvm3d.locations)) {
                                                   dgvm3d.succession[[i]]$Year > 1859, ]
 }
 ```
+
+### Other models
+
+Please write your own input function.
+
+## Layout
+
+For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches.
+
+```{r, message=FALSE}
+library(DGVM3D)
+stand = initStand()
+stand3D(stand)
+snapshot3d("stand_1x1.png")
+```
+![One single hexagonal default stand](stand_1x1.png)
 
 ## Establish the individual trees
 
@@ -235,8 +245,10 @@ veg$Height    = veg$DBH * 35
 veg$Crownarea = veg$DBH * 5
 veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
+veg$LAI = rep(2, nrow(veg))
+veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=3, LAI=0.5))
 stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
-dummy = plant3D(stand, 1)
+stand = plant3D(stand)
 
 stand3D(stand, 2)
 veg = data.frame(DBH=rep(0.5, 100) * rgamma(100, 2.5, 9))
@@ -244,14 +256,17 @@ veg$Height    = veg$DBH * 35  * rbeta(nrow(veg),10,1)
 veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
 veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
+veg$LAI = rep(2, nrow(veg))
+veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=-1, LAI=1.5))
 stand@patches[[2]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
-dummy = plant3D(stand, 2)
+stand = plant3D(stand, 2)
 snapshot3d("stand_1x2.png")
 ```
 ![One stand with two patches](stand_1x2.png)
 
 ## Overview Applications
 
-With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishTrees` with the next years vegetation data.frame to distribute new trees. 
+With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishTrees` with the next years vegetation data.frame to distribute new trees.
+
 
 # References

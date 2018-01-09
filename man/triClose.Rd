@@ -49,6 +49,3 @@ for (faces in c(6, 12, 13, 25)) {
             col=rgb(runif(1), runif(1), runif(1)))
 }
 }
-\author{
-Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
-}

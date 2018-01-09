@@ -17,6 +17,3 @@ a Information to draw a triangular object
 \item{\code{supp}}{supplementary information}
 }}
 
-\author{
-Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
-}

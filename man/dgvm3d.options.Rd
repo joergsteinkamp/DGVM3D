@@ -30,6 +30,3 @@ dgvm3d.options(x = NULL, patch.area = NULL, samples = NULL,
 \description{
 set some variables used in cascading functions
 }
-\author{
-Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
-}

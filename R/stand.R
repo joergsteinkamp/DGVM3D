@@ -15,7 +15,6 @@
 #' @importFrom grDevices colorRampPalette
 #' @export
 #' @include classes.R
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' \dontrun{
 #' stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)))
@@ -157,7 +156,6 @@ updateStand <- function(stand, vegetation, year=NULL) {
 #' @export
 #' @import rgl
 #' @include classes.R
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @seealso \code{\link{initStand}} for examples
 stand3D <- function(stand, patch.id=NULL) {
   if (is.null(patch.id))

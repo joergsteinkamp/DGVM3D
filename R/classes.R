@@ -4,7 +4,6 @@
 #' @slot id the column indices of the vertex matrix to draw the triangular body
 #' @slot supp supplementary information
 #' @exportClass TriangBody
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 setClass("TriangBody",
          slots=c(vertices = "matrix",
                  id       = "numeric",
@@ -21,7 +20,6 @@ setClass("TriangBody",
 #' @slot vegetation the vegetation data.frame
 #' @slot color.table lookup table for coloring
 #' @exportClass Patch
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 setClass("Patch",
          slots = c(id          = "numeric",
                    pid         = "numeric",
@@ -40,7 +38,6 @@ setClass("Patch",
 #' @slot composition either 'spatial' or 'temporal'. Has no effect yet.
 #' @slot patch.pos the position of the patche hexagon centers
 #' @exportClass Stand
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 setClass("Stand",
          slots=c(patches     = "list",
                  area        = "numeric",
@@ -63,7 +60,6 @@ setClass("Stand",
 #' @param color.column name of the vegetation column to create the canopy colors from.
 #' @param verbose print some information.
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 dgvm3d.options <- function(x=NULL,
                            patch.area=NULL,
                            samples=NULL,
@@ -121,16 +117,15 @@ dgvm3d.options <- function(x=NULL,
 #'
 #'  @name dgvm3d.locations
 #'  @docType data
-#'  @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #'  @keywords data
 "dgvm3d.locations"
 
 #' timeseries data from 1865-2005 in 5 year steps
 #'
-#' A list of 13 data.frames with simulation results of a model run without random patch disturbance at the 13 locations defined in \code{\link{dgvm3d.locations}}.
+#' A list of 13 data.frames with simulation results of a LPJ-GUESS model run without random patch disturbance at the 13 locations defined in \code{\link{dgvm3d.locations}}.
+#' Only every 5th year is included from 1860 to 2005. All patches at all locations were disturbed in 1859.
 #'
 #'  @name dgvm3d.succession
 #'  @docType data
-#'  @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #'  @keywords data
 "dgvm3d.succession"

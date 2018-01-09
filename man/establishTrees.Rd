@@ -29,6 +29,3 @@ veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
 stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 }
 }
-\author{
-Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
-}

@@ -12,7 +12,6 @@
 #' @return individual vegetation data.frame with equal indivuduals from each cohort.
 #' @importFrom utils read.table
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' \dontrun{
 #' dgvm3d.locations = read.table("gridlist.txt",
@@ -64,6 +63,8 @@ read.LPJ <- function(file="vegstruct.out", stand.id=1, patch.id=NULL, year=NULL,
   ## vegstruct$Pathway[vegstruct$Pathway==2] = "C4"
   ##
   vegstruct$ShadeType = gapless.rank(vegstruct$ShadeType)
+  if (grass)
+    vegstruct$ShadeType = vegstruct$ShadeType - 1
   ## if (max(vegstruct$ShadeType)==2) {
   ##   vegstruct$ShadeType[vegstruct$ShadeType==1] = "tolerant"
   ##   vegstruct$ShadeType[vegstruct$ShadeType==2] = "intolerant"

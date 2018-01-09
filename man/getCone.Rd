@@ -29,6 +29,3 @@ if (require(rgl)) {
   message("the library 'rgl' is required for this example!")
 }
 }
-\author{
-Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
-}

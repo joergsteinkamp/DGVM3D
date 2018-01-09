@@ -25,6 +25,3 @@ One model stand consisting of several patches
 \item{\code{patch.pos}}{the position of the patche hexagon centers}
 }}
 
-\author{
-Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
-}

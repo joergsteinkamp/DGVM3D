@@ -7,7 +7,6 @@
 #' @param center The center vertex ID for the central point (method 'center' only; default NA).
 #' @return A vector of indices for the polygon vertices.
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' par(mfrow=c(2,2))
 #' for (m in c("plan", "fix", "center", "")) {
@@ -105,7 +104,6 @@ triClose <- function(n, method="circular", center=NA){
 #' @return  a \code{\link{TriangBody-class}}
 #' @importFrom methods new
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' if (require(rgl)) {
 #'   hexagon <- getHexagon(area=dgvm3d.options("patch.area"), z=c(0, -2))
@@ -146,7 +144,6 @@ getHexagon <- function(area=NA, outer.radius=NA, inner.radius=NA, z=c(0,1)) {
 #' @return a \code{\link{TriangBody-class}}
 #' @importFrom methods new
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' if (require(rgl)) {
 #'   cone=getCone(faces=13, close=TRUE)
@@ -176,7 +173,6 @@ getCone <- function(radius=0.5, height=1, faces=72, close=FALSE) {
 #' @return a \code{\link{TriangBody-class}}
 #' @importFrom methods new
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' if (require(rgl)) {
 #'   ellipsoid=getEllipsoid(height=2)

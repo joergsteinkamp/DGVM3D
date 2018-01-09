@@ -1,9 +1,3 @@
-## ---- message=FALSE------------------------------------------------------
-library(DGVM3D)
-stand = initStand()
-stand3D(stand)
-snapshot3d("stand_1x1.png")
-
 ## ---- eval=FALSE---------------------------------------------------------
 #  dgvm3d.locations = read.table("gridlist.txt",
 #                                col.names=c("Lon", "Lat", "Name"), sep="\t",
@@ -18,6 +12,12 @@ snapshot3d("stand_1x1.png")
 #                                                    dgvm3d.succession[[i]]$Year > 1859, ]
 #  }
 
+## ---- message=FALSE------------------------------------------------------
+library(DGVM3D)
+stand = initStand()
+stand3D(stand)
+snapshot3d("stand_1x1.png")
+
 ## ------------------------------------------------------------------------
 stand = initStand(npatch=2)
 stand3D(stand, 1)
@@ -26,8 +26,10 @@ veg$Height    = veg$DBH * 35
 veg$Crownarea = veg$DBH * 5
 veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
-stand@patches[[1]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
-dummy = plant3D(stand, 1)
+veg$LAI = rep(2, nrow(veg))
+veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=3, LAI=0.5))
+stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+stand = plant3D(stand)
 
 stand3D(stand, 2)
 veg = data.frame(DBH=rep(0.5, 100) * rgamma(100, 2.5, 9))
@@ -35,7 +37,9 @@ veg$Height    = veg$DBH * 35  * rbeta(nrow(veg),10,1)
 veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
 veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
-stand@patches[[2]]@vegetation = establishVegetation(veg, stand@hexagon@supp[['inner.radius']])
-dummy = plant3D(stand, 2)
+veg$LAI = rep(2, nrow(veg))
+veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=-1, LAI=1.5))
+stand@patches[[2]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+stand = plant3D(stand, 2)
 snapshot3d("stand_1x2.png")
 

@@ -34,5 +34,7 @@ Depends:
 Suggests:
     RColorBrewer,
     knitr,
-    rmarkdown
+    rmarkdown,
+    data.table,
+    ggplot2
 VignetteBuilder: knitr

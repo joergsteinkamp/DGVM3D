@@ -1,10 +1,16 @@
 if("package:DGVM3D" %in% search()) detach(name = "package:DGVM3D", unload = TRUE)
 library(DGVM3D)
 
+
+
+
+
+
+for (y in c(1865, 1900, 2000)) {
 open3d(windowRect=c(10, 10, 1280, 1024), scale=c(1, 1, 1), FOV=0)
-stand = snapshot(dgvm3d.succession[[1]])
+stand = snapshot(dgvm3d.succession[[1]], year=y)
 rgl.clear("lights")
-rgl.light( theta = -25, phi = 30, specular = "#AAAAAA")
+rgl.light( theta = -25, phi = 30, specular = "black", diffuse = "#FFFFFF")
 #axis3d("z", pos=c(stand@hexagon@supp$outer.radius*0.525, -0.25, NA))
 axis3d("z", pos=c(-stand@hexagon@supp$outer.radius, 5*stand@hexagon@supp$inner.radius, NA))
 ##  axis3d("z", pos=c(stand@hexagon@supp$outer.radius*4.15, stand@hexagon@supp$inner.radius * 5.2, NA))

@@ -4,17 +4,17 @@
 \name{dgvm3d.succession}
 \alias{dgvm3d.succession}
 \title{timeseries data from 1865-2005 in 5 year steps}
-\format{An object of class \code{list} of length 19.}
+\format{An object of class \code{list} of length 13.}
 \usage{
 dgvm3d.succession
 }
 \description{
-A list of 13 data.frames with simulation results of a model run without random patch disturbance at the 13 locations defined in \code{\link{dgvm3d.locations}}.
+A list of 13 data.frames with simulation results of a LPJ-GUESS model run without random patch disturbance at the 13 locations defined in \code{\link{dgvm3d.locations}}.
+Only every 5th year is included from 1860 to 2005. All patches at all locations were disturbed in 1859.
 }
 \details{
 @name dgvm3d.succession
  @docType data
- @author Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
  @keywords data
 }
 \keyword{datasets}

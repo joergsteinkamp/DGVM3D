@@ -4,7 +4,7 @@
 \name{dgvm3d.locations}
 \alias{dgvm3d.locations}
 \title{LPJ-GUESS gridlist of 13 locations}
-\format{An object of class \code{data.frame} with 19 rows and 3 columns.}
+\format{An object of class \code{data.frame} with 13 rows and 3 columns.}
 \usage{
 dgvm3d.locations
 }
@@ -14,7 +14,6 @@ This is the default test gridlist shipped with the LPJ-GUESS source code.
 \details{
 @name dgvm3d.locations
  @docType data
- @author Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
  @keywords data
 }
 \keyword{datasets}

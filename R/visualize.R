@@ -61,7 +61,6 @@ succession <- function(vegetation, stand.id=1, patch.id=NULL, init.year=1901, ye
 #' @param year which year to take the snapshot off.
 #' @return a \code{\link{Stand-class}}.
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' \dontrun{
 #' stand=snapshot(dgvm3d.succession[[1]])

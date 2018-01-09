@@ -8,7 +8,6 @@
 #' @include classes.R
 #' @importFrom stats runif rbeta
 #' @export
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @examples
 #' \dontrun{
 #' dgvm3d.options("default")
@@ -130,9 +129,9 @@ establishTrees <- function(vegetation=NULL, radius=1) {
 #' @param patch.id one or several specific patches only
 #' @param crown.opacity alpha value for the green tree crowns. Setting it to something different than 1 slows down the rendering substatially!
 #' @return the updated stand
-#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
 #' @export
 #' @import rgl
+#' @importFrom utils tail
 #' @examples
 #' \dontrun{
 #' stand = initStand(npatch=2)
@@ -167,50 +166,82 @@ plant3D <- function(stand=NULL, patch.id=NULL, crown.opacity=1) {
   crown.colors = colorRampPalette(c("#004529", "#78C679"))
   color.column = dgvm3d.options("color.column")
 
+  ## determin the number of colors
+  ncol = length(unique(as.vector(unlist(sapply(stand@patches, function(x) {
+    if (nrow(x@vegetation) > 0) {
+    y = x@vegetation[, dgvm3d.options("color.column")]
+    return(unique(y))
+    } else {
+      return(NULL)
+    }
+    })))))
+
   for (i in patch.id) {
     ## only in those patches with vegetation
     if (nrow(stand@patches[[i]]@vegetation) > 0) {
       offset = stand@patch.pos[i, ]
       ## chose the canopy color
       if (!any(names(stand@patches[[i]]@color.table) == "crown")) {
-        n = eval(parse(text=paste0("length(unique(stand@patches[[i]]@vegetation$", color.column, "))")))
-        stand@patches[[i]]@color.table[['crown']] = crown.colors(n)
+        ##n = eval(parse(text=paste0("length(unique(stand@patches[[i]]@vegetation$", color.column, "))")))
+        stand@patches[[i]]@color.table[['crown']] = crown.colors(ncol)
       }
       col = stand@patches[[i]]@color.table[['crown']]
-      if (length(col) != eval(parse(text=paste0("length(unique(stand@patches[[i]]@vegetation$", color.column, "))")))) {
-        col = eval(parse(text=paste0("crown.colors(length(unique(stand@patches[[i]]@vegetation$", color.column,")))")))
-        stand@patches[[i]]@color.table[['crown']] = col
-      }
+      ##if (length(col) != eval(parse(text=paste0("length(unique(stand@patches[[i]]@vegetation$", color.column, "))")))) {
+      ##  col = eval(parse(text=paste0("crown.colors(length(unique(stand@patches[[i]]@vegetation$", color.column,")))")))
+      ##  stand@patches[[i]]@color.table[['crown']] = col
+      ##}
       for (j in 1:nrow(stand@patches[[i]]@vegetation)) {
         tree3D(stand@patches[[i]]@vegetation[j, ], offset, col, opacity=crown.opacity)
       }
-      grass = stand@patches[[i]]@vegetation[stand@patches[[i]]@vegetation$Crownarea <= 0 | !is.finite(stand@patches[[i]]@vegetation$Crownarea), ]
-      if (nrow(grass > 0)) {
-        if (sum(grass$LAI > 0.2)) {
-          patch.hex = stand@hexagon@vertices
-          offset = matrix(stand@patch.pos[i, ], nrow(patch.hex), 3, byrow=TRUE)
-          patch.hex[,1:2] = patch.hex[,1:2] + offset[,1:2]
-          patch.hex[7:12, 3] = -patch.hex[7:12, 3] * sum(grass$LAI*0.1)
-          patch.hex[,3] = patch.hex[,3] + offset[,3]
-          triangles3d(patch.hex[stand@hexagon@id, ], col="green", opacity=min(1, sum(grass$LAI)))
-        }
-      }
+      grass3D(stand@patches[[i]]@vegetation, stand@hexagon, offset=matrix(stand@patch.pos[i, ], nrow(stand@hexagon@vertices), 3, byrow=TRUE), col=tail(stand@patches[[1]]@color.table$crown, 1))
     }
   }
   return(stand)
 }
 
-## draw a single tree
-##
-## @param tree one column of the \code{\link{Patch-class}} vegetation data.frame slot
-## @param offset x/y center and surface (z) of the respective patch
-## @param col crown colors for the shade classes
-## @param opacity alpha value for the tree crown (heavy impacting performance)
-## @param faces number of faces/triangles used per stem and tree cone 3-times for ellipsoid.
-## @return NULL
-## @import rgl
+#' Plant the grass on the patch
+#'
+#' @param grass vegetation data.frame
+#' @param kind so far only a hexagon is allowed (TriangBody)
+#' @param offset the patch offset
+#' @param col the color to use for grass
+#' @param opacity.threshold no grass is drawn below the lower values of LAI and full opacity is used above the upper value
+#' @param height.scale scale the LAI by this factor as height for the hexagon.
+#'
+#' @importFrom rgl triangles3d
+#' @return NULL
 ## @export
-## @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#'
+grass3D <- function(grass=NULL, kind=NULL, offset=c(0, 0, 0), col="green", opacity.threshold=c(0.2, 2), height.scale=0.1) {
+  ## TODO: somehow distinguish C3 and C4 grass
+  ## should be done before calling this function
+  grass = grass[grass$Crownarea <= 0 | !is.finite(grass$Crownarea), ]
+  if (nrow(grass) > 0) {
+    if (sum(grass$LAI > min(opacity.threshold))) {
+      if (class(kind) == "TriangBody") {
+        patch.hex = kind@vertices
+        patch.hex[,1:2] = patch.hex[,1:2] + offset[,1:2]
+        patch.hex[7:12, 3] = -patch.hex[7:12, 3] * sum(grass$LAI * height.scale)
+        patch.hex[,3] = patch.hex[,3] + offset[,3]
+        triangles3d(patch.hex[kind@id, ], col=col, opacity=min(1, sum(grass$LAI) / max(opacity.threshold)))
+      } else {
+        warning("This grass 'kind' is not yet implemented!")
+      }
+    }
+  }
+  return(invisible(NULL))
+}
+
+#' draw a single tree
+#'
+#' @param tree one column of the \code{\link{Patch-class}} vegetation data.frame slot
+#' @param offset x/y center and surface (z) of the respective patch
+#' @param col crown colors for the shade classes
+#' @param opacity alpha value for the tree crown (heavy impacting performance)
+#' @param faces number of faces/triangles used per stem and tree cone 3-times for ellipsoid.
+#' @return NULL
+#' @importFrom rgl triangles3d cylinder3d
+## @export
 tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opacity=1, faces=19) {
   if (tree$Crownarea <= 0 || !is.finite(tree$Crownarea))
     return(NULL)
