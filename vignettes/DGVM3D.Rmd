@@ -21,7 +21,7 @@ So far LPJ-GUESS is the only model included.
 
 LPJ-GUESS is hirarchically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per coarse gridpoint. This library here needs the output of each patch, therefore an additional output module is needed.
 
-To create the required output table in LPJ-GUESS, which is written in C++ a new output module needs to be registered. In the source code the following header and code files need to be placed in the 'modules' subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position.
+To create the required output table in LPJ-GUESS, which is written in C++ a new output module needs to be registered. In the source code the following header and code files need to be placed in the 'modules' subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position. The files are also located in the R site-library, which can be accessed via `system.file(paste0("lpj/modules/vegstructoutput.", c("h", "cpp")), package="DGVM3D")`.
 
 ```{r engine='Rcpp', eval=FALSE}
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +237,7 @@ The individual trees are by default randomly distributed within the inner radius
 
 `stand3D` renders the soil hexagons in a rgl window and `plant3D` renders the trees planted with `establishTrees`.
 
-```{r}
+```{r, message=FALSE}
 stand = initStand(npatch=2)
 stand3D(stand, 1)
 veg = data.frame(DBH=rep(0.4, 50))
@@ -266,7 +266,107 @@ snapshot3d("stand_1x2.png")
 
 ## Overview Applications
 
-With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishTrees` with the next years vegetation data.frame to distribute new trees.
+With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishTrees` with the next years vegetation data.frame to distribute new tree saplings.
 
+## Temporal snapshots and their application
+
+The succession is often visualized with the Leaf area index (LAI). Starting with grasses in the beginning, then early successional trees (shade intolerant) and later on the late successional trees (shade tolerant). Due to the random component in establishment, mortality and patch distroying disturbance the indivudual patches look quiet chaotic.
+
+```{r, fig.height=8, fig.width=6}
+library(data.table)
+library(ggplot2)
+i = 1
+dt <- data.table(dgvm3d.succession[[i]])
+## mean over individuums
+dt = dt[, list(LAI=mean(LAI, na.rm=TRUE)), by=c("Year", "VID", "PID", "Pft")]
+## sum over PFTs
+dt = dt[, list(LAI=sum(LAI, na.rm=TRUE)), by=c("Year", "PID", "Pft")]
+## fill missing values with zeros
+full.dt = expand.grid(Year=unique(dt$Year), PID=unique(dt$PID), Pft=unique(dt$Pft))
+dt = merge(dt, full.dt, by=c("Year" , "PID", "Pft"), all = TRUE)
+dt[is.na(LAI), LAI:=0]
+
+gg <- ggplot(dt, aes(Year, LAI, group=Pft, fill=Pft))
+gg = gg + DGVMTools::dgvm.ggplot.theme("timeseries")
+gg = gg + geom_area(position="stack")
+gg = gg + facet_wrap(~PID, ncol=2)
+gg = gg + labs(title=paste0(dgvm3d.locations$Name[i], " (", dgvm3d.locations$Lon[i], "/", dgvm3d.locations$Lat[i], ")"))
+print(gg)
+```
+However, if averaged over those patches, which is normally done, the expected successional pattern emerges. Allthough still not very smooth here, since we have only 12 patches. Normally a simulation should have at least 50 or better 100 patches.
+```{r, fig.height=4, fig.width=6}
+dt = dt[, list(LAI=mean(LAI)), by=c("Year", "Pft")]
+gg <- ggplot(dt, aes(Year, LAI, group=Pft, fill=Pft))
+gg = gg + DGVMTools::dgvm.ggplot.theme("timeseries")
+gg = gg + geom_area(position="stack")
+gg = gg + labs(title=paste0(dgvm3d.locations$Name[i], " (", dgvm3d.locations$Lon[i], "/", dgvm3d.locations$Lat[i], ")"))
+print(gg)
+```
+
+Now, we can look at different temporal snapshots during that succession:
+
+```{r, message=FALSE}
+for (y in c(1865, 1915, 2005)) {
+  open3d(windowRect=c(10, 10, 1280, 1024), scale=c(1, 1, 1), FOV=0)
+  par3d(skipRedraw=TRUE)
+  stand = snapshot(dgvm3d.succession[[1]], year=y)
+  par3d(skipRedraw=FALSE)
+  rgl.clear("lights")
+  rgl.light( theta = -25, phi = 30, specular = "black", diffuse = "#FFFFFF")
+  axis3d("z", pos=c(-stand@hexagon@supp$outer.radius, 5*stand@hexagon@supp$inner.radius, NA))
+  rot.z = rotationMatrix(pi/6, 0, 0, 1)
+  rot.y = rotationMatrix(-pi/3, 1, 0, 0)
+  rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
+  rgl.snapshot(paste0("patch_1_", y, ".png"))
+}
+```
+In the beginning the patches look very homogen.
+![Location 1 5 years after disturbance](patch_1_1865.png)
+However, already after 40 years they grow higher and start to differentiate.
+![Location 1 50 years after disturbance](patch_1_1915.png)
+And after 140 years, the patches look very heterogen, they are dominated by different tree types and exhibit an individual age structure (height).
+![Location 1 140 years after disturbance](patch_1_2005.png)
+
+### Succession and fire
+
+If we look at another location (Sahel), we get a grass dominated landscape
+```{r, fig.height=4, fig.width=6}
+library(data.table)
+library(ggplot2)
+i = 1
+dt <- data.table(dgvm3d.succession[[i]])
+## mean over individuums
+dt = dt[, list(LAI=mean(LAI, na.rm=TRUE)), by=c("Year", "VID", "PID", "Pft")]
+## sum over PFTs
+dt = dt[, list(LAI=sum(LAI, na.rm=TRUE)), by=c("Year", "PID", "Pft")]
+## fill missing values with zeros
+full.dt = expand.grid(Year=unique(dt$Year), PID=unique(dt$PID), Pft=unique(dt$Pft))
+dt = merge(dt, full.dt, by=c("Year" , "PID", "Pft"), all = TRUE)
+dt[is.na(LAI), LAI:=0]
+
+dt = dt[, list(LAI=mean(LAI)), by=c("Year", "Pft")]
+gg <- ggplot(dt, aes(Year, LAI, group=Pft, fill=Pft))
+gg = gg + DGVMTools::dgvm.ggplot.theme("timeseries")
+gg = gg + geom_area(position="stack")
+gg = gg + labs(title=paste0(dgvm3d.locations$Name[i], " (", dgvm3d.locations$Lon[i], "/", dgvm3d.locations$Lat[i], ")"))
+print(gg)
+```
+
+```{r, message=FALSE}
+dummy = open3d(windowRect=c(100, 100, 1280, 800), scale=c(1, 1, 1), FOV=1)
+stand = succession(dgvm3d.succession[[7]], patch.id = c(5, 7, 8, 10), init.year = 1860, years = seq(1905, 2005, 10))
+stand3D(stand)
+par3d(skipRedraw=TRUE)
+stand = plant3D(stand)
+fire3D(stand, limit=0.2)
+par3d(skipRedraw=FALSE)
+rgl.clear("lights")
+rgl.light( theta = -25, phi = 30, specular = "black", diffuse = "#FFFFFF")
+rot.z = rotationMatrix(-pi/2, 0, 0, 1)
+rot.y = rotationMatrix(-pi/3, 1, 0, 0)
+rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1.5, zoom = 0.6)
+rgl.snapshot("succession_7.png")
+```
+![Time series of 4 patches in the Sahel region from 1905 to 2005, every 10 years.](succession_7.png)
 
 # References

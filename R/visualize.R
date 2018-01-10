@@ -28,24 +28,24 @@ succession <- function(vegetation, stand.id=1, patch.id=NULL, init.year=1901, ye
   }
 
   avail.years = sort(unique(vegetation$Year))
-  avail.years = avail.years[which(avail.years>init.year)]
-  avail.years = avail.years[which(avail.years<=max(years))]
+  avail.years = avail.years[which(avail.years > init.year)]
+  avail.years = avail.years[which(avail.years <= max(years))]
 
-  ts.stand = initStand(npatch=npatch*length(years), layout = c(npatch, length(years)), composition = "temporal")
+  ts.stand = initStand(npatch=npatch * length(years), layout = c(npatch, length(years)), composition = "temporal")
 
-  if (init.year==years[1]) {
+  if (init.year == years[1]) {
     for (i in 1:npatch) {
-      print(1+(i-1)*length(years))
-      ts.stand@patches[[1+(i-1)*length(years)]] = stand@patches[[i]]
+      print(1 + (i - 1) * length(years))
+      ts.stand@patches[[1 + (i - 1) * length(years)]] = stand@patches[[i]]
     }
   }
 
   for (i in 1:length(avail.years)) {
     stand = updateStand(stand, vegetation, year = avail.years[i])
-    match.year = which(years==avail.years[i])
-    if (length(match.year)==1) {
+    match.year = which(years == avail.years[i])
+    if (length(match.year) == 1) {
       for (j in 1:npatch) {
-        ts.pid=match.year + (j-1)*length(years)
+        ts.pid=match.year + (j - 1) * length(years)
         ts.stand@patches[[ts.pid]] = stand@patches[[j]]
       }
     }
@@ -110,4 +110,3 @@ snapshot <- function(vegetation, stand.id=1, patch.id=NULL, year=2000) {
   stand = plant3D(stand)
   return(stand)
 }
-

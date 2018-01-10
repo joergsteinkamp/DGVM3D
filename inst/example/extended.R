@@ -55,7 +55,7 @@ axis3d("z", pos=c(stand@hexagon@supp$outer.radius*0.525, -0.25, NA))
 
 
 open3d(windowRect=c(100, 100, 1280, 1024), scale=c(1, 1, 1), FOV=1)
-succession(dgvm3d.succession[[7]], patch.id = c(2, 6, 10), init.year = 1860, years = seq(1905, 2005, 10))
+stand=succession(dgvm3d.succession[[7]], patch.id = c(2, 6, 10), init.year = 1860, years = seq(1905, 2005, 10))
 stand3D(stand)
 stand=plant3D(stand)
 fire3D(stand)

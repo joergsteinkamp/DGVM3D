@@ -31,7 +31,7 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
     if (!is.vector(soil))
       stop("'soil' must either be a matrix or vector")
   }
-  if (length(z)==1) {
+  if (length(z) == 1) {
     z = rep(z, npatch)
   } else if (length(z) != npatch) {
     stop("'z' must be either of length 'npatch' or 1!")
@@ -40,11 +40,11 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
   hexagon <- getHexagon(area=dgvm3d.options("patch.area"), z=c(0, -1))
 
   if (typeof(layout) == "character") {
-    if (layout=="square") {
+    if (layout == "square") {
       nxy.max = ceiling(sqrt(npatch))
       nxy.min = floor(sqrt(npatch))
       ## with 3 patches the above got the values 2 and 1, so 3 was never reached in the loop below
-      if (npatch==3)
+      if (npatch == 3)
         nxy.min=2
       layout = c(nxy.min, nxy.max)
     } else {
@@ -71,12 +71,17 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
   patches=list()
   for (i in 1:nxy.max) {
     for (j in 1:nxy.min) {
-      id <- (i-1) * nxy.min + j
+      id <- (i - 1) * nxy.min + j
       if (id > npatch)
         break
-      x = (1.5 + dist) * (i-1) * hexagon@supp[['outer.radius']]
-      y = (2.0 + dist) * (j-1) * hexagon@supp[['inner.radius']] + (i %% 2) * (1+ dist/1.95) * hexagon@supp[['inner.radius']]
-      if (id==1) {
+      if (composition == "temporal") {
+        x = (2 + dist) * (i - 1) * hexagon@supp[['outer.radius']]
+        y = (2 + dist) * (j - 1) * hexagon@supp[['inner.radius']]
+      } else {
+        x = (1.5 + dist) * (i - 1) * hexagon@supp[['outer.radius']]
+        y = (2.0 + dist) * (j - 1) * hexagon@supp[['inner.radius']] + (i %% 2) * (1 + dist / 1.95) * hexagon@supp[['inner.radius']]
+      }
+      if (id == 1) {
         patch.pos <- matrix(c(x, y, z[1]), 3, 1)
         row.names(patch.pos) <- c("x", "y", "z")
       } else {
@@ -94,7 +99,14 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
     }
   }
 
-  return(new("Stand", area=dgvm3d.options("patch.area"), year=year, hexagon=hexagon, layout=layout, composition=composition, patch.pos=t(patch.pos), patches=patches))
+  return(new("Stand",
+             area=dgvm3d.options("patch.area"),
+             year=year,
+             hexagon=hexagon,
+             layout=layout,
+             composition=composition,
+             patch.pos=t(patch.pos),
+             patches=patches))
 }
 
 #' Remove/add trees with a new vegetation data.frame
