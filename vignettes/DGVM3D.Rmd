@@ -317,4 +317,8 @@ rgl.snapshot("succession.png")
 ```
 ![Time series of 4 patches in the Sahel region from 1905 to 2005, every 10 years.](succession.png)
 
+### Rotating Animation
+
+The `demo('dgvm3d.animation')` contains an example with a snapshot of all 12 patches, starting in 1860 rotating around the central z-axis and every 50 frames the year is incremented. *Be carefull* this takes several minutes. It also includes commented out code to save all pictures, label them and convert them to MP4.
+
 # References
