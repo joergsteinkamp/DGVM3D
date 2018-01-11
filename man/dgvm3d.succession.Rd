@@ -3,14 +3,14 @@
 \docType{data}
 \name{dgvm3d.succession}
 \alias{dgvm3d.succession}
-\title{timeseries data from 1865-2005 in 5 year steps}
-\format{An object of class \code{list} of length 13.}
+\title{Vegetation timeseries data from 1860-2005}
+\format{An object of class \code{list} of length 3.}
 \usage{
 dgvm3d.succession
 }
 \description{
-A list of 13 data.frames with simulation results of a LPJ-GUESS model run without random patch disturbance at the 13 locations defined in \code{\link{dgvm3d.locations}}.
-Only every 5th year is included from 1860 to 2005. All patches at all locations were disturbed in 1859.
+A list of 3 data.frames with simulation results of a LPJ-GUESS model run without random patch disturbance at 3 locations.
+All patches at all locations were disturbed in 1859.
 }
 \details{
 @name dgvm3d.succession

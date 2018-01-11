@@ -111,19 +111,11 @@ dgvm3d.options <- function(x=NULL,
   dgvm3d.options("default")
 }
 
-#' LPJ-GUESS gridlist of 13 locations
-#'
-#' This is the default test gridlist shipped with the LPJ-GUESS source code.
-#'
-#'  @name dgvm3d.locations
-#'  @docType data
-#'  @keywords data
-"dgvm3d.locations"
 
-#' timeseries data from 1865-2005 in 5 year steps
+#' Vegetation timeseries data from 1860-2005
 #'
-#' A list of 13 data.frames with simulation results of a LPJ-GUESS model run without random patch disturbance at the 13 locations defined in \code{\link{dgvm3d.locations}}.
-#' Only every 5th year is included from 1860 to 2005. All patches at all locations were disturbed in 1859.
+#' A list of 3 data.frames with simulation results of a LPJ-GUESS model run without random patch disturbance at 3 locations.
+#' All patches at all locations were disturbed in 1859.
 #'
 #'  @name dgvm3d.succession
 #'  @docType data

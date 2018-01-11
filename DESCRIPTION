@@ -11,7 +11,7 @@ Description: This is a visualization tool for simulated vegetation structure/
     succession in space and/or time of forest gap models. Those models should
     contain either individual trees or cohorts (e.g. LPJ-GUESS: Smith et al. (2001,
     2014)).
-License: GPL | file LICENSE
+License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1

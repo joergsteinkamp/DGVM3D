@@ -120,22 +120,24 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
 #' @export
 updateStand <- function(stand, vegetation, year=NULL) {
   Year=PID=NULL
-  old.year = stand@year
-  new.years = sort(unique(vegetation$Year))
-  if (all(new.years <= old.year))
-    stop("No larger year in vegetation data.frame!")
-  if (!is.null(year)) {
-    if (all(new.years != year))
-      stop(paste0("Given 'year' (", year, ") not in 'vegetation data.frame!"))
-  } else {
-    year = new.years[which(new.years>old.year)[1]]
+  if (is.null(year)) {
+    old.year = stand@year
+    new.years = sort(unique(vegetation$Year))
+    if (all(new.years <= old.year))
+      stop("No larger year in vegetation data.frame!")
+    if (!is.null(year)) {
+      if (all(new.years != year))
+        stop(paste0("Given 'year' (", year, ") not in 'vegetation data.frame!"))
+    } else {
+      year = new.years[which(new.years > old.year)[1]]
+    }
   }
-  vegetation = subset(vegetation, Year==year)
+  vegetation = subset(vegetation, Year == year)
   stand@year = year
 
   for ( i in 1:length(stand@patches)) {
-    new.patch.veg = subset(vegetation, PID==stand@patches[[i]]@pid)
-    if (nrow(new.patch.veg)>0) {
+    new.patch.veg = subset(vegetation, PID == stand@patches[[i]]@pid)
+    if (nrow(new.patch.veg) > 0) {
       new.patch.veg$x = NA
       new.patch.veg$y = NA
       new.patch.veg$dnn = NA
@@ -143,8 +145,8 @@ updateStand <- function(stand, vegetation, year=NULL) {
       if (length(old.vid) > 0) {
         ## removal of killed individuals
         for (j in 1:length(old.vid)) {
-          remain = sum(new.patch.veg$VID==old.vid[j])
-          old.trees = stand@patches[[i]]@vegetation[stand@patches[[i]]@vegetation$VID==old.vid[j], ]
+          remain = sum(new.patch.veg$VID == old.vid[j])
+          old.trees = stand@patches[[i]]@vegetation[stand@patches[[i]]@vegetation$VID == old.vid[j], ]
           old.trees = old.trees[with(old.trees, order(-dnn)), ]
           new.patch.veg[new.patch.veg$VID==old.vid[j], "x"] = old.trees$x[1:remain]
           new.patch.veg[new.patch.veg$VID==old.vid[j], "y"] = old.trees$y[1:remain]
