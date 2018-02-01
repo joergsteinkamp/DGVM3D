@@ -248,24 +248,30 @@ tree3D <- function(tree=NULL, offset=c(0, 0, 0), col=c("#22BB22", "33FF33"), opa
   color.column = dgvm3d.options("color.column")
   crownRadius = sqrt(tree$Crownarea / pi)
   if (tree$LeafType == 1) {
+    if (is.null(tree$BoleHeight)) {
+      tree$BoleHeight = 0.25 * tree$Height
+    }
     shade3d(cylinder3d(matrix(c(tree$x + offset[1], tree$y + offset[2], offset[3],
-                                tree$x + offset[1], tree$y + offset[2], 0.25 * tree$Height + offset[3]),
+                                tree$x + offset[1], tree$y + offset[2], tree$BoleHeight + offset[3]),
                               nrow=2, byrow=TRUE),
                        rep(tree$DBH/2, 2), sides=faces), col="#8B4513")
-    cone = getCone(radius = crownRadius, height = 0.75 * tree$Height, faces=faces, close=TRUE)
+    cone = getCone(radius = crownRadius, height = tree$Height - tree$BoleHeight, faces=faces, close=TRUE)
     cone@vertices[,1] = cone@vertices[,1] + tree$x + offset[1]
     cone@vertices[,2] = cone@vertices[,2] + tree$y + offset[2]
-    cone@vertices[,3] = cone@vertices[,3] + 0.25 * tree$Height + offset[3]
+    cone@vertices[,3] = cone@vertices[,3] + tree$BoleHeight + offset[3]
     triangles3d(cone@vertices[cone@id, ], col=col[eval(parse(text=paste0("tree$",color.column)))], alpha=opacity)
   } else if (tree$LeafType == 2) {
+    if (is.null(tree$BoleHeight)) {
+      tree$BoleHeight = 0.3333 * tree$Height
+    }
     shade3d(cylinder3d(matrix(c(tree$x + offset[1], tree$y + offset[2], offset[3],
-                                tree$x + offset[1], tree$y + offset[2], 0.34 * tree$Height + offset[3]),
+                                tree$x + offset[1], tree$y + offset[2], 1.05 * tree$BoleHeight + offset[3]),
                               nrow=2, byrow=TRUE),
                        rep(tree$DBH/2, 2), sides=faces), col="#8B4513")
-    ellipsoid = getEllipsoid(radius=crownRadius, height=0.66*tree$Height, faces=3*faces)
+    ellipsoid = getEllipsoid(radius=crownRadius, height=tree$Height - tree$BoleHeight, faces=3*faces)
     ellipsoid@vertices[,1] = ellipsoid@vertices[,1] + tree$x + offset[1]
     ellipsoid@vertices[,2] = ellipsoid@vertices[,2] + tree$y + offset[2]
-    ellipsoid@vertices[,3] = ellipsoid@vertices[,3] + 0.25 * tree$Height + offset[3]
+    ellipsoid@vertices[,3] = ellipsoid@vertices[,3] + tree$BoleHeight + offset[3]
     triangles3d(ellipsoid@vertices[ellipsoid@id, ], col=col[eval(parse(text=paste0("tree$",color.column)))], alpha=opacity)
   }
   return(invisible(NULL))
