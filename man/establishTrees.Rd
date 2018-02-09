@@ -24,8 +24,16 @@ stand = initStand(npatch=1)
 veg = data.frame(DBH=rep(0.5, 100))
 veg$Height    = veg$DBH * 35
 veg$Crownarea = veg$DBH * 10
-veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
-veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
+veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
+veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+stand3D(stand)
+dummy = plant3D(stand)
+rgl.clear()
+dgvm3d.options(establish.method = "sunflower")
+stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+stand3D(stand)
+dummy = plant3D(stand)
 }
 }
+

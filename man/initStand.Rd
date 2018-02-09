@@ -41,3 +41,4 @@ stand <- initStand(npatch=9, z=sort(rnorm(9, sd=2)), layout='linear')
 stand3D(stand)
 }
 }
+

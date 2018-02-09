@@ -41,3 +41,4 @@ stand@patches[[2]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.r
 dummy = plant3D(stand, 2)
 }
 }
+

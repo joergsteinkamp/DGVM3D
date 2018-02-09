@@ -26,3 +26,4 @@ Visualize a snapshot of patches.
 stand=snapshot(dgvm3d.succession[[1]])
 }
 }
+

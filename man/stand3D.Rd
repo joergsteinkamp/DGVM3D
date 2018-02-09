@@ -20,3 +20,4 @@ Uses \code{\link{rgl}} to visualize a single, if patch.id is given, or all patch
 \seealso{
 \code{\link{initStand}} for examples
 }
+

@@ -55,8 +55,7 @@ setClass("Stand",
 #' @param samples 2 element vector. 1. number of samples to determine the next trees position. 2. max. number to repeat the sampling
 #' @param overlap fraction of crownradius allowed to overlap.
 #' @param sort.column 2 element vector: 1. vegetation data.frame culumn name to sort by. 2. "descending" (default) or "ascending".
-#' @param establish.method where to place the next tree: 'random', 'min' or 'max' of valid sampled new positions.
-#' @param establish.beta.parameters shape parameters for beta random value to get the distance from the patch center. For 'random' it should be biased away from the center c(1.03, 0.9), whereas for 'max' this should be biased towards from the center c(0.97, 1.4), otherwise trees tend to accumulate in the center.
+#' @param establish.method where to place the trees: 'random', 'sunflower' or 'row'. If there are trees with positions already 'random' is applied.
 #' @param color.column name of the vegetation column to create the canopy colors from.
 #' @param verbose print some information.
 #' @export
@@ -66,7 +65,6 @@ dgvm3d.options <- function(x=NULL,
                            overlap=NULL,
                            sort.column=NULL,
                            establish.method=NULL,
-                           establish.beta.parameters=NULL,
                            color.column=NULL,
                            verbose=NULL) {
   if (!is.null(x)) {
@@ -76,7 +74,6 @@ dgvm3d.options <- function(x=NULL,
       options(dgvm3d.overlap=0.5)
       options(dgvm3d.sort.column=c("Crownarea", "descending"))
       options(dgvm3d.establish.method="random")
-      options(dgvm3d.establish.beta.parameters=c(1.1, 0.9))
       options(dgvm3d.color.column="ShadeType")
       options(dgvm3d.verbose=TRUE)
       return(TRUE)
@@ -98,8 +95,6 @@ dgvm3d.options <- function(x=NULL,
     options(dgvm3d.sort.column=sort.column)
   if (!is.null(establish.method))
     options(dgvm3d.establish.method=establish.method)
-  if (!is.null(establish.beta.parameters))
-    options(dgvm3d.establish.beta.parameters=establish.beta.parameters)
   if (!is.null(color.column))
     options(dgvm3d.color.column=color.column)
   if (!is.null(verbose))

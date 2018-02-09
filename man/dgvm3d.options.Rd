@@ -6,7 +6,7 @@
 \usage{
 dgvm3d.options(x = NULL, patch.area = NULL, samples = NULL,
   overlap = NULL, sort.column = NULL, establish.method = NULL,
-  establish.beta.parameters = NULL, color.column = NULL, verbose = NULL)
+  color.column = NULL, verbose = NULL)
 }
 \arguments{
 \item{x}{query character 'x' for its value.}
@@ -19,9 +19,7 @@ dgvm3d.options(x = NULL, patch.area = NULL, samples = NULL,
 
 \item{sort.column}{2 element vector: 1. vegetation data.frame culumn name to sort by. 2. "descending" (default) or "ascending".}
 
-\item{establish.method}{where to place the next tree: 'random', 'min' or 'max' of valid sampled new positions.}
-
-\item{establish.beta.parameters}{shape parameters for beta random value to get the distance from the patch center. For 'random' it should be biased away from the center c(1.03, 0.9), whereas for 'max' this should be biased towards from the center c(0.97, 1.4), otherwise trees tend to accumulate in the center.}
+\item{establish.method}{where to place the trees: 'random', 'sunflower' or 'row'. If there are trees with positions already 'random' is applied.}
 
 \item{color.column}{name of the vegetation column to create the canopy colors from.}
 
@@ -30,3 +28,4 @@ dgvm3d.options(x = NULL, patch.area = NULL, samples = NULL,
 \description{
 set some variables used in cascading functions
 }
+

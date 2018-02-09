@@ -236,3 +236,55 @@ getEllipsoid <- function(radius=0.5, height=1, faces=c(6, 3)) {
                                height))
   return(new("TriangBody", vertices=as.matrix(vertices), id=id, supp=list(radius=radius, height=height)))
 }
+
+## sunflower is from: https://stackoverflow.com/questions/28567166/uniformly-distribute-x-points-inside-a-circle
+#' Calc the current radius
+#'
+#' @param k current value
+#' @param n total number
+#' @param b number of boundary points
+#'
+#' @return radius
+sunflower.radius <- function(k, n, b) {
+  if (k > n - b) {
+    return(1)
+  }
+  sqrt(k - 1 / 2) / sqrt(n - (b + 1) / 2)
+}
+#' return the positions
+#'
+#' @param n total number of trees
+#' @param alpha smoothing factor for boundary points
+#'
+#' @return position data.frame
+sunflower.disc <- function(n, alpha=0) {
+  ret = data.frame()
+  b = round(alpha * sqrt(n))
+  phi = (sqrt(5) + 1) / 2
+  for (k in 1:n) {
+    r = sunflower.radius(k, n, b)
+    theta = 2 * pi * k / phi^2
+    ret = rbind(ret, data.frame(x=r * cos(theta),
+                                y=r * sin(theta)))
+  }
+  return(ret)
+}
+
+#' Random distribution in a circle
+#'
+#' @param n total numer of trees
+#' @param strict should the value 2pi be excluded
+#'
+#' @return data.frame of positions
+random.disc <- function(n, strict=FALSE) {
+  r = runif(n, 0., 1.)
+  theta = runif(n, 0., 2. * pi)
+  if (strict) {
+    while (any(theta == 2 * pi)) {
+      theta[theta == 2. * pi] = runif(sum(theta == 2. * pi), 0., 2. * pi)
+    }
+  }
+  data.frame(x=sqrt(r) * cos(theta),
+             y=sqrt(r) * sin(theta))
+}
+

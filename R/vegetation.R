@@ -15,9 +15,16 @@
 #' veg = data.frame(DBH=rep(0.5, 100))
 #' veg$Height    = veg$DBH * 35
 #' veg$Crownarea = veg$DBH * 10
-#' veg$LeafType  = sample(0:1, nrow(veg), replace=TRUE)
-#' veg$ShadeType = sample(0:1, nrow(veg), replace=TRUE)
+#' veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
+#' veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 #' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+#' stand3D(stand)
+#' dummy = plant3D(stand)
+#' rgl.clear()
+#' dgvm3d.options(establish.method = "sunflower")
+#' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+#' stand3D(stand)
+#' dummy = plant3D(stand)
 #' }
 establishTrees <- function(vegetation=NULL, radius=1) {
   if (is.null(vegetation))
@@ -27,12 +34,14 @@ establishTrees <- function(vegetation=NULL, radius=1) {
   overlap          <- dgvm3d.options("overlap")
   sort.column      <- dgvm3d.options("sort.column")
   establish.method <- dgvm3d.options("establish.method")
-  est.beta.param   <- dgvm3d.options("establish.beta.parameters")
 
-  if (dgvm3d.options("verbose")) {
+  if (dgvm3d.options("verbose") && dgvm3d.options("establish.method") == "random") {
     message("### establishTrees ###")
     message(sprintf("Using %i samples in max. %i repetitions (max. crown radius overlap: %0.3f).", samples[1], samples[2], overlap))
     message(paste0("Sorting by '", sort.column[1], "' in '", sort.column[2], "' order."))
+  } else if (dgvm3d.options("verbose")) {
+    message("### establishTrees ###")
+    message(paste0 ("Using method: '", establish.method, "'."))
   }
 
   if (any(colnames(vegetation) == sort.column[1])) {
@@ -50,14 +59,31 @@ establishTrees <- function(vegetation=NULL, radius=1) {
   if (nrow(vegetation) == 0)
     return(vegetation)
 
-  ## check for present position columns
-  if (!all(c("x","y") %in% colnames(vegetation))) {
+  ## check for presence of position columns
+  ## and establishment method
+  established = FALSE
+  if (!all(c("x", "y") %in% colnames(vegetation))) {
     if (dgvm3d.options("verbose"))
       message("New establishment.")
-    vegetation$x = NA
-    vegetation$y = NA
+    if (establish.method == "sunflower") {
+      tree.ids <- which(vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))
+      positions <- sunflower.disc(length(tree.ids))
+      vegetation$x[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$x * radius
+      vegetation$y[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$y * radius
+      established = TRUE
+    } else if (establish.method == "row") {
+      stop("Establishment method 'row' is comming soon!")
+
+    } else {
+      vegetation$x = NA
+      vegetation$y = NA
+    }
   } else if (dgvm3d.options("verbose")) {
-    message("Establishing new trees.")
+    message("Establishing additional trees.")
+  }
+
+  if (!established && establish.method != "random") {
+    warning("If there are already trees with positions, only 'random' establishment works!")
   }
 
   ## first tree (excluding grasses)
@@ -69,27 +95,29 @@ establishTrees <- function(vegetation=NULL, radius=1) {
   }
 
   ## any other tree
-  ## Filter grasses by negative Crownarea, should bettter be done by lifeform
-  for (i in which((is.na(vegetation$x) | is.na(vegetation$y)) & (vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)))) {
-    trees.with.xy = which(!is.na(vegetation$x) & !is.na(vegetation$y))
+  ## Filter grasses by negative Crownarea, should better be done by lifeform
+  for (i in which((is.na(vegetation$x) | is.na(vegetation$y)) & vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))) {
+    trees.with.xy = which(!is.na(vegetation$x) & !is.na(vegetation$y) & vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))
     nwhile = 0
-    dist <- matrix(NA, i-1, samples[1])
+    dist <- matrix(NA, i - 1, samples[1])
     while(all(is.na(dist))) {
       if (nwhile > samples[2])
         stop("Could not find suitable position for next tree. Adjust dgvm3d.options 'overlap' and 'samples'!")
       phi <- runif(samples[1]) * 2 * pi
       ## slightly biased towards the center, since max distance below tends to place less points in the center.
       ## Need to find the optimum values (depends also in number of samples)
-      r   <- rbeta(samples[1], est.beta.param[1], est.beta.param[2]) * radius
-      new.x <- sin(phi) * r
-      new.y <- cos(phi) * r
+      new.pos = random.disc(samples[1]) * radius
+      #r   <- rbeta(samples[1], est.beta.param[1], est.beta.param[2]) * radius
+      #new.x <- sin(phi) * r
+      #new.y <- cos(phi) * r
 
       ## distance to all other trees
       dist <- matrix(NA, length(trees.with.xy), samples[1])
       for (j in 1:samples[1])
-        dist[,j] <- sqrt((new.x[j] - vegetation$x[trees.with.xy])^2 + (new.y[j] -vegetation$y[trees.with.xy])^2)
+        dist[,j] <- sqrt((new.pos$x[j] - vegetation$x[trees.with.xy])^2 + (new.pos$y[j] -vegetation$y[trees.with.xy])^2)
 
       ## TODO: NaNs are produced for grasses, since Crownarea = -1
+      ## 20180209: should be fixed now
       crown.radius <- sqrt(vegetation$Crownarea[trees.with.xy] / pi)
       min.dist <- (crown.radius + sqrt(vegetation$Crownarea[i] / pi)) * (1 - overlap)
       min.dist = matrix(rep(min.dist, samples[1]), length(min.dist), samples[1])
@@ -100,24 +128,18 @@ establishTrees <- function(vegetation=NULL, radius=1) {
       ## on those
       dist = apply(dist, 2, min)
       if (!all(is.na(dist))) {
-        if (establish.method == "max") {
-          k = which.max(dist)
-        } else if (establish.method == "min") {
-          k = which.min(dist)
-        } else if (establish.method == "random") {
-          k = sample(which(is.finite(dist)), 1)
-        } else {
-          stop(paste0("'establish.method' '", establish.method, "' not known!"))
-        }
-        vegetation$x[i] = new.x[k]
-        vegetation$y[i] = new.y[k]
+        k = sample(which(is.finite(dist)), 1)
+
+        vegetation$x[i] = new.pos$x[k]
+        vegetation$y[i] = new.pos$y[k]
       }
       nwhile = nwhile + 1
     } ## while
   }
+
   ## distance to nearest neighbour
   vegetation$dnn = sapply(1:nrow(vegetation), function(x) {
-    min(sqrt((vegetation$x[x]-vegetation$x[-x])^2 + (vegetation$y[x] - vegetation$y[-x])^2))
+    min(sqrt((vegetation$x[x] - vegetation$x[-x])^2 + (vegetation$y[x] - vegetation$y[-x])^2))
   })
   return(vegetation)
 }
