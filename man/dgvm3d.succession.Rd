@@ -18,4 +18,3 @@ All patches at all locations were disturbed in 1859.
  @keywords data
 }
 \keyword{datasets}
-

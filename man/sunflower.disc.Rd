@@ -17,4 +17,3 @@ position data.frame
 \description{
 return the positions
 }
-

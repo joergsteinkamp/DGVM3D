@@ -14,8 +14,8 @@ Description: This is a visualization tool for simulated vegetation structure/
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 5.0.1
-Collate:
+RoxygenNote: 6.0.1
+Collate: 
     'DGVM3D.R'
     'classes.R'
     'flame.R'

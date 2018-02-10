@@ -23,4 +23,3 @@ grass3D(grass = NULL, kind = NULL, offset = c(0, 0, 0), col = "green",
 \description{
 Plant the grass on the patch
 }
-

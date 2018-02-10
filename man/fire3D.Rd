@@ -24,4 +24,3 @@ rgl.light( theta = -25, phi = 30, specular = "#AAAAAA")
 fire3D(stand)
 }
 }
-

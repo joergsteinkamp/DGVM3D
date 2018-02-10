@@ -44,4 +44,3 @@ for (i in 1:nrow(dgvm3d.locations)) {
 }
 }
 }
-

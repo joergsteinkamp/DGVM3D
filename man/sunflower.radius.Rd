@@ -19,4 +19,3 @@ radius
 \description{
 Calc the current radius
 }
-

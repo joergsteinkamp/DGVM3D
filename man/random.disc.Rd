@@ -17,4 +17,3 @@ data.frame of positions
 \description{
 Random distribution in a circle
 }
-

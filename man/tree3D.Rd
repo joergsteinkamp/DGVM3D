@@ -21,4 +21,3 @@ tree3D(tree = NULL, offset = c(0, 0, 0), col = c("#22BB22", "33FF33"),
 \description{
 draw a single tree
 }
-

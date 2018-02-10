@@ -257,6 +257,7 @@ sunflower.radius <- function(k, n, b) {
 #' @param alpha smoothing factor for boundary points
 #'
 #' @return position data.frame
+#' @export
 sunflower.disc <- function(n, alpha=0) {
   ret = data.frame()
   b = round(alpha * sqrt(n))
@@ -276,6 +277,7 @@ sunflower.disc <- function(n, alpha=0) {
 #' @param strict should the value 2pi be excluded
 #'
 #' @return data.frame of positions
+#' @export
 random.disc <- function(n, strict=FALSE) {
   r = runif(n, 0., 1.)
   theta = runif(n, 0., 2. * pi)
@@ -287,4 +289,60 @@ random.disc <- function(n, strict=FALSE) {
   data.frame(x=sqrt(r) * cos(theta),
              y=sqrt(r) * sin(theta))
 }
+
+
+#' row-wise distribution of points in a disc
+#'
+#' @param n number of points
+#'
+#' @return data.frame of x and y positions
+#' @export
+#'
+#' @examples
+#' par(mfrow=c(2,2), mai=c(0,0,0,0))
+#' for (n in c(51, 250, 280, 1000)) {
+#'   ret=row.disc(n)
+#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)), type="l", axes = FALSE, ylab = "", xlab="")
+#'   points(ret)
+#' }
+#' par(mfrow=c(2,2), mai=c(0,0,0,0))
+#' for (n in c(120, 640, 1280, 2400)) {
+#'   ret=row.disc(n)
+#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)), type="l", axes = FALSE, ylab = "", xlab="")
+#'   points(ret)
+#' }
+row.disc <- function(n) {
+  warning("This method is still very buggy due to lazy use of round/floor/ceiling.")
+  warning("See examples, to see the potentially wrong patterns.")
+  d = sqrt(pi / n / 2)
+  ret = data.frame()
+  ## round the number of rows in half a circle to the lower even number
+  nrows = floor(1 / d / 2) + 1
+  drow = 1 / nrows
+  for (i in 1:nrows) {
+    theta = acos(1 - (i - 0.5) * drow)
+    npr = floor(2 * sin(theta) / d) # number per row
+    if (i == nrows && nrow(ret) + npr * 2 > n) {
+      npr  = (n - nrow(ret)) / 2
+    } else if (i == nrows && nrow(ret) + npr * 2 < n) {
+      npr  = (n - nrow(ret)) / 2
+    }
+    if (npr <= 0)
+      next
+    # upper half (y > 0)
+    ret = rbind(ret, data.frame(x=seq(-sin(theta) * (1 - d / 2),
+                                      sin(theta) * (1 - d / 2), length.out = npr),
+                                y=1 - (i - 0.5) * drow))
+    ## if odd and first row, remove one value
+    if (i == 1 && n %% 2)
+      npr = npr - 1
+    ## lower half (y < 0)
+    ret = rbind(ret, data.frame(x=seq(-sin(theta) * (1 - d / 2),
+                                      sin(theta)  * (1 - d / 2), length.out = npr),
+                                y=(i - 0.5) * drow - 1 ))
+
+  }
+  return(ret)
+}
+
 

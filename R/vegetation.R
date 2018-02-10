@@ -4,6 +4,8 @@
 #'
 #' @param vegetation the vegetation data.frame
 #' @param radius the radius used to distribute the vegetation to
+#' @param jitter add a small amount of noise to the positions. Applies only for dgvm3d.options("establish.method") = "row" or "sunflower. default FALSE.
+#' @param ... additiontal parameters passed to jitter.
 #' @return the vegetation data.frame with the positions
 #' @include classes.R
 #' @importFrom stats runif rbeta
@@ -20,13 +22,23 @@
 #' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 #' stand3D(stand)
 #' dummy = plant3D(stand)
+#' rot.z = rotationMatrix(0, 0, 0, 1)
+#' rot.y = rotationMatrix(0, 1, 0, 0)
+#' rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
+#'
 #' rgl.clear()
 #' dgvm3d.options(establish.method = "sunflower")
 #' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 #' stand3D(stand)
 #' dummy = plant3D(stand)
+#'
+#' rgl.clear()
+#' dgvm3d.options(establish.method = "row")
+#' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']], jitter=TRUE, amount=0.01)
+#' stand3D(stand)
+#' dummy = plant3D(stand)
 #' }
-establishTrees <- function(vegetation=NULL, radius=1) {
+establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
   if (is.null(vegetation))
     stop("'vegetation' data.frame is missing!")
 
@@ -68,11 +80,23 @@ establishTrees <- function(vegetation=NULL, radius=1) {
     if (establish.method == "sunflower") {
       tree.ids <- which(vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))
       positions <- sunflower.disc(length(tree.ids))
+      if (jitter) {
+        positions$x = jitter(positions$x, ...)
+        positions$y = jitter(positions$y, ...)
+      }
       vegetation$x[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$x * radius
       vegetation$y[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$y * radius
       established = TRUE
     } else if (establish.method == "row") {
-      stop("Establishment method 'row' is comming soon!")
+      tree.ids <- which(vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))
+      positions <- row.disc(length(tree.ids))
+      if (jitter) {
+        positions$x = jitter(positions$x, ...)
+        positions$y = jitter(positions$y, ...)
+      }
+      vegetation$x[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$x * radius
+      vegetation$y[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$y * radius
+      established = TRUE
 
     } else {
       vegetation$x = NA

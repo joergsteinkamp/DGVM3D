@@ -19,4 +19,3 @@ stand
 \description{
 Removes those individuums with the shortest distance to any neighbour and adds new individuums randomly.
 }
-
