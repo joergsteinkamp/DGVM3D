@@ -4,7 +4,7 @@
 #'
 #' @param vegetation the vegetation data.frame
 #' @param radius the radius used to distribute the vegetation to
-#' @param jitter add a small amount of noise to the positions. Applies only for dgvm3d.options("establish.method") = "row" or "sunflower. default FALSE.
+#' @param jitter add a small amount of noise to the positions. Applies only for dgvm3d.options("establish.method") = "row" or "sunflower" (default: FALSE).
 #' @param ... additiontal parameters passed to jitter.
 #' @return the vegetation data.frame with the positions
 #' @include classes.R

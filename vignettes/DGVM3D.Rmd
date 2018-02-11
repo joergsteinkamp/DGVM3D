@@ -185,8 +185,7 @@ When the library is loaded a few global default options are set to reduce the nu
 | samples | c(10, 10) | [1] Number of samples to determin next tree position; [2] max. repetition if no suitable position is found |
 | overlap | 0.5 | fraction of crownradii to overlap with nearest neighbour during establishment |
 | sort.column | c("Crownarea", "descending") | Determine the position for the largest trees first, then fill the gaps |
-| establish.method | "random" | How to choose from the above sample for the next tree position ('random', 'min' or 'max' distance) |
-| beta.parameters | c(1.1, 0.9) | shape parameters for beta random value to determine the distance from the patch center |
+| establish.method | "random" | How to choose from the above sample for the next tree position ('random', 'row' or 'sunflower' distance) |
 | color.column | "ShadeType" | which data column to use for the canopy color |
 | verbose | TRUE | print some messages |
 
@@ -227,42 +226,54 @@ stand = initStand()
 stand3D(stand)
 snapshot3d("stand_1x1.png")
 ```
-![One single hexagonal default stand](stand_1x1.png)
+![One single hexagonal default stand (two soil layers of 0.5 and 1m depth.)](stand_1x1.png)
 
 ## Establish the individual trees
 
-The individual trees are by default randomly distributed within the inner radius of each patch hexagon with `establishTrees`. The returned data.frame should is the put into the respective vegetation slot of a patch of a stand.
+The individual trees are by default randomly distributed within the inner radius of each patch hexagon with `establishTrees`. The returned data.frame should is the put into the respective vegetation slot of a patch of a stand. There are three algorithms implemented, how the individual trees are distributed:
+
+- **random:** somewhere on the patch, respecting the maximum overlap (default).
+- **sunflower:** comparable to the seeds in a sunflower (golden ratio)
+- **row:** trees are planted in a row with approximately equal distance.
+
+The later two algorithms can be complemented by setting the option 'jitter' to TRUE and optionally giving 'jitter' parameters for fine tuning. Alternatively additional the columns 'x' and 'y' in the vegetation data.frame can be set with custom coordinates with (0/0) in the center of the hexagon.
 
 ## Visualisation
 
 `stand3D` renders the soil hexagons in a rgl window and `plant3D` renders the trees planted with `establishTrees`.
 
-```{r, message=FALSE}
-stand = initStand(npatch=2)
-stand3D(stand, 1)
-veg = data.frame(DBH=rep(0.4, 50))
+```{r, message=FALSE, warning=FALSE}
+veg = data.frame(DBH=rep(0.05, 250))
 veg$Height    = veg$DBH * 35
 veg$Crownarea = veg$DBH * 5
 veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 veg$LAI = rep(2, nrow(veg))
 veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=3, LAI=0.5))
+stand = initStand(npatch=3)
+par3d(skipRedraw=TRUE)
+stand3D(stand, 1)
+dgvm3d.options(establish.method = "random")
 stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 stand = plant3D(stand)
 
 stand3D(stand, 2)
-veg = data.frame(DBH=rep(0.5, 100) * rgamma(100, 2.5, 9))
-veg$Height    = veg$DBH * 35  * rbeta(nrow(veg),10,1)
-veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
-veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
-veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
-veg$LAI = rep(2, nrow(veg))
-veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=-1, LAI=1.5))
+dgvm3d.options(establish.method = "sunflower")
 stand@patches[[2]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 stand = plant3D(stand, 2)
+
+stand3D(stand, 3)
+dgvm3d.options(establish.method = "row")
+stand@patches[[3]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+stand = plant3D(stand, 3)
+
+par3d(skipRedraw=FALSE)
+rot.z = rotationMatrix(pi/3, 0, 0, 1)
+rot.y = rotationMatrix(-pi/8, 1, 0, 0)
+rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
 snapshot3d("stand_1x2.png")
 ```
-![One stand with two patches](stand_1x2.png)
+![One stand with 3 patches](stand_1x2.png)
 
 ## Overview Applications
 
@@ -272,7 +283,8 @@ With the function `snapshot` the trees present at the given year and for the giv
 
 The succession is often visualized with the Leaf area index (LAI). Starting with grasses in the beginning, then early successional trees (shade intolerant) and later on the late successional trees (shade tolerant). Due to the random component in establishment, mortality and patch distroying disturbance the indivudual patches look quiet chaotic with a low number of repeated patches. However, if averaged over all patches, which is normally done, the expected successional pattern emerges. Allthough still not very smooth here, since we have only 12 patches. Normally a simulation should have at least 50 or better 100 patches (see `demo(dgvm3d.ggsuccession)`).
 
-```{r, message=FALSE}
+```{r, message=FALSE, results="hide"}
+dgvm3d.options("default")
 location <- 'Canada - boreal forest'
 for (y in c(1865, 1915, 2005)) {
   open3d(windowRect=c(0, 0, 800, 600), scale=c(1, 1, 1), FOV=0)
