@@ -11,7 +11,7 @@ establishTrees(vegetation = NULL, radius = 1, jitter = FALSE, ...)
 
 \item{radius}{the radius used to distribute the vegetation to}
 
-\item{jitter}{add a small amount of noise to the positions. Applies only for dgvm3d.options("establish.method") = "row" or "sunflower. default FALSE.}
+\item{jitter}{add a small amount of noise to the positions. Applies only for dgvm3d.options("establish.method") = "row" or "sunflower" (default: FALSE).}
 
 \item{...}{additiontal parameters passed to jitter.}
 }
@@ -45,7 +45,8 @@ dummy = plant3D(stand)
 
 rgl.clear()
 dgvm3d.options(establish.method = "row")
-stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']], jitter=TRUE, amount=0.01)
+stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']],
+                                               jitter=TRUE, amount=0.01)
 stand3D(stand)
 dummy = plant3D(stand)
 }

@@ -238,6 +238,7 @@ getEllipsoid <- function(radius=0.5, height=1, faces=c(6, 3)) {
 }
 
 ## sunflower is from: https://stackoverflow.com/questions/28567166/uniformly-distribute-x-points-inside-a-circle
+##
 #' Calc the current radius
 #'
 #' @param k current value
@@ -302,18 +303,20 @@ random.disc <- function(n, strict=FALSE) {
 #' par(mfrow=c(2,2), mai=c(0,0,0,0))
 #' for (n in c(51, 250, 280, 1000)) {
 #'   ret=row.disc(n)
-#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)), type="l", axes = FALSE, ylab = "", xlab="")
+#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)),
+#'        type="l", axes = FALSE, ylab = "", xlab="")
 #'   points(ret)
 #' }
 #' par(mfrow=c(2,2), mai=c(0,0,0,0))
 #' for (n in c(120, 640, 1280, 2400)) {
 #'   ret=row.disc(n)
-#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)), type="l", axes = FALSE, ylab = "", xlab="")
+#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)),
+#'        type="l", axes = FALSE, ylab = "", xlab="")
 #'   points(ret)
 #' }
 row.disc <- function(n) {
   warning("This method is still very buggy due to lazy use of round/floor/ceiling.")
-  warning("See examples, to see the potentially wrong patterns.")
+  warning("See 'example(row.disc)', to see the potentially wrong patterns.")
   d = sqrt(pi / n / 2)
   ret = data.frame()
   ## round the number of rows in half a circle to the lower even number

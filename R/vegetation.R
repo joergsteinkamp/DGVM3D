@@ -34,7 +34,8 @@
 #'
 #' rgl.clear()
 #' dgvm3d.options(establish.method = "row")
-#' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']], jitter=TRUE, amount=0.01)
+#' stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']],
+#'                                                jitter=TRUE, amount=0.01)
 #' stand3D(stand)
 #' dummy = plant3D(stand)
 #' }

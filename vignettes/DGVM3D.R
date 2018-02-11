@@ -18,32 +18,39 @@ stand = initStand()
 stand3D(stand)
 snapshot3d("stand_1x1.png")
 
-## ---- message=FALSE------------------------------------------------------
-stand = initStand(npatch=2)
-stand3D(stand, 1)
-veg = data.frame(DBH=rep(0.4, 50))
+## ---- message=FALSE, warning=FALSE---------------------------------------
+veg = data.frame(DBH=rep(0.05, 250))
 veg$Height    = veg$DBH * 35
 veg$Crownarea = veg$DBH * 5
 veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
 veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
 veg$LAI = rep(2, nrow(veg))
 veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=3, LAI=0.5))
+stand = initStand(npatch=3)
+par3d(skipRedraw=TRUE)
+stand3D(stand, 1)
+dgvm3d.options(establish.method = "random")
 stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 stand = plant3D(stand)
 
 stand3D(stand, 2)
-veg = data.frame(DBH=rep(0.5, 100) * rgamma(100, 2.5, 9))
-veg$Height    = veg$DBH * 35  * rbeta(nrow(veg),10,1)
-veg$Crownarea = veg$DBH * 5 * rnorm(nrow(veg), 1, 0.1)
-veg$LeafType  = sample(1:2, nrow(veg), replace=TRUE)
-veg$ShadeType = sample(1:2, nrow(veg), replace=TRUE)
-veg$LAI = rep(2, nrow(veg))
-veg = rbind(veg, data.frame(DBH=-1, Height=-1, Crownarea=-1, LeafType=-1, ShadeType=-1, LAI=1.5))
+dgvm3d.options(establish.method = "sunflower")
 stand@patches[[2]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
 stand = plant3D(stand, 2)
+
+stand3D(stand, 3)
+dgvm3d.options(establish.method = "row")
+stand@patches[[3]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
+stand = plant3D(stand, 3)
+
+par3d(skipRedraw=FALSE)
+rot.z = rotationMatrix(pi/3, 0, 0, 1)
+rot.y = rotationMatrix(-pi/8, 1, 0, 0)
+rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
 snapshot3d("stand_1x2.png")
 
-## ---- message=FALSE------------------------------------------------------
+## ---- message=FALSE, results="hide"--------------------------------------
+dgvm3d.options("default")
 location <- 'Canada - boreal forest'
 for (y in c(1865, 1915, 2005)) {
   open3d(windowRect=c(0, 0, 800, 600), scale=c(1, 1, 1), FOV=0)
