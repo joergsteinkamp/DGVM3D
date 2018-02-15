@@ -312,10 +312,10 @@ row.disc <- function(n) {
   ## helper function, to get the row coordinates, based on the number of rows
   rows.coords = function(nr) {
     lst = lapply(1:nr, function(x, dr=2/nr) {
-      y = 1- (x -0.5) * dr
+      y = 1 - (x - 0.5) * dr
       theta = acos(y)
       x = sin(theta)
-      data.frame(x=c(-x,x), y=y)
+      data.frame(x=c(-x, x), y=y)
     })
     ret <- as.data.frame(do.call(rbind, lst))
     ret$g <- rep(1:nr, each=2)
@@ -343,13 +343,13 @@ row.disc <- function(n) {
 
   ## calculate a suitable number of rows, so that the distance between rows and the distance within a row is smallest
   i = 1
-  while (i < sqrt(pi*n) -1) {
+  while (i < sqrt(pi*n) - 1) {
     dd <- dr^2 + dp^2
     nr <- nr + 1
     dr <- 2/nr ## distance between rows
     rc <- rows.coords(nr)
     rl <- sapply(unique(rc$g), function(x){diff(rc$x[rc$g==x])}) ## row length
-    dp <- sum(rl) / (n+1) ## distance between points in a row
+    dp <- sum(rl) / (n + 1) ## distance between points in a row
     if (dr^2 + dp^2 > dd)
       break
     i = i + 1
@@ -359,7 +359,7 @@ row.disc <- function(n) {
   ## "Largest Remainder Method" to fill up to exactly 'n' points
   ippr = floor(ppr)
   ## give a larger weight to longer rows by multipying with row length
-  ippr[order((ippr-ppr)*rl)[1:(n-sum(ippr))]] = ippr[order((ippr-ppr)*rl)[1:(n-sum(ippr))]] + 1
+  ippr[order((ippr - ppr) * rl)[1:(n - sum(ippr))]] = ippr[order((ippr - ppr) * rl)[1:(n - sum(ippr))]] + 1
 
   if (sum(ippr) != n)
     stop("Something unexpected happend: the computed number of points does not agree with the given one!\nBlame the author!")
@@ -371,6 +371,6 @@ row.disc <- function(n) {
                y=unique(rc$y[rc$g == x]),
                g=x)
   })
-  ret = do.call(rbind, ret)
+  ret = as.data.frame(do.call(rbind, ret))
   return(ret[c("x", "y")])
 }
