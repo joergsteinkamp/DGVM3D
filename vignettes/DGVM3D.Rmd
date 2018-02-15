@@ -152,26 +152,32 @@ The code writes the following output columns including a header line, if the par
 
 | Column name | Type      | Description |
 |:------------|:---------:|:-------------------------------------------------|
-| Lon         | numeric   | longitude  |
-| Lat         | numeric   | latitude |
-| Year        | integer   | year |
-| SID         | integer   | Stand ID |
-| PID         | integer   | Patch ID |
-| VID         | integer   | Vegetation ID; the ID of a cohort or individuum |
-| Pft         | character | Name of the PFT/Species as defined in the guess instruction file |
-| Lifeform    | integer   | value of Pft lifeform (enum {NOLIFEFORM, TREE, GRASS}) |
-| LeafType    | integer   | value of Pft leafphysiognomy (enum {NOLEAFTYPE, NEEDLELEAF, BROADLEAF}) |
-| PhenType    | integer   | value of Pft phenology (enum {NOPHENOLOGY, EVERGREEN, RAINGREEN, SUMMERGREEN, CROPGREEN, ANY}) |
-| Pathway     | integer   | value of Pft pathway (enum {NOPATHWAY, C3, C4}) |
-| Age         | integer   | value of cohort age |
-| LAI         | numeric   | value of cohort leaf area index |
-| ShadeType   | numeric   | value of cohort alphar as a measure for shade tolerance class. Is ranked in the package. |
-| N           | integer   | number of individual per cohort. In individual mode this is 1. |
-| DBH         | numeric   | individual tree diameter (equal for all members of the same cohort) |
-| Height      | numeric   | individual height |
-| Crownarea   | numeric   | individual crown area |
+| **Lon**       | numeric   | longitude  |
+| **Lat**       | numeric   | latitude |
+| **Year**      | integer   | year |
+| **SID**       | integer   | Stand ID |
+| **PID**       | integer   | Patch ID |
+| **VID**       | integer   | Vegetation ID; the ID of a cohort or individuum |
+| Pft           | character | Name of the PFT/Species as defined in the guess instruction file |
+| **Lifeform**  | integer   | value of Pft lifeform (enum {NOLIFEFORM, TREE, GRASS}) |
+| **LeafType**  | integer   | value of Pft leafphysiognomy (enum {NOLEAFTYPE, NEEDLELEAF, BROADLEAF}) |
+| PhenType      | integer   | value of Pft phenology (enum {NOPHENOLOGY, EVERGREEN, RAINGREEN, SUMMERGREEN, CROPGREEN, ANY}) |
+| Pathway       | integer   | value of Pft pathway (enum {NOPATHWAY, C3, C4}) |
+| Age           | integer   | value of cohort age |
+| **LAI**       | numeric   | value of cohort leaf area index |
+| **ShadeType** | numeric   | value of cohort alphar as a measure for shade tolerance class. Is ranked in the package. |
+| **N**         | integer   | number of individual per cohort. In individual mode this is 1. |
+| **DBH**       | numeric   | individual tree diameter (equal for all members of the same cohort) |
+| **Height**    | numeric   | individual height |
+| **Crownarea** | numeric   | individual crown area |
 
-So far not all of those values are used in the code. However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output! An example dataset ('dgvm3d.succession') is included in this package. However, to save disk space it includes data for every fifth year only.
+An additional column 'BoleHeight' (branch free stem) can be given, if not present BoleHeight for broad-leaved trees is 1/3 of 'Height' and 1/4 for needle-leaved trees.
+
+So far not all of those values are used in the code (used ones are maked bold). However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output! An example dataset ('dgvm3d.succession') is included in this package, which contains a named list of 3 data.frames at 3 locations with 12 patches each for the period 1861 to 2006: 
+
+- Canada - boreal forest
+- Africa - sahel
+- Chile - temperate/mediterranean forest
 
 # DGVM3D workflow
 
@@ -195,7 +201,7 @@ For very large output files I recommend writing an extra input function using da
 
 ### From LPJ-GUESS
 
-The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes. If LPJ-GUESS was run at several locations, it is recommended to read the gridlist first, and create a list of data.frames. In this example below every fifth year after 1859 is selected for the given locations.
+The function `read.LPJ` reads the above output if the output and extend cohorts to `N` average individuals, which will be rendered in varying shapes and colors based on the other attributes. If LPJ-GUESS was run at several locations, it is recommended to read the gridlist first, and create a list of data.frames. In the example below every fifth year after 1859 is selected for the given locations.
 
 ```{r, eval=FALSE}
 dgvm3d.locations = read.table("gridlist.txt",
@@ -218,15 +224,14 @@ Please write and contibute your own input function.
 
 ## Layout
 
-For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches.
+For visualization each patch in a stand is represented by a hexagon with an individual number of soil layers as well as variable height. However, the patch size is equal for all patches. This here is a WebGL element, if your browser supports it, otherwise I guess you see nothing.
 
 ```{r, message=FALSE}
 library(DGVM3D)
 stand = initStand()
 stand3D(stand)
-snapshot3d("stand_1x1.png")
+rglwidget()
 ```
-![One single hexagonal default stand (two soil layers of 0.5 and 1m depth.)](stand_1x1.png)
 
 ## Establish the individual trees
 

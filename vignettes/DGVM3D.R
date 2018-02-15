@@ -16,7 +16,7 @@
 library(DGVM3D)
 stand = initStand()
 stand3D(stand)
-snapshot3d("stand_1x1.png")
+rglwidget()
 
 ## ---- message=FALSE, warning=FALSE---------------------------------------
 veg = data.frame(DBH=rep(0.05, 250))
