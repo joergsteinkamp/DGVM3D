@@ -63,7 +63,7 @@ read.LPJ <- function(file="vegstruct.out", stand.id=1, patch.id=NULL, year=NULL,
   ## vegstruct$Pathway[vegstruct$Pathway==2] = "C4"
   ##
   vegstruct$ShadeType = gapless.rank(vegstruct$ShadeType)
-  if (grass)
+  if (any(2 %in% unique(vegstruct$Lifeform)))
     vegstruct$ShadeType = vegstruct$ShadeType - 1
   ## if (max(vegstruct$ShadeType)==2) {
   ##   vegstruct$ShadeType[vegstruct$ShadeType==1] = "tolerant"
