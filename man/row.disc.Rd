@@ -16,18 +16,12 @@ data.frame of x and y positions
 row-wise distribution of points in a disc
 }
 \examples{
-par(mfrow=c(2,2), mai=c(0,0,0,0))
-for (n in c(51, 250, 280, 1000)) {
+par(mfrow=c(2,2), mai=c(0, 0, 0.5, 0))
+for (n in sample(500, 4)) {
   ret=row.disc(n)
-  plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)),
-       type="l", axes = FALSE, ylab = "", xlab="")
-  points(ret)
-}
-par(mfrow=c(2,2), mai=c(0,0,0,0))
-for (n in c(120, 640, 1280, 2400)) {
-  ret=row.disc(n)
-  plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)),
-       type="l", axes = FALSE, ylab = "", xlab="")
+  plot(cos(seq(0, 2 * pi, length.out=7)) * 1.154701,
+       sin(seq(0, 2 * pi, length.out=7)) * 1.154701,
+       type="l", axes = FALSE, ylab = "", xlab="", main=n)
   points(ret)
 }
 }

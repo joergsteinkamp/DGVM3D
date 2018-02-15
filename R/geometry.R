@@ -300,52 +300,77 @@ random.disc <- function(n, strict=FALSE) {
 #' @export
 #'
 #' @examples
-#' par(mfrow=c(2,2), mai=c(0,0,0,0))
-#' for (n in c(51, 250, 280, 1000)) {
+#' par(mfrow=c(2,2), mai=c(0, 0, 0.5, 0))
+#' for (n in sample(500, 4)) {
 #'   ret=row.disc(n)
-#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)),
-#'        type="l", axes = FALSE, ylab = "", xlab="")
-#'   points(ret)
-#' }
-#' par(mfrow=c(2,2), mai=c(0,0,0,0))
-#' for (n in c(120, 640, 1280, 2400)) {
-#'   ret=row.disc(n)
-#'   plot(sin(seq(0, 2*pi, length.out=361)), cos(seq(0, 2*pi, length.out=361)),
-#'        type="l", axes = FALSE, ylab = "", xlab="")
+#'   plot(cos(seq(0, 2 * pi, length.out=7)) * 1.154701,
+#'        sin(seq(0, 2 * pi, length.out=7)) * 1.154701,
+#'        type="l", axes = FALSE, ylab = "", xlab="", main=n)
 #'   points(ret)
 #' }
 row.disc <- function(n) {
-  warning("This method is still very buggy due to lazy use of round/floor/ceiling.")
-  warning("See 'example(row.disc)', to see the potentially wrong patterns.")
-  d = sqrt(pi / n / 2)
-  ret = data.frame()
-  ## round the number of rows in half a circle to the lower even number
-  nrows = floor(1 / d / 2) + 1
-  drow = 1 / nrows
-  for (i in 1:nrows) {
-    theta = acos(1 - (i - 0.5) * drow)
-    npr = floor(2 * sin(theta) / d) # number per row
-    if (i == nrows && nrow(ret) + npr * 2 > n) {
-      npr  = (n - nrow(ret)) / 2
-    } else if (i == nrows && nrow(ret) + npr * 2 < n) {
-      npr  = (n - nrow(ret)) / 2
-    }
-    if (npr <= 0)
-      next
-    # upper half (y > 0)
-    ret = rbind(ret, data.frame(x=seq(-sin(theta) * (1 - d / 2),
-                                      sin(theta) * (1 - d / 2), length.out = npr),
-                                y=1 - (i - 0.5) * drow))
-    ## if odd and first row, remove one value
-    if (i == 1 && n %% 2)
-      npr = npr - 1
-    ## lower half (y < 0)
-    ret = rbind(ret, data.frame(x=seq(-sin(theta) * (1 - d / 2),
-                                      sin(theta)  * (1 - d / 2), length.out = npr),
-                                y=(i - 0.5) * drow - 1 ))
-
+  ## helper function, to get the row coordinates, based on the number of rows
+  rows.coords = function(nr) {
+    lst = lapply(1:nr, function(x, dr=2/nr) {
+      y = 1- (x -0.5) * dr
+      theta = acos(y)
+      x = sin(theta)
+      data.frame(x=c(-x,x), y=y)
+    })
+    ret <- as.data.frame(do.call(rbind, lst))
+    ret$g <- rep(1:nr, each=2)
+    return(ret)
   }
-  return(ret)
+
+  ## Those number of points are not calculated properly,
+  ## so I did it by hand.
+  if (n == 0) {
+    return(NULL)
+  } else if (n == 1) {
+    return(data.frame(x=0, y=0))
+  } else if (n == 2) {
+    return(data.frame(x=0, y=c(-2/3, 2/3)))
+  } else if (n == 3) {
+    return(data.frame(x=c(-2/3, 2/3, 0), y=c(-2/3, -2/3, 2/3)))
+  } else if (n == 5) {
+    return(data.frame(x=c(-2/3, 2/3, 0, -2/3, 2/3),
+                      y=c(-2/3, -2/3, 0, 2/3, 2/3)))
+  }
+
+  nr <- 0    ## number of rows; initial value
+  dr <- 2/nr ## distance between rows
+  dp <- 1    ## distance between points in a row
+
+  ## calculate a suitable number of rows, so that the distance between rows and the distance within a row is smallest
+  i = 1
+  while (i < sqrt(pi*n) -1) {
+    dd <- dr^2 + dp^2
+    nr <- nr + 1
+    dr <- 2/nr ## distance between rows
+    rc <- rows.coords(nr)
+    rl <- sapply(unique(rc$g), function(x){diff(rc$x[rc$g==x])}) ## row length
+    dp <- sum(rl) / (n+1) ## distance between points in a row
+    if (dr^2 + dp^2 > dd)
+      break
+    i = i + 1
+  }
+  ## calculate the fractional number of points per row
+  ppr = rl / sum(rl) * n
+  ## "Largest Remainder Method" to fill up to exactly 'n' points
+  ippr = floor(ppr)
+  ## give a larger weight to longer rows by multipying with row length
+  ippr[order((ippr-ppr)*rl)[1:(n-sum(ippr))]] = ippr[order((ippr-ppr)*rl)[1:(n-sum(ippr))]] + 1
+
+  if (sum(ippr) != n)
+    stop("Something unexpected happend: the computed number of points does not agree with the given one!\nBlame the author!")
+
+  ## distribute the
+  ret = lapply(unique(rc$g), function(x){
+    dp = diff(rc$x[rc$g == x]) / (ippr[x] + 1)
+    data.frame(x=seq(rc$x[rc$g == x][1] + dp / 2, rc$x[rc$g == x][2] - dp / 2, length.out = ippr[x]),
+               y=unique(rc$y[rc$g == x]),
+               g=x)
+  })
+  ret = do.call(rbind, ret)
+  return(ret[c("x", "y")])
 }
-
-
