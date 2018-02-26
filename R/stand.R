@@ -148,11 +148,14 @@ updateStand <- function(stand, vegetation, year=NULL) {
           remain = sum(new.patch.veg$VID == old.vid[j])
           old.trees = stand@patches[[i]]@vegetation[stand@patches[[i]]@vegetation$VID == old.vid[j], ]
           old.trees = old.trees[with(old.trees, order(-dnn)), ]
-          new.patch.veg[new.patch.veg$VID==old.vid[j], "x"] = old.trees$x[1:remain]
-          new.patch.veg[new.patch.veg$VID==old.vid[j], "y"] = old.trees$y[1:remain]
+          new.patch.veg[new.patch.veg$VID == old.vid[j], "x"] = old.trees$x[1:remain]
+          new.patch.veg[new.patch.veg$VID == old.vid[j], "y"] = old.trees$y[1:remain]
         }
       }
-      stand@patches[[i]]@vegetation = establishTrees(new.patch.veg, stand@hexagon@supp$inner.radius)
+      ## f_js_20180224 DEBUG one grass has coord values
+      stand@patches[[i]]@vegetation = subset(new.patch.veg, Crownarea < 0 | !is.finite(Crownarea))
+      stand@patches[[i]]@vegetation = rbind(stand@patches[[i]]@vegetation,
+                                            establishTrees(subset(new.patch.veg, Crownarea > 0 & is.finite(Crownarea)), stand@hexagon@supp$inner.radius))
     } else {
       stand@patches[[i]]@vegetation = data.frame()
     }

@@ -43,6 +43,9 @@ establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
   if (is.null(vegetation))
     stop("'vegetation' data.frame is missing!")
 
+  ## Filter out grasses; just for safety, should be done before calling this function
+  vegetation = subset(vegetation, Crownarea > 0 & is.finite(Crownarea))
+
   samples          <- dgvm3d.options("samples")
   overlap          <- dgvm3d.options("overlap")
   sort.column      <- dgvm3d.options("sort.column")
@@ -79,24 +82,22 @@ establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
     if (dgvm3d.options("verbose"))
       message("New establishment.")
     if (establish.method == "sunflower") {
-      tree.ids <- which(vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))
-      positions <- sunflower.disc(length(tree.ids))
+      positions <- sunflower.disc(nrow(vegetation))
       if (jitter) {
         positions$x = jitter(positions$x, ...)
         positions$y = jitter(positions$y, ...)
       }
-      vegetation$x[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$x * radius
-      vegetation$y[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$y * radius
+      vegetation$x = positions$x * radius
+      vegetation$y = positions$y * radius
       established = TRUE
     } else if (establish.method == "row") {
-      tree.ids <- which(vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))
-      positions <- row.disc(length(tree.ids))
+      positions <- row.disc(nrow(vegetation))
       if (jitter) {
         positions$x = jitter(positions$x, ...)
         positions$y = jitter(positions$y, ...)
       }
-      vegetation$x[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$x * radius
-      vegetation$y[vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea)] = positions$y * radius
+      vegetation$x = positions$x * radius
+      vegetation$y = positions$y * radius
       established = TRUE
 
     } else {
@@ -112,17 +113,17 @@ establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
   }
 
   ## first tree (excluding grasses)
-  if (all(is.na(vegetation$x)) || all(is.na(vegetation$x))) {
+  if (all(is.na(vegetation$x)) || all(is.na(vegetation$y))) {
     phi <- runif(1) * 2 * pi
     r   <- runif(1) * radius
     vegetation$x[1] = sin(phi) * r
     vegetation$y[1] = cos(phi) * r
   }
 
-  ## any other tree
-  ## Filter grasses by negative Crownarea, should better be done by lifeform
-  for (i in which((is.na(vegetation$x) | is.na(vegetation$y)) & vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))) {
-    trees.with.xy = which(!is.na(vegetation$x) & !is.na(vegetation$y) & vegetation$Crownarea > 0 & is.finite(vegetation$Crownarea))
+  ## any other tree, which has no position yet
+  tree.ids <- which(is.na(vegetation$x) | is.na(vegetation$y))
+  for (i in tree.ids) {
+    trees.with.xy = which(is.finite(vegetation$x) & is.finite(vegetation$y))
     nwhile = 0
     dist <- matrix(NA, i - 1, samples[1])
     while(all(is.na(dist))) {
@@ -132,9 +133,6 @@ establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
       ## slightly biased towards the center, since max distance below tends to place less points in the center.
       ## Need to find the optimum values (depends also in number of samples)
       new.pos = random.disc(samples[1]) * radius
-      #r   <- rbeta(samples[1], est.beta.param[1], est.beta.param[2]) * radius
-      #new.x <- sin(phi) * r
-      #new.y <- cos(phi) * r
 
       ## distance to all other trees
       dist <- matrix(NA, length(trees.with.xy), samples[1])
@@ -164,7 +162,10 @@ establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
 
   ## distance to nearest neighbour
   vegetation$dnn = sapply(1:nrow(vegetation), function(x) {
-    min(sqrt((vegetation$x[x] - vegetation$x[-x])^2 + (vegetation$y[x] - vegetation$y[-x])^2))
+    ret <- min(sqrt((vegetation$x[x] - vegetation$x[-x])^2 + (vegetation$y[x] - vegetation$y[-x])^2), na.rm=TRUE)
+    if (!is.finite(ret))
+      ret = NA
+    return(ret)
   })
   return(vegetation)
 }
