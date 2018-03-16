@@ -2,11 +2,10 @@ Package: DGVM3D
 Type: Package
 Title: 3D forest simulation visualization tool
 Version: 0.0.0.9000
+Date: 2018-03-16
 Authors@R: c(
     person("Steinkamp", "Joerg", , "steinkamp.joerg@gmail.com", c("aut", "cre"))
     )
-Maintainer: Joerg Steinkamp <steinkamp.joerg@gmail.com>
-Author: Joerg Steinkamp <steinkamp.joerg@gmail.com>
 URL: https://github.com/joergsteinkamp/DGVM3D
 BugReports: https://github.com/joergsteinkamp/DGVM3D/issues
 Description: This is a visualization tool for simulated vegetation structure/succession
