@@ -40,6 +40,7 @@
 #' dummy = plant3D(stand)
 #' }
 establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
+  Crownarea=NULL
   if (is.null(vegetation))
     stop("'vegetation' data.frame is missing!")
 

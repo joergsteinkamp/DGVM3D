@@ -11,7 +11,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This package renders the vegetation structure of individual and cohort based dynamic (global) vegetation models (DGVM) with gap dynamic. Here I present how to derive the required data with the DGVM [LPJ-GUESS](http://iis4.nateko.lu.se/lpj-guess/) [@smith_representation_2001; @smith_implications_2014].
+This package renders the vegetation structure of individual and cohort based dynamic (global) vegetation models (DGVM) with gap dynamic. Here I present how to derive the required data with the DGVM [LPJ-GUESS](http://iis4.nateko.lu.se/lpj-guess/) [@smith_representation_2001; @smith_implications_2014]. Initial presentation at the [EGU in Vienna, Austria, 11. April, 2018](https://meetingorganizer.copernicus.org/EGU2018/EGU2018-13037.pdf).
 
 # Code to be part of an external DGVM
 

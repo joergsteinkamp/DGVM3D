@@ -119,7 +119,7 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
 #' @return stand
 #' @export
 updateStand <- function(stand, vegetation, year=NULL) {
-  Year=PID=NULL
+  Year=PID=Crownarea=NULL
   if (is.null(year)) {
     old.year = stand@year
     new.years = sort(unique(vegetation$Year))
