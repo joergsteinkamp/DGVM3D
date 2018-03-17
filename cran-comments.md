@@ -1,7 +1,8 @@
 ## Test environments
-* OS X via homebrew, R 3.4.3
-* Debian 10 (Buster, testing), R 3.4.3
+* local OS X via homebrew, R 3.4.4
+* local Debian 10 (Buster, testing), R 3.4.3
 * Windows 10, unknown R version (ran by colleague)
+* win-builder (release and devel)
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
