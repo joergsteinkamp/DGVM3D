@@ -1,17 +1,18 @@
 Package: DGVM3D
 Type: Package
-Title: 3D forest simulation visualization tool
-Version: 0.0.0.9000
+Title: 3D Forest Simulation Visualization Tool
+Version: 1.0.0
 Date: 2018-03-16
 Authors@R: c(
     person("Steinkamp", "Joerg", , "steinkamp.joerg@gmail.com", c("aut", "cre"))
     )
 URL: https://github.com/joergsteinkamp/DGVM3D
 BugReports: https://github.com/joergsteinkamp/DGVM3D/issues
-Description: This is a visualization tool for simulated vegetation structure/succession
+Description: This is a visualization tool for vegetation structure/succession
     in space and/or time mainly for forest gap models. However, it could also be used to
     visualize observed forest stands. If used for models, they should contain either
-    individual trees or cohorts (e.g. LPJ-GUESS: Smith et al. (2001, 2014)).
+    individual trees or cohorts (e.g. LPJ-GUESS by Smith et al. (2014) <doi:10.5194/bg-11-2027-2014>).
+    For a list of required and additional data fileds see the vignette.
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
