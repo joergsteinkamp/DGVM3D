@@ -14,7 +14,7 @@ getFlame(faces = 10, radius = 0.3, dz = 1, z.exp = 1.1, expand = 1,
 
 \item{dz}{increase in height per z-side}
 
-\item{z.exp}{exponetial z factor}
+\item{z.exp}{exponential z factor}
 
 \item{expand}{linear width (x/y) expend factor with height}
 

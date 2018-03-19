@@ -7,7 +7,7 @@
 random.disc(n, strict = FALSE)
 }
 \arguments{
-\item{n}{total numer of trees}
+\item{n}{total number of trees}
 
 \item{strict}{should the value 2pi be excluded}
 }

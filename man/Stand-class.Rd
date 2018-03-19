@@ -22,6 +22,6 @@ One model stand consisting of several patches
 
 \item{\code{composition}}{either 'spatial' or 'temporal'. Has no effect yet.}
 
-\item{\code{patch.pos}}{the position of the patche hexagon centers}
+\item{\code{patch.pos}}{the position of the hexagon centers of each patch}
 }}
 

@@ -17,5 +17,5 @@ updateStand(stand, vegetation, year = NULL)
 stand
 }
 \description{
-Removes those individuums with the shortest distance to any neighbour and adds new individuums randomly.
+Removes those individuals with the shortest distance to any neighbor and adds new individuals randomly.
 }

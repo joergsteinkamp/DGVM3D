@@ -7,7 +7,7 @@
 #' @param year the initialization year
 #' @param soil a vector or matrix of soil depths.
 #' @param z the height of each patch.
-#' @param layout patch layout ('square' or 'linear'), a two element vector with number of rows/colums. A matrix for layout (not yet ready).
+#' @param layout patch layout ('square' or 'linear'), a two element vector with number of rows/columns. A matrix for layout (not yet ready).
 #' @param composition 'spatial' or 'temporal'
 #' @param dist the fractional distance between the hexagons
 #' @return a \code{\link{Stand-class}}
@@ -111,7 +111,7 @@ initStand <- function(npatch=1, year=2000, soil=c(0, -0.5, -1.5), z=0, layout="s
 
 #' Remove/add trees with a new vegetation data.frame
 #'
-#' Removes those individuums with the shortest distance to any neighbour and adds new individuums randomly.
+#' Removes those individuals with the shortest distance to any neighbor and adds new individuals randomly.
 #'
 #' @param stand stand to update
 #' @param vegetation new vegetation data.frame

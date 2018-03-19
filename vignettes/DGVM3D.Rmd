@@ -19,7 +19,7 @@ So far LPJ-GUESS is the only model included.
 
 ## C++ code to include in LPJ-GUESS
 
-LPJ-GUESS is hirarchically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per coarse gridpoint. This library here needs the output of each patch, therefore an additional output module is needed.
+LPJ-GUESS is hierarchically organized in stands, which contain a certain number of patches, where the vegetation grows. The default output is averaged over those patches, to represent different successional states of vegetation per coarse gridpoint. This library here needs the output of each patch, therefore an additional output module is needed.
 
 To create the required output table in LPJ-GUESS, which is written in C++ a new output module needs to be registered. In the source code the following header and code files need to be placed in the 'modules' subdirectory of the LPJ-GUESS source code. And they have to be added in the CMakeList.txt file at the appropriate position. The files are also located in the R site-library, which can be accessed via `system.file(paste0("lpj/modules/vegstructoutput.", c("h", "cpp")), package="DGVM3D")`.
 
@@ -157,7 +157,7 @@ The code writes the following output columns including a header line, if the par
 | **Year**      | integer   | year |
 | **SID**       | integer   | Stand ID |
 | **PID**       | integer   | Patch ID |
-| **VID**       | integer   | Vegetation ID; the ID of a cohort or individuum |
+| **VID**       | integer   | Vegetation ID; the ID of a cohort or individual |
 | Pft           | character | Name of the PFT/Species as defined in the guess instruction file |
 | **Lifeform**  | integer   | value of Pft lifeform (enum {NOLIFEFORM, TREE, GRASS}) |
 | **LeafType**  | integer   | value of Pft leafphysiognomy (enum {NOLEAFTYPE, NEEDLELEAF, BROADLEAF}) |
@@ -171,9 +171,9 @@ The code writes the following output columns including a header line, if the par
 | **Height**    | numeric   | individual height |
 | **Crownarea** | numeric   | individual crown area |
 
-An additional column 'BoleHeight' (branch free stem) can be given, if not present BoleHeight for broad-leaved trees is 1/3 of 'Height' and 1/4 for needle-leaved trees.
+So far not all of those values are used in the code (used ones are made bold). However, they seemed to be useful in the future. An additional column 'BoleHeight' (branch free stem) can be given, if not present BoleHeight for broad-leaved trees is 1/3 of 'Height' and 1/4 for needle-leaved trees.
 
-So far not all of those values are used in the code (used ones are maked bold). However, they seemed to be useful in the future. Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output! An example dataset ('dgvm3d.succession') is included in this package, which contains a named list of 3 data.frames at 3 locations with 12 patches each for the period 1861 to 2006: 
+Do not run LPJ-GUESS with too many gridpoints with the above output module. This will create hundreds of GB or even TB of output! An example dataset ('dgvm3d.succession') is included in this package, which contains a named list of 3 data.frames at 3 locations with 12 patches each for the period 1861 to 2006: 
 
 - Canada - boreal forest
 - Africa - sahel
@@ -188,8 +188,8 @@ When the library is loaded a few global default options are set to reduce the nu
 | Name | Value | Function |
 |------|-------|-----------------------------------------------------------|
 | patch.area | 1000 | The area of one patch in m^2 |
-| samples | c(10, 10) | [1] Number of samples to determin next tree position; [2] max. repetition if no suitable position is found |
-| overlap | 0.5 | fraction of crownradii to overlap with nearest neighbour during establishment |
+| samples | c(10, 10) | [1] Number of samples to determine next tree position; [2] max. repetition if no suitable position is found |
+| overlap | 0.5 | fraction of crownradii to overlap with nearest neighbor during establishment |
 | sort.column | c("Crownarea", "descending") | Determine the position for the largest trees first, then fill the gaps |
 | establish.method | "random" | How to choose from the above sample for the next tree position ('random', 'row' or 'sunflower' distance) |
 | color.column | "ShadeType" | which data column to use for the canopy color |
@@ -220,7 +220,7 @@ for (i in 1:nrow(dgvm3d.locations)) {
 
 ### Other models
 
-Please write and contibute your own input function.
+Please write and contribute your own input function.
 
 ## Layout
 
@@ -282,11 +282,11 @@ snapshot3d("stand_1x2.png")
 
 ## Overview Applications
 
-With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbour for each cohort at their position and those trees growing too close together are removed, when the number of individuums decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishTrees` with the next years vegetation data.frame to distribute new tree saplings.
+With the function `snapshot` the trees present at the given year and for the given patches will be rendered. The function `succession` keeps the trees with the maximum distance to the nearest neighbor for each cohort at their position and those trees growing too close together are removed, when the number of individuals decreases. New trees are randomly distributed with the desired method. The removal of killed individuals is done in the function `updateStand`, which calls `establishTrees` with the next years vegetation data.frame to distribute new tree saplings.
 
 ## Temporal snapshots and their application
 
-The succession is often visualized with the Leaf area index (LAI). Starting with grasses in the beginning, then early successional trees (shade intolerant) and later on the late successional trees (shade tolerant). Due to the random component in establishment, mortality and patch distroying disturbance the indivudual patches look quiet chaotic with a low number of repeated patches. However, if averaged over all patches, which is normally done, the expected successional pattern emerges. Allthough still not very smooth here, since we have only 12 patches. Normally a simulation should have at least 50 or better 100 patches (see `demo(dgvm3d.ggsuccession)`).
+The succession is often visualized with the Leaf area index (LAI). Starting with grasses in the beginning, then early successional trees (shade intolerant) and later on the late successional trees (shade tolerant). Due to the random component in establishment, mortality and patch destroying disturbance the individual patches look quiet chaotic with a low number of repeated patches. However, if averaged over all patches, which is normally done, the expected successional pattern emerges. Although still not very smooth here, since we have only 12 patches. Normally a simulation should have at least 50 or better 100 patches (see `demo(dgvm3d.ggsuccession)`).
 
 ```{r, message=FALSE, results="hide"}
 dgvm3d.options("default")
@@ -305,11 +305,11 @@ for (y in c(1865, 1915, 2005)) {
   rgl.snapshot(paste0("snapshot_", y, ".png"))
 }
 ```
-In the beginning the patches look very homogen.
+In the beginning the patches look very homogeneous.
 ![Location 1 5 years after disturbance](snapshot_1865.png)
 However, already after 40 years they grow higher and start to differentiate.
 ![Location 1 50 years after disturbance](snapshot_1915.png)
-And after 140 years, the patches look very heterogen, they are dominated by different tree types and exhibit an individual age structure (height).
+And after 140 years, the patches look very heterogeneous, they are dominated by different tree types and exhibit an individual age structure (height).
 ![Location 1 140 years after disturbance](snapshot_2005.png)
 
 ### Succession and fire

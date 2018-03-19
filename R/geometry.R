@@ -239,12 +239,13 @@ getEllipsoid <- function(radius=0.5, height=1, faces=c(6, 3)) {
 
 ## sunflower is from: https://stackoverflow.com/questions/28567166/uniformly-distribute-x-points-inside-a-circle
 ##
-#' Calc the current radius
+#' Calculate the current radius
 #'
 #' @param k current value
 #' @param n total number
 #' @param b number of boundary points
-#'
+#' @references
+#' \href{https://stackoverflow.com/questions/28567166/uniformly-distribute-x-points-inside-a-circle}{https://stackoverflow.com/questions/28567166/uniformly-distribute-x-points-inside-a-circle}
 #' @return radius
 sunflower.radius <- function(k, n, b) {
   if (k > n - b) {
@@ -274,7 +275,7 @@ sunflower.disc <- function(n, alpha=0) {
 
 #' Random distribution in a circle
 #'
-#' @param n total numer of trees
+#' @param n total number of trees
 #' @param strict should the value 2pi be excluded
 #'
 #' @return data.frame of positions

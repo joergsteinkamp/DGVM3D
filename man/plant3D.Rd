@@ -11,7 +11,7 @@ plant3D(stand = NULL, patch.id = NULL, crown.opacity = 1)
 
 \item{patch.id}{one or several specific patches only}
 
-\item{crown.opacity}{alpha value for the green tree crowns. Setting it to something different than 1 slows down the rendering substatially!}
+\item{crown.opacity}{alpha value for the green tree crowns. Setting it to something different than 1 slows down the rendering substantially!}
 }
 \value{
 the updated stand

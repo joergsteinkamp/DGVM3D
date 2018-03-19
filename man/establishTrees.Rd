@@ -2,7 +2,7 @@
 % Please edit documentation in R/vegetation.R
 \name{establishTrees}
 \alias{establishTrees}
-\title{poplulate a patch with its vegetation}
+\title{populate a patch with its vegetation}
 \usage{
 establishTrees(vegetation = NULL, radius = 1, jitter = FALSE, ...)
 }
@@ -13,7 +13,7 @@ establishTrees(vegetation = NULL, radius = 1, jitter = FALSE, ...)
 
 \item{jitter}{add a small amount of noise to the positions. Applies only for dgvm3d.options("establish.method") = "row" or "sunflower" (default: FALSE).}
 
-\item{...}{additiontal parameters passed to jitter.}
+\item{...}{additional parameters passed to jitter.}
 }
 \value{
 the vegetation data.frame with the positions

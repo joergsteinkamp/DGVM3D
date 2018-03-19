@@ -10,7 +10,7 @@ a Information to draw a triangular object
 \section{Slots}{
 
 \describe{
-\item{\code{vertices}}{the vertices of the bject}
+\item{\code{vertices}}{the vertices of the object}
 
 \item{\code{id}}{the column indices of the vertex matrix to draw the triangular body}
 

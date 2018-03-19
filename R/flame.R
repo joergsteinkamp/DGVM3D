@@ -3,7 +3,7 @@
 #' @param faces number of side and height
 #' @param radius maximum width
 #' @param dz increase in height per z-side
-#' @param z.exp exponetial z factor
+#' @param z.exp exponential z factor
 #' @param expand linear width (x/y) expend factor with height
 #' @param turn twist the flame a bit
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/geometry.R
 \name{sunflower.radius}
 \alias{sunflower.radius}
-\title{Calc the current radius}
+\title{Calculate the current radius}
 \usage{
 sunflower.radius(k, n, b)
 }
@@ -17,5 +17,8 @@ sunflower.radius(k, n, b)
 radius
 }
 \description{
-Calc the current radius
+Calculate the current radius
+}
+\references{
+\href{https://stackoverflow.com/questions/28567166/uniformly-distribute-x-points-inside-a-circle}{https://stackoverflow.com/questions/28567166/uniformly-distribute-x-points-inside-a-circle}
 }

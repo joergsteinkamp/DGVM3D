@@ -1,11 +1,11 @@
-#' poplulate a patch with its vegetation
+#' populate a patch with its vegetation
 #'
 #' Randomly 'plant' the trees in the patch within a given radius.
 #'
 #' @param vegetation the vegetation data.frame
 #' @param radius the radius used to distribute the vegetation to
 #' @param jitter add a small amount of noise to the positions. Applies only for dgvm3d.options("establish.method") = "row" or "sunflower" (default: FALSE).
-#' @param ... additiontal parameters passed to jitter.
+#' @param ... additional parameters passed to jitter.
 #' @return the vegetation data.frame with the positions
 #' @include classes.R
 #' @importFrom stats runif rbeta
@@ -163,6 +163,7 @@ establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
 
   ## distance to nearest neighbour
   vegetation$dnn = sapply(1:nrow(vegetation), function(x) {
+    ## TODO: This throws a warning, I guess if there is only one tree in the patch (?)
     ret <- min(sqrt((vegetation$x[x] - vegetation$x[-x])^2 + (vegetation$y[x] - vegetation$y[-x])^2), na.rm=TRUE)
     if (!is.finite(ret))
       ret = NA
@@ -176,7 +177,7 @@ establishTrees <- function(vegetation=NULL, radius=1, jitter=FALSE, ...) {
 #'
 #' @param stand the stand for plantation
 #' @param patch.id one or several specific patches only
-#' @param crown.opacity alpha value for the green tree crowns. Setting it to something different than 1 slows down the rendering substatially!
+#' @param crown.opacity alpha value for the green tree crowns. Setting it to something different than 1 slows down the rendering substantially!
 #' @return the updated stand
 #' @export
 #' @import rgl

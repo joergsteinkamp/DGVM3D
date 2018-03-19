@@ -17,7 +17,7 @@ dgvm3d.options(x = NULL, patch.area = NULL, samples = NULL,
 
 \item{overlap}{fraction of crownradius allowed to overlap.}
 
-\item{sort.column}{2 element vector: 1. vegetation data.frame culumn name to sort by. 2. "descending" (default) or "ascending".}
+\item{sort.column}{2 element vector: 1. vegetation data.frame column name to sort by. 2. "descending" (default) or "ascending".}
 
 \item{establish.method}{where to place the trees: 'random', 'sunflower' or 'row'. If there are trees with positions already 'random' is applied.}
 
