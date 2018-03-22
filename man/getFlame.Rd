@@ -39,3 +39,8 @@ triangles3d(outer$vertices[outer$id[, (2*20+1):200], ],
             col="#ce1301", alpha=0.3,shininess=10,lit=FALSE)
 }
 }
+\author{
+Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
+
+Gitta Lasslop \email{gitta.lasslop@senckenberg.de}
+}

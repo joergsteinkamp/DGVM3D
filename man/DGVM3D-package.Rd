@@ -24,6 +24,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Steinkamp Joerg \email{steinkamp.joerg@gmail.com}
+\strong{Maintainer}: Joerg Steinkamp \email{steinkamp.joerg@gmail.com}
+
+Authors:
+\itemize{
+  \item Gitta Lasslop \email{gitta.lasslop@senckenberg.de}
+}
 
 }

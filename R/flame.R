@@ -10,6 +10,9 @@
 #' @return list of vertices and ids to be used with rgl::triangles3d
 #' @export
 #'
+#' @author Joerg Steinkamp \email{steinkamp.joerg@@gmail.com}
+#' @author Gitta Lasslop \email{gitta.lasslop@@senckenberg.de}
+#'
 #' @examples
 #' \dontrun{
 #' center = getFlame(dz=0.8)
