@@ -6,4 +6,4 @@ For a list of required and additional data fileds see the vignette.
 
 For details, see the vignette (`vignette("DGVM3D", package="DGVM3D")`) or [https://joergsteinkamp.github.io/DGVM3D](https://joergsteinkamp.github.io/DGVM3D)
 
-
+[![](https://cranlogs.r-pkg.org/badges/DGVM3D)](https://CRAN.R-project.org/package=DGVM3D)
