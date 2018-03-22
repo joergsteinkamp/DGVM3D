@@ -31,4 +31,10 @@ Authors:
   \item Gitta Lasslop \email{gitta.lasslop@senckenberg.de}
 }
 
+Other contributors:
+\itemize{
+  \item Christian Werner \email{christian.werner@senckenberg.de} [contributor]
+  \item Thomas Hickler \email{thomas.hickler@senckenberg.de} [contributor]
+}
+
 }

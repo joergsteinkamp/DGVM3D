@@ -1,0 +1,25 @@
+citHeader("To cite DGVM3D in publications, please use:")
+
+citEntry(
+  entry = "InProceedings",
+  title = "3D visualization of simulated forest gap-dynamics",
+  author = c(person("Joerg", "Steinkamp", ,
+                    "steinkamp.joerg@gmail.com", c("aut", "cre"),
+                    comment="Senckenberg Biodiversity and Climate Research Centre (BiK-F), Frankfurt am Main, Germany"),
+             person("Gitta", "Lasslop", ,
+                    "gitta.lasslop@senckenberg.de", c("aut"),
+                    comment="Senckenberg Biodiversity and Climate Research Centre (BiK-F), Frankfurt am Main, Germany"),
+             person("Christian", "Werner", ,
+                    "christian.werner@senckenberg.de", c("ctb"),
+                    comment="Senckenberg Biodiversity and Climate Research Centre (BiK-F), Frankfurt am Main, Germany"),
+             person("Thomas", "Hickler", ,
+                    "thomas.hickler@senckenberg.de", c("ctb"),
+                    comment="Senckenberg Biodiversity and Climate Research Centre (BiK-F), Frankfurt am Main, Germany")),
+  year = "2018",
+  note = "Geophysical Research Abstracts Vol. 20",
+  url = "https://meetingorganizer.copernicus.org/EGU2018/EGU2018-13037.pdf",
+  address = "Vienna, Austria",
+  pages = "EGU2018-13037",
+  booktitle = "EGU General Assembly 2018",
+  textVersion = "Steinkamp, J., Lasslop, G., Werner, C., Hickler, T. (2018): 3D visualization of simulated forest gap-dynamics. Geophysical Research Abstracts Vol. 20. Vienna, Austria: EGU2018-13037."
+)
