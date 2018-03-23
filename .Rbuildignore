@@ -4,3 +4,6 @@
 ^ \.git$
 .DS_Store$
 ^cran-comments.md$
+.travis.yml
+
+^\.travis\.yml$
