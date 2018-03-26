@@ -6,7 +6,7 @@
 This is a visualization tool for vegetation structure/succession
 in space and/or time mainly for forest gap models. However, it could also be used to
 visualize observed forest stands. If used for models, they should contain either
-individual trees or cohorts (e.g. [https://dx.doi.org/10.5194/bg-11-2027-2014](LPJ-GUESS by Smith et al. (2014)).
+individual trees or cohorts (e.g. [LPJ-GUESS by Smith et al. (2014)](https://dx.doi.org/10.5194/bg-11-2027-2014).
 For a list of required and additional data fileds see the vignette.
 
-For details, see the vignette (`vignette("DGVM3D", package="DGVM3D")`) or [https://joergsteinkamp.github.io/DGVM3D](https://joergsteinkamp.github.io/DGVM3D)
+For details, see the vignette in the package via (`vignette("DGVM3D", package="DGVM3D")`) or on my [GitHub.io page](https://joergsteinkamp.github.io/DGVM3D)
