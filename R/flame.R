@@ -101,11 +101,11 @@ fire3D <- function(stand=NULL, patch.id=NULL, limit=0.5) {
     fire.prob = stand@patches[[i]]@vegetation$Fireprob[1]
     inner.radius = stand@hexagon@supp$inner.radius
     ##    Fire = NULL
-    for (j in 1:round(200*fire.prob^2)) {
+    for (j in 1:round(100 * fire.prob^1.5)) {
       ## angle of each flame
       phi    <- runif(1) * 2 * pi
       ## fractional distance from center of each flame
-      dist   <- rbeta(1, 1.5, 1)
+      dist   <- rbeta(1, 1.9, 0.8)
       ## absolute distance from center in x/y direction
       offset <- c(sin(phi) * dist * inner.radius,
                   cos(phi) * dist * inner.radius) * fire.prob
@@ -113,22 +113,39 @@ fire3D <- function(stand=NULL, patch.id=NULL, limit=0.5) {
       turn   <- rnorm(1, sd=2)
       ## radius/height reduction depending on distance from center
       ##      Fire = append(Fire, sqrt(sum(offset^2)) / inner.radius)
-      radius <- rlnorm(1, meanlog=-0.2 * (2 + sqrt(sum(offset^2))), sdlog=0.1)
-      dz     <- 0.5 + rlnorm(1, meanlog=-0.4 * sqrt(sum(offset^2)), sdlog=0.3)
+      radius <- (1 + fire.prob) * rlnorm(1, meanlog=-0.1 * (2 + sqrt(sum(offset^2))), sdlog=0.1)
+      dz = abs(rnorm(1, 2, 0.1)) * radius
+      #dz     <- (1 + fire.prob) + rlnorm(1, meanlog=-0.4 * sqrt(sum(offset^2)), sdlog=0.3)
       ## center (whitish)
-      x = getFlame(radius=radius, dz=dz*0.8, turn=turn)
+      x = getFlame(radius=radius, dz=dz * 0.8, turn=turn)
+
+      ## TODO: make the flames larger but less in number
+      ## TODO: workaround, needs to be fixed elsewhere
+      #x$vertices = x$vertices * 2
+      x$vertices$z = x$vertices$z - x$vertices$z[21]
+
       x$vertices$x = x$vertices$x + offset[1] + stand@patch.pos[i, 'x']
       x$vertices$y = x$vertices$y + offset[2] + stand@patch.pos[i, 'y']
       x$vertices$z = x$vertices$z + stand@patch.pos[i, 'z']
       triangles3d(x$vertices[x$id[, (2 * 20 + 1):150], ], col="#e6ffcc", alpha=1, shininess=1,lit=F)
       ## inner ( yellow)
       x = getFlame(radius=radius, dz=dz*0.97, turn=turn, expand=2)
+
+      ## TODO: workaround, needs to be fixed elsewhere
+      #x$vertices = x$vertices * 2
+      x$vertices$z = x$vertices$z - x$vertices$z[21]
+
       x$vertices$x = x$vertices$x + offset[1] + stand@patch.pos[i, 'x']
       x$vertices$y = x$vertices$y + offset[2] + stand@patch.pos[i, 'y']
       x$vertices$z = x$vertices$z + stand@patch.pos[i, 'z']
       triangles3d(x$vertices[x$id[, (2 * 20 + 1):175], ], col="#f0ff00", alpha=0.6, shininess=1,lit=F)
       ## outer ( red)
       x = getFlame(radius=radius, dz=dz, expand=3, turn=turn)
+
+      ## TODO: workaround, needs to be fixed elsewhere
+      #x$vertices = x$vertices * 2
+      x$vertices$z = x$vertices$z - x$vertices$z[21]
+
       x$vertices$x = x$vertices$x + offset[1] + stand@patch.pos[i, 'x']
       x$vertices$y = x$vertices$y + offset[2] + stand@patch.pos[i, 'y']
       x$vertices$z = x$vertices$z + stand@patch.pos[i, 'z']

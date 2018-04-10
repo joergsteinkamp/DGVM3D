@@ -1,7 +1,7 @@
 library(DGVM3D)
 
 ## pictures per year
-ppy <- 20
+ppy <- 10
 ## angle per year
 apy = 0.5
 

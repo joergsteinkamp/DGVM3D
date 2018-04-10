@@ -1,7 +1,7 @@
 Package: DGVM3D
 Type: Package
 Title: 3D Forest Simulation Visualization Tool
-Version: 1.0.7
+Version: 1.0.8
 Date: 2018-03-26
 Authors@R: c(person("Joerg", "Steinkamp", ,
         "steinkamp.joerg@gmail.com", c("aut", "cre")), person("Gitta",
