@@ -66,5 +66,7 @@ for (y in seq(ystart + 1, yend, 1)) {
 ## convert the images to a movie
 owd = getwd()
 setwd(md)
-system("ffmpeg -y -f image2 -r 25 -i movie%08d.png -vcodec libx264 -pix_fmt yuv420p movie.mp4")
+system("ffmpeg -y -f image2 -r 25 -i movie%08d.png -vcodec libx264 -pix_fmt yuv420p dgvm3d.mp4")
+unlink(list.files(pattern="movie[0-9]{8}.png"))
+message(file.path(md, "dgvm3d.mp4"))
 setwd(owd)

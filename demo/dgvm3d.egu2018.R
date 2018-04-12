@@ -91,7 +91,7 @@ stand=initStand()
 open3d(windowRect=c(0, 0, 800, 600), scale=c(1, 1, 1), FOV=0)
 stand3D(stand)
 stand@patches[[1]]@vegetation = establishTrees(veg, stand@hexagon@supp[['inner.radius']])
-#
+
 rgl.clear("lights")
 rgl.light( theta = -25, phi = 30, specular = "black", diffuse = "#FFFFFF")
 rot.y = rotationMatrix(-pi/3, 1, 0, 0)
@@ -99,21 +99,21 @@ rot.z = rotationMatrix(0, 0, 0, 1)
 rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
 
 for (i in seq(1, 360, 3)) {
-set.seed(123456)
-   stand@patches[[1]]@vegetation$Fireprob=0.1 + i / 400
-   stand3D(stand)
-   axis3d("z", pos=c(-stand@hexagon@supp$outer.radius, 5*stand@hexagon@supp$inner.radius, NA))
-   #rot.z = rotationMatrix(i * pi/360, 0, 0, 1)
-   #rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
+  set.seed(123456)
+  stand@patches[[1]]@vegetation$Fireprob=0.1 + i / 400
+  stand3D(stand)
+  axis3d("z", pos=c(-stand@hexagon@supp$outer.radius, 5*stand@hexagon@supp$inner.radius, NA))
+  #rot.z = rotationMatrix(i * pi/360, 0, 0, 1)
+  #rgl.viewpoint(userMatrix = rot.y %*% rot.z, fov=1)
 
-   text3d(stand@hexagon@supp$outer.radius * c(1.0, 1.0, -1.0, -1.0, 0),
-             stand@hexagon@supp$outer.radius * c(0, 2, 0, 2, 1),
-             c(0, 0, 0, 0, 5), "a", alpha=0)
+  text3d(stand@hexagon@supp$outer.radius * c(1.0, 1.0, -1.0, -1.0, 0),
+         stand@hexagon@supp$outer.radius * c(0, 2, 0, 2, 1),
+         c(0, 0, 0, 0, 5), "a", alpha=0)
 
-   fire3D(stand, limit=0)
-   snapshot3d(sprintf("fire_%03i.png", (i-1)/3))
-   rgl.clear()
- }
+  fire3D(stand, limit=0)
+  snapshot3d(sprintf("fire_%03i.png", (i-1)/3))
+  rgl.clear()
+}
 
 system("ffmpeg -y -f image2 -r 30 -i fire_%03d.png -vcodec libx264 -pix_fmt yuv420p fire.mp4")
 unlink(list.files(pattern="fire_[0-9]{3}.png"))
